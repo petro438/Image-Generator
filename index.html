@@ -33,7 +33,7 @@
     .header h1 {
       font-size: 36px;
       font-weight: 700;
-      background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+      background: linear-gradient(135deg, #00c358 0%, #60a5fa 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -47,7 +47,7 @@
 
     .main-grid {
       display: grid;
-      grid-template-columns: 380px 1fr;
+      grid-template-columns: 400px 1fr;
       gap: 24px;
     }
 
@@ -90,8 +90,8 @@
 
     .input-field:focus {
       outline: none;
-      border-color: #3b82f6;
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+      border-color: #00c358;
+      box-shadow: 0 0 0 3px rgba(0, 195, 88, 0.2);
     }
 
     textarea.input-field {
@@ -146,7 +146,7 @@
     }
 
     .checkbox-label input {
-      accent-color: #3b82f6;
+      accent-color: #00c358;
     }
 
     .color-swatches {
@@ -157,22 +157,73 @@
     }
 
     .color-swatch {
-      width: 48px;
-      height: 24px;
-      border-radius: 4px;
+      height: 28px;
+      border-radius: 6px;
       border: 2px solid transparent;
       cursor: pointer;
       transition: all 0.2s;
+      padding: 2px 12px;
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      color: #1e293b;
+      font-weight: 500;
     }
 
     .color-swatch.selected {
-      border-color: #3b82f6;
-      transform: scale(1.1);
+      border-color: #fff;
+      transform: scale(1.05);
     }
 
-    .column-checkboxes {
-      max-height: 150px;
+    .column-config {
+      max-height: 200px;
       overflow-y: auto;
+      border: 1px solid rgba(148, 163, 184, 0.1);
+      border-radius: 8px;
+      padding: 8px;
+    }
+
+    .column-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+
+    .column-row:hover {
+      background: rgba(51, 65, 85, 0.3);
+    }
+
+    .column-row label {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .lower-better-btn {
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      background: rgba(30, 41, 59, 0.8);
+      color: #94a3b8;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .lower-better-btn.active {
+      background: #00c358;
+      color: #fff;
+      border-color: #00c358;
+    }
+
+    .lower-better-btn:hover {
+      border-color: #00c358;
     }
 
     .btn {
@@ -186,7 +237,7 @@
     }
 
     .btn-primary {
-      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      background: linear-gradient(135deg, #00c358 0%, #00a34a 100%);
       color: white;
       width: 100%;
       padding: 16px;
@@ -195,7 +246,7 @@
 
     .btn-primary:hover:not(:disabled) {
       transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+      box-shadow: 0 8px 20px rgba(0, 195, 88, 0.4);
     }
 
     .btn-primary:disabled {
@@ -255,31 +306,40 @@
       width: 100%;
       border-collapse: collapse;
       font-size: 13px;
+      border-radius: 12px;
+      overflow: hidden;
     }
 
     .preview-table th {
-      background: #1e293b;
+      background: #00c358;
       padding: 12px 8px;
       text-align: center;
       font-weight: 600;
-      border-bottom: 2px solid #334155;
+      color: white;
       white-space: nowrap;
     }
 
     .preview-table td {
       padding: 10px 8px;
       text-align: center;
-      border-bottom: 1px solid #334155;
+    }
+
+    .preview-table tr:nth-child(odd) td {
+      background: #ebecf5;
     }
 
     .preview-table tr:nth-child(even) td {
-      background: rgba(51, 65, 85, 0.3);
+      background: #f6f8fd;
+    }
+
+    .preview-table tr td {
+      color: #1e293b;
     }
 
     .sort-btn {
       background: none;
       border: none;
-      color: #94a3b8;
+      color: rgba(255,255,255,0.7);
       cursor: pointer;
       padding: 2px 6px;
       margin-left: 4px;
@@ -287,7 +347,7 @@
     }
 
     .sort-btn:hover {
-      color: #3b82f6;
+      color: white;
     }
 
     .footer {
@@ -309,15 +369,6 @@
 
     .inline-inputs .input-field {
       width: 100px;
-    }
-
-    .color-input {
-      width: 60px;
-      height: 36px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      padding: 0;
     }
   </style>
 </head>
@@ -345,6 +396,10 @@
         <!-- Title & Subtitle -->
         <div class="card">
           <h3>✏️ Title & Subtitle</h3>
+          <label class="checkbox-label" style="margin-bottom: 12px; padding: 0;">
+            <input type="checkbox" id="showTitle" checked>
+            Show title on image
+          </label>
           <input 
             type="text" 
             id="titleInput" 
@@ -380,8 +435,8 @@
           </div>
 
           <div id="columnCheckboxContainer" style="display: none;">
-            <span class="label-text">Columns to format:</span>
-            <div class="column-checkboxes" id="columnCheckboxes"></div>
+            <span class="label-text">Columns to format (click "Lower is better" to flip):</span>
+            <div class="column-config" id="columnCheckboxes"></div>
           </div>
         </div>
 
@@ -402,20 +457,15 @@
             >
           </label>
 
-          <label class="checkbox-label">
+          <label class="checkbox-label" style="padding: 8px 0;">
             <input type="checkbox" id="showRanks">
             Show rank numbers (#)
-          </label>
-
-          <label class="label" style="margin-top: 12px;">
-            <span class="label-text">Header background:</span>
-            <input type="color" id="headerColor" class="color-input" value="#1a1a2e">
           </label>
         </div>
 
         <!-- Generate Button -->
         <button id="downloadBtn" class="btn btn-primary" disabled>
-          📥 Download Image (1200×675)
+          📥 Download Image
         </button>
       </div>
 
@@ -439,7 +489,7 @@
     <canvas id="canvas"></canvas>
 
     <div class="footer">
-      Tip: Click column headers to sort • Images export at 1200×675 for optimal social sharing
+      Tip: Click column headers to sort • Image size adjusts to fit your table
     </div>
   </div>
 
@@ -447,27 +497,56 @@
     // State
     let tableData = { headers: [], rows: [] };
     let heatmapColumns = new Set();
+    let lowerIsBetterColumns = new Set();
     let sortColumn = null;
     let sortDirection = 'asc';
 
+    // 10-step color scales based on percentiles
     const colorSchemes = {
-      'blue-red': { low: [59, 130, 246], high: [239, 68, 68], mid: [255, 255, 255] },
-      'green-red': { low: [34, 197, 94], high: [239, 68, 68], mid: [255, 255, 255] },
-      'purple-orange': { low: [147, 51, 234], high: [249, 115, 22], mid: [255, 255, 255] },
-      'blue-white': { low: [59, 130, 246], high: [255, 255, 255], mid: [173, 216, 230] },
-      'cool-warm': { low: [56, 189, 248], high: [251, 146, 60], mid: [255, 255, 255] },
+      'green-red': [
+        '#f8696b', // 0-9th percentile (worst)
+        '#f98370',
+        '#fa9d75',
+        '#fbb77a',
+        '#fcd17f',
+        '#ffeb84',
+        '#d8e082',
+        '#b1d580',
+        '#8aca7e',
+        '#63be7b'  // 90-100th percentile (best)
+      ],
+      'green-grey': [
+        '#d0d0d0', // 0-9th percentile (worst) - grey
+        '#b8d4bc',
+        '#a0d8a8',
+        '#88dc94',
+        '#70e080',
+        '#63be7b',
+        '#57b574',
+        '#4bac6d',
+        '#3fa366',
+        '#339a5f'  // 90-100th percentile (best) - dark green
+      ]
     };
 
-    let selectedColorScheme = 'blue-red';
+    let selectedColorScheme = 'green-red';
+
+    // Row colors
+    const rowColors = {
+      odd: '#ebecf5',
+      even: '#f6f8fd'
+    };
+
+    const headerBgColor = '#00c358';
 
     // DOM Elements
     const dataInput = document.getElementById('dataInput');
     const titleInput = document.getElementById('titleInput');
     const subtitleInput = document.getElementById('subtitleInput');
+    const showTitleCheckbox = document.getElementById('showTitle');
     const heatmapMode = document.getElementById('heatmapMode');
     const maxRowsInput = document.getElementById('maxRows');
     const showRanksCheckbox = document.getElementById('showRanks');
-    const headerColorInput = document.getElementById('headerColor');
     const downloadBtn = document.getElementById('downloadBtn');
     const emptyState = document.getElementById('emptyState');
     const previewContainer = document.getElementById('previewContainer');
@@ -479,11 +558,16 @@
 
     // Initialize color swatches
     function initColorSwatches() {
-      Object.entries(colorSchemes).forEach(([key, scheme]) => {
+      const schemeLabels = {
+        'green-red': 'Green → Red',
+        'green-grey': 'Green → Grey'
+      };
+
+      Object.entries(colorSchemes).forEach(([key, colors]) => {
         const swatch = document.createElement('div');
         swatch.className = `color-swatch ${key === selectedColorScheme ? 'selected' : ''}`;
-        swatch.style.background = `linear-gradient(90deg, rgb(${scheme.low.join(',')}) 0%, rgb(${scheme.mid.join(',')}) 50%, rgb(${scheme.high.join(',')}) 100%)`;
-        swatch.title = key;
+        swatch.style.background = `linear-gradient(90deg, ${colors[9]} 0%, ${colors[5]} 50%, ${colors[0]} 100%)`;
+        swatch.textContent = schemeLabels[key];
         swatch.onclick = () => {
           document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
           swatch.classList.add('selected');
@@ -521,6 +605,7 @@
         if (isNumeric && colIdx > 0) numericCols.add(colIdx);
       });
       heatmapColumns = numericCols;
+      lowerIsBetterColumns = new Set(); // Reset
 
       updateColumnCheckboxes();
     }
@@ -537,8 +622,10 @@
       columnCheckboxContainer.style.display = 'block';
 
       tableData.headers.forEach((header, idx) => {
+        const row = document.createElement('div');
+        row.className = 'column-row';
+        
         const label = document.createElement('label');
-        label.className = 'checkbox-label';
         
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
@@ -554,7 +641,25 @@
 
         label.appendChild(checkbox);
         label.appendChild(document.createTextNode(header));
-        columnCheckboxes.appendChild(label);
+        
+        const lowerBtn = document.createElement('button');
+        lowerBtn.className = `lower-better-btn ${lowerIsBetterColumns.has(idx) ? 'active' : ''}`;
+        lowerBtn.textContent = 'Lower is better';
+        lowerBtn.onclick = (e) => {
+          e.preventDefault();
+          if (lowerIsBetterColumns.has(idx)) {
+            lowerIsBetterColumns.delete(idx);
+            lowerBtn.classList.remove('active');
+          } else {
+            lowerIsBetterColumns.add(idx);
+            lowerBtn.classList.add('active');
+          }
+          renderPreview();
+        };
+
+        row.appendChild(label);
+        row.appendChild(lowerBtn);
+        columnCheckboxes.appendChild(row);
       });
     }
 
@@ -587,13 +692,8 @@
       return rows.slice(0, maxRows);
     }
 
-    // Calculate min/max for heatmap
-    function calculateMinMax(colIdx, rows) {
-      const mode = heatmapMode.value;
-      if (mode === 'none' || !heatmapColumns.has(colIdx)) {
-        return { min: 0, max: 0 };
-      }
-
+    // Get all values for percentile calculation
+    function getValuesForPercentile(colIdx, rows, mode) {
       let values = [];
 
       if (mode === 'column') {
@@ -605,47 +705,62 @@
             if (v !== null) values.push(v);
           });
         });
+      } else if (mode === 'row') {
+        // Will be calculated per-row
+        return null;
       }
 
-      if (values.length === 0) return { min: 0, max: 0 };
-      return { min: Math.min(...values), max: Math.max(...values) };
+      return values.sort((a, b) => a - b);
     }
 
-    // Calculate row min/max
-    function calculateRowMinMax(row) {
+    // Get row values for percentile
+    function getRowValues(row) {
       const values = [];
       heatmapColumns.forEach(idx => {
         const v = getNumericValue(row[idx]);
         if (v !== null) values.push(v);
       });
-      if (values.length === 0) return { min: 0, max: 0 };
-      return { min: Math.min(...values), max: Math.max(...values) };
+      return values.sort((a, b) => a - b);
     }
 
-    // Get heatmap color
-    function getHeatmapColor(value, min, max, colIdx) {
+    // Get percentile bucket (0-9) for a value
+    function getPercentileBucket(value, sortedValues, lowerIsBetter) {
+      if (sortedValues.length === 0) return null;
+      if (sortedValues.length === 1) return lowerIsBetter ? 9 : 9; // Single value gets best color
+      
+      // Find position in sorted array
+      let position = 0;
+      for (let i = 0; i < sortedValues.length; i++) {
+        if (sortedValues[i] <= value) position = i;
+      }
+      
+      // Calculate percentile (0-100)
+      const percentile = (position / (sortedValues.length - 1)) * 100;
+      
+      // Convert to bucket (0-9)
+      let bucket = Math.min(9, Math.floor(percentile / 10));
+      
+      // Flip if lower is better
+      if (lowerIsBetter) {
+        bucket = 9 - bucket;
+      }
+      
+      return bucket;
+    }
+
+    // Get heatmap color based on percentile bucket
+    function getHeatmapColor(value, sortedValues, colIdx) {
       if (!heatmapColumns.has(colIdx) || heatmapMode.value === 'none') return null;
 
       const num = getNumericValue(value);
-      if (num === null || min === max) return null;
+      if (num === null || sortedValues.length === 0) return null;
 
-      const scheme = colorSchemes[selectedColorScheme];
-      const ratio = (num - min) / (max - min);
+      const lowerIsBetter = lowerIsBetterColumns.has(colIdx);
+      const bucket = getPercentileBucket(num, sortedValues, lowerIsBetter);
+      
+      if (bucket === null) return null;
 
-      let r, g, b;
-      if (ratio < 0.5) {
-        const t = ratio * 2;
-        r = Math.round(scheme.low[0] + (scheme.mid[0] - scheme.low[0]) * t);
-        g = Math.round(scheme.low[1] + (scheme.mid[1] - scheme.low[1]) * t);
-        b = Math.round(scheme.low[2] + (scheme.mid[2] - scheme.low[2]) * t);
-      } else {
-        const t = (ratio - 0.5) * 2;
-        r = Math.round(scheme.mid[0] + (scheme.high[0] - scheme.mid[0]) * t);
-        g = Math.round(scheme.mid[1] + (scheme.high[1] - scheme.mid[1]) * t);
-        b = Math.round(scheme.mid[2] + (scheme.high[2] - scheme.mid[2]) * t);
-      }
-
-      return `rgb(${r}, ${g}, ${b})`;
+      return colorSchemes[selectedColorScheme][bucket];
     }
 
     // Render preview table
@@ -664,15 +779,25 @@
 
       const sortedRows = getSortedRows();
       const showRanks = showRanksCheckbox.checked;
-      const headerBgColor = headerColorInput.value;
+      const showTitle = showTitleCheckbox.checked;
       const title = titleInput.value;
       const subtitle = subtitleInput.value;
 
       rowCountSpan.textContent = `Showing ${sortedRows.length} of ${tableData.rows.length} rows`;
 
+      // Pre-calculate values for percentiles
+      const mode = heatmapMode.value;
+      const colValues = {};
+      
+      if (mode === 'column' || mode === 'all') {
+        heatmapColumns.forEach(colIdx => {
+          colValues[colIdx] = getValuesForPercentile(colIdx, sortedRows, mode);
+        });
+      }
+
       let html = '';
 
-      if (title) {
+      if (showTitle && title) {
         html += `<div class="preview-title">
           <h2>${title}</h2>
           ${subtitle ? `<p>${subtitle}</p>` : ''}
@@ -682,14 +807,14 @@
       html += '<table class="preview-table"><thead><tr>';
       
       if (showRanks) {
-        html += `<th style="background: ${headerBgColor}; width: 40px;">#</th>`;
+        html += `<th style="width: 40px;">#</th>`;
       }
 
       tableData.headers.forEach((header, idx) => {
         const sortIndicator = sortColumn === idx 
           ? (sortDirection === 'asc' ? '▲' : '▼') 
           : '⇅';
-        html += `<th style="background: ${headerBgColor}">
+        html += `<th>
           ${header}
           <button class="sort-btn" onclick="handleSort(${idx})">${sortIndicator}</button>
         </th>`;
@@ -697,39 +822,30 @@
 
       html += '</tr></thead><tbody>';
 
-      // Pre-calculate min/max for columns if needed
-      const colMinMax = {};
-      if (heatmapMode.value === 'column' || heatmapMode.value === 'all') {
-        heatmapColumns.forEach(colIdx => {
-          colMinMax[colIdx] = calculateMinMax(colIdx, sortedRows);
-        });
-      }
-
       sortedRows.forEach((row, rowIdx) => {
-        const rowMinMax = heatmapMode.value === 'row' ? calculateRowMinMax(row) : null;
+        // Get row values for row-based percentile
+        const rowValues = mode === 'row' ? getRowValues(row) : null;
 
         html += '<tr>';
         
         if (showRanks) {
-          html += `<td style="font-weight: 600; color: #64748b;">${rowIdx + 1}</td>`;
+          const bgColor = rowIdx % 2 === 0 ? rowColors.odd : rowColors.even;
+          html += `<td style="font-weight: 600; color: #64748b; background: ${bgColor};">${rowIdx + 1}</td>`;
         }
 
         row.forEach((cell, colIdx) => {
-          let bgColor = null;
+          let bgColor = rowIdx % 2 === 0 ? rowColors.odd : rowColors.even;
+          let textColor = '#1e293b';
 
-          if (heatmapColumns.has(colIdx) && heatmapMode.value !== 'none') {
-            if (heatmapMode.value === 'row' && rowMinMax) {
-              bgColor = getHeatmapColor(cell, rowMinMax.min, rowMinMax.max, colIdx);
-            } else if (heatmapMode.value === 'column' || heatmapMode.value === 'all') {
-              const { min, max } = colMinMax[colIdx] || { min: 0, max: 0 };
-              bgColor = getHeatmapColor(cell, min, max, colIdx);
+          if (heatmapColumns.has(colIdx) && mode !== 'none') {
+            const sortedVals = mode === 'row' ? rowValues : colValues[colIdx];
+            const heatColor = getHeatmapColor(cell, sortedVals || [], colIdx);
+            if (heatColor) {
+              bgColor = heatColor;
             }
           }
 
-          const style = bgColor 
-            ? `background: ${bgColor}; color: #1e293b;` 
-            : '';
-          html += `<td style="${style}">${cell}</td>`;
+          html += `<td style="background: ${bgColor}; color: ${textColor};">${cell}</td>`;
         });
 
         html += '</tr>';
@@ -753,18 +869,10 @@
     // Generate and download image
     function generateImage() {
       const ctx = canvas.getContext('2d');
-      const width = 1200;
-      const height = 675;
-
-      canvas.width = width;
-      canvas.height = height;
-
-      // Background
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(0, 0, width, height);
-
+      
       const rows = getSortedRows();
       const showRanks = showRanksCheckbox.checked;
+      const showTitle = showTitleCheckbox.checked;
       const headers = showRanks ? ['#', ...tableData.headers] : tableData.headers;
       const dataRows = showRanks
         ? rows.map((row, idx) => [(idx + 1).toString(), ...row])
@@ -772,110 +880,131 @@
 
       const title = titleInput.value;
       const subtitle = subtitleInput.value;
-      const headerBgColor = headerColorInput.value;
 
-      // Calculate layout
-      const padding = 40;
-      const headerHeight = title ? 70 : 20;
-      const tableTop = padding + headerHeight;
-      const tableBottom = height - padding;
-      const tableHeight = tableBottom - tableTop;
+      // Calculate dynamic dimensions
+      const padding = 24;
+      const cornerRadius = 16;
+      const titleHeight = (showTitle && title) ? (subtitle ? 65 : 45) : 0;
+      const rowHeight = 36;
+      const headerRowHeight = 42;
+      
+      // Calculate column widths based on content
+      const colWidths = headers.map((header, idx) => {
+        let maxLen = header.length;
+        dataRows.forEach(row => {
+          if (row[idx] && row[idx].length > maxLen) {
+            maxLen = row[idx].length;
+          }
+        });
+        return Math.max(50, maxLen * 8.5 + 20);
+      });
+      
+      const tableWidth = colWidths.reduce((a, b) => a + b, 0);
+      const tableContentHeight = headerRowHeight + rowHeight * dataRows.length;
+      
+      const width = tableWidth + padding * 2;
+      const height = titleHeight + tableContentHeight + padding * 2;
 
-      const rowHeight = Math.min(40, (tableHeight - 45) / (dataRows.length + 1));
-      const colWidth = (width - padding * 2) / headers.length;
+      canvas.width = width;
+      canvas.height = height;
+
+      // Clear and draw rounded background
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.roundRect(0, 0, width, height, cornerRadius);
+      ctx.fill();
+
+      const tableTop = padding + titleHeight;
+      const tableLeft = padding;
 
       // Title
-      if (title) {
+      if (showTitle && title) {
         ctx.fillStyle = '#1a1a2e';
-        ctx.font = 'bold 28px Inter, system-ui, sans-serif';
+        ctx.font = 'bold 22px Inter, system-ui, sans-serif';
         ctx.textAlign = 'center';
-        ctx.fillText(title, width / 2, padding + 30);
+        ctx.fillText(title, width / 2, padding + 26);
 
         if (subtitle) {
           ctx.fillStyle = '#64748b';
-          ctx.font = '16px Inter, system-ui, sans-serif';
-          ctx.fillText(subtitle, width / 2, padding + 55);
+          ctx.font = '13px Inter, system-ui, sans-serif';
+          ctx.fillText(subtitle, width / 2, padding + 48);
         }
       }
 
+      // Table with rounded corners - clip path
+      ctx.save();
+      ctx.beginPath();
+      ctx.roundRect(tableLeft, tableTop, tableWidth, tableContentHeight, 10);
+      ctx.clip();
+
       // Table header background
       ctx.fillStyle = headerBgColor;
-      ctx.fillRect(padding, tableTop, width - padding * 2, 45);
+      ctx.fillRect(tableLeft, tableTop, tableWidth, headerRowHeight);
 
       // Header text
       ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 14px Inter, system-ui, sans-serif';
+      ctx.font = 'bold 12px Inter, system-ui, sans-serif';
       ctx.textAlign = 'center';
 
+      let xPos = tableLeft;
       headers.forEach((header, idx) => {
-        const x = padding + colWidth * idx + colWidth / 2;
-        ctx.fillText(header, x, tableTop + 28);
+        const x = xPos + colWidths[idx] / 2;
+        ctx.fillText(header, x, tableTop + 26);
+        xPos += colWidths[idx];
       });
 
-      // Pre-calculate min/max for columns if needed
-      const colMinMax = {};
-      if (heatmapMode.value === 'column' || heatmapMode.value === 'all') {
-        const offset = showRanks ? 1 : 0;
+      // Pre-calculate values for percentiles
+      const mode = heatmapMode.value;
+      const colValues = {};
+      
+      if (mode === 'column' || mode === 'all') {
         heatmapColumns.forEach(colIdx => {
-          colMinMax[colIdx + offset] = calculateMinMax(colIdx, rows);
+          colValues[colIdx] = getValuesForPercentile(colIdx, rows, mode);
         });
       }
 
       // Data rows
       dataRows.forEach((row, rowIdx) => {
-        const y = tableTop + 45 + rowHeight * rowIdx;
+        const y = tableTop + headerRowHeight + rowHeight * rowIdx;
+        const rowBgColor = rowIdx % 2 === 0 ? rowColors.odd : rowColors.even;
 
         // Row background
-        ctx.fillStyle = rowIdx % 2 === 0 ? '#f8fafc' : '#ffffff';
-        ctx.fillRect(padding, y, width - padding * 2, rowHeight);
+        ctx.fillStyle = rowBgColor;
+        ctx.fillRect(tableLeft, y, tableWidth, rowHeight);
 
+        // Get row values for row-based percentile
+        const rowValues = mode === 'row' ? getRowValues(rows[rowIdx]) : null;
+
+        let cellX = tableLeft;
         row.forEach((cell, colIdx) => {
-          const x = padding + colWidth * colIdx;
-          const cellCenter = x + colWidth / 2;
-
           // Determine if this column should have heatmap
           const originalColIdx = showRanks ? colIdx - 1 : colIdx;
           const shouldHeatmap = showRanks 
             ? colIdx > 0 && heatmapColumns.has(originalColIdx) 
             : heatmapColumns.has(colIdx);
 
-          if (shouldHeatmap && heatmapMode.value !== 'none') {
-            let bgColor = null;
-
-            if (heatmapMode.value === 'row') {
-              const { min, max } = calculateRowMinMax(rows[rowIdx]);
-              bgColor = getHeatmapColor(cell, min, max, originalColIdx);
-            } else {
-              const { min, max } = colMinMax[colIdx] || { min: 0, max: 0 };
-              bgColor = getHeatmapColor(cell, min, max, originalColIdx);
-            }
-
-            if (bgColor) {
-              ctx.fillStyle = bgColor;
-              ctx.fillRect(x + 2, y + 2, colWidth - 4, rowHeight - 4);
+          if (shouldHeatmap && mode !== 'none') {
+            const sortedVals = mode === 'row' ? rowValues : colValues[originalColIdx];
+            const heatColor = getHeatmapColor(cell, sortedVals || [], originalColIdx);
+            
+            if (heatColor) {
+              ctx.fillStyle = heatColor;
+              ctx.fillRect(cellX + 1, y + 1, colWidths[colIdx] - 2, rowHeight - 2);
             }
           }
 
           // Cell text
           ctx.fillStyle = '#1e293b';
-          ctx.font = '13px Inter, system-ui, sans-serif';
+          ctx.font = '11px Inter, system-ui, sans-serif';
           ctx.textAlign = 'center';
-          ctx.fillText(cell, cellCenter, y + rowHeight / 2 + 5);
-        });
+          ctx.fillText(cell, cellX + colWidths[colIdx] / 2, y + rowHeight / 2 + 4);
 
-        // Row border
-        ctx.strokeStyle = '#e2e8f0';
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(padding, y + rowHeight);
-        ctx.lineTo(width - padding, y + rowHeight);
-        ctx.stroke();
+          cellX += colWidths[colIdx];
+        });
       });
 
-      // Table border
-      ctx.strokeStyle = '#cbd5e1';
-      ctx.lineWidth = 2;
-      ctx.strokeRect(padding, tableTop, width - padding * 2, 45 + rowHeight * dataRows.length);
+      ctx.restore();
 
       // Download
       const link = document.createElement('a');
@@ -892,10 +1021,10 @@
 
     titleInput.addEventListener('input', renderPreview);
     subtitleInput.addEventListener('input', renderPreview);
+    showTitleCheckbox.addEventListener('change', renderPreview);
     heatmapMode.addEventListener('change', renderPreview);
     maxRowsInput.addEventListener('input', renderPreview);
     showRanksCheckbox.addEventListener('change', renderPreview);
-    headerColorInput.addEventListener('input', renderPreview);
     downloadBtn.addEventListener('click', generateImage);
 
     // Initialize
