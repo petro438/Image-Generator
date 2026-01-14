@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Table Image Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      color: #e2e8f0;
+      padding: 32px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .header h1 {
+      font-size: 36px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+
+    .header p {
+      color: #94a3b8;
+      font-size: 16px;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .card {
+      background: rgba(30, 41, 59, 0.6);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(148, 163, 184, 0.1);
+      border-radius: 16px;
+      padding: 24px;
+    }
+
+    .card h3 {
+      margin-bottom: 16px;
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .input-field {
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 8px;
+      padding: 12px 16px;
+      color: #e2e8f0;
+      font-size: 14px;
+      width: 100%;
+      transition: all 0.2s ease;
+    }
+
+    .input-field:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+
+    textarea.input-field {
+      height: 120px;
+      resize: vertical;
+      font-family: 'Monaco', 'Consolas', monospace;
+      font-size: 12px;
+    }
+
+    .hint {
+      font-size: 12px;
+      color: #64748b;
+      margin-top: 8px;
+    }
+
+    .select-field {
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: #e2e8f0;
+      font-size: 14px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .label {
+      display: block;
+      margin-bottom: 12px;
+    }
+
+    .label-text {
+      font-size: 13px;
+      color: #94a3b8;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      padding: 8px 12px;
+      border-radius: 6px;
+      transition: background 0.2s;
+      font-size: 13px;
+    }
+
+    .checkbox-label:hover {
+      background: rgba(51, 65, 85, 0.5);
+    }
+
+    .checkbox-label input {
+      accent-color: #3b82f6;
+    }
+
+    .color-swatches {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .color-swatch {
+      width: 48px;
+      height: 24px;
+      border-radius: 4px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .color-swatch.selected {
+      border-color: #3b82f6;
+      transform: scale(1.1);
+    }
+
+    .column-checkboxes {
+      max-height: 150px;
+      overflow-y: auto;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      color: white;
+      width: 100%;
+      padding: 16px;
+      font-size: 16px;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .preview-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .preview-count {
+      font-size: 13px;
+      color: #64748b;
+    }
+
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 40px;
+      color: #64748b;
+      text-align: center;
+    }
+
+    .empty-state .icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    .preview-title {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .preview-title h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #f1f5f9;
+    }
+
+    .preview-title p {
+      font-size: 14px;
+      color: #94a3b8;
+    }
+
+    .preview-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .preview-table th {
+      background: #1e293b;
+      padding: 12px 8px;
+      text-align: center;
+      font-weight: 600;
+      border-bottom: 2px solid #334155;
+      white-space: nowrap;
+    }
+
+    .preview-table td {
+      padding: 10px 8px;
+      text-align: center;
+      border-bottom: 1px solid #334155;
+    }
+
+    .preview-table tr:nth-child(even) td {
+      background: rgba(51, 65, 85, 0.3);
+    }
+
+    .sort-btn {
+      background: none;
+      border: none;
+      color: #94a3b8;
+      cursor: pointer;
+      padding: 2px 6px;
+      margin-left: 4px;
+      font-size: 12px;
+    }
+
+    .sort-btn:hover {
+      color: #3b82f6;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      color: #475569;
+      font-size: 13px;
+    }
+
+    #canvas {
+      display: none;
+    }
+
+    .inline-inputs {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .inline-inputs .input-field {
+      width: 100px;
+    }
+
+    .color-input {
+      width: 60px;
+      height: 36px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      padding: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Table Image Generator</h1>
+      <p>Transform spreadsheet data into beautiful, shareable images</p>
+    </div>
+
+    <div class="main-grid">
+      <!-- Left Panel - Controls -->
+      <div class="controls">
+        <!-- Data Input -->
+        <div class="card">
+          <h3>📋 Paste Data</h3>
+          <textarea 
+            id="dataInput" 
+            class="input-field" 
+            placeholder="Paste cells from Excel or Google Sheets here..."
+          ></textarea>
+          <p class="hint">Copy cells directly from your spreadsheet (Ctrl+C) and paste here</p>
+        </div>
+
+        <!-- Title & Subtitle -->
+        <div class="card">
+          <h3>✏️ Title & Subtitle</h3>
+          <input 
+            type="text" 
+            id="titleInput" 
+            class="input-field" 
+            placeholder="Table Title"
+            style="margin-bottom: 12px;"
+          >
+          <input 
+            type="text" 
+            id="subtitleInput" 
+            class="input-field" 
+            placeholder="Subtitle (optional)"
+          >
+        </div>
+
+        <!-- Heatmap Settings -->
+        <div class="card">
+          <h3>🎨 Conditional Formatting</h3>
+          
+          <label class="label">
+            <span class="label-text">Apply heatmap:</span>
+            <select id="heatmapMode" class="select-field">
+              <option value="row">Across each row</option>
+              <option value="column">Across each column</option>
+              <option value="all">Across entire dataset</option>
+              <option value="none">No heatmap</option>
+            </select>
+          </label>
+
+          <div>
+            <span class="label-text">Color scheme:</span>
+            <div class="color-swatches" id="colorSwatches"></div>
+          </div>
+
+          <div id="columnCheckboxContainer" style="display: none;">
+            <span class="label-text">Columns to format:</span>
+            <div class="column-checkboxes" id="columnCheckboxes"></div>
+          </div>
+        </div>
+
+        <!-- Display Options -->
+        <div class="card">
+          <h3>⚙️ Display Options</h3>
+          
+          <label class="label">
+            <span class="label-text">Max rows to show:</span>
+            <input 
+              type="number" 
+              id="maxRows" 
+              class="input-field" 
+              value="20" 
+              min="1" 
+              max="50"
+              style="width: 100px;"
+            >
+          </label>
+
+          <label class="checkbox-label">
+            <input type="checkbox" id="showRanks">
+            Show rank numbers (#)
+          </label>
+
+          <label class="label" style="margin-top: 12px;">
+            <span class="label-text">Header background:</span>
+            <input type="color" id="headerColor" class="color-input" value="#1a1a2e">
+          </label>
+        </div>
+
+        <!-- Generate Button -->
+        <button id="downloadBtn" class="btn btn-primary" disabled>
+          📥 Download Image (1200×675)
+        </button>
+      </div>
+
+      <!-- Right Panel - Preview -->
+      <div class="card">
+        <div class="preview-header">
+          <h3>👁️ Preview</h3>
+          <span id="rowCount" class="preview-count"></span>
+        </div>
+
+        <div id="emptyState" class="empty-state">
+          <div class="icon">📊</div>
+          <p style="font-size: 16px; margin-bottom: 8px;">No data yet</p>
+          <p style="font-size: 13px;">Paste data from Excel or Google Sheets to get started</p>
+        </div>
+
+        <div id="previewContainer" class="table-wrapper" style="display: none;"></div>
+      </div>
+    </div>
+
+    <canvas id="canvas"></canvas>
+
+    <div class="footer">
+      Tip: Click column headers to sort • Images export at 1200×675 for optimal social sharing
+    </div>
+  </div>
+
+  <script>
+    // State
+    let tableData = { headers: [], rows: [] };
+    let heatmapColumns = new Set();
+    let sortColumn = null;
+    let sortDirection = 'asc';
+
+    const colorSchemes = {
+      'blue-red': { low: [59, 130, 246], high: [239, 68, 68], mid: [255, 255, 255] },
+      'green-red': { low: [34, 197, 94], high: [239, 68, 68], mid: [255, 255, 255] },
+      'purple-orange': { low: [147, 51, 234], high: [249, 115, 22], mid: [255, 255, 255] },
+      'blue-white': { low: [59, 130, 246], high: [255, 255, 255], mid: [173, 216, 230] },
+      'cool-warm': { low: [56, 189, 248], high: [251, 146, 60], mid: [255, 255, 255] },
+    };
+
+    let selectedColorScheme = 'blue-red';
+
+    // DOM Elements
+    const dataInput = document.getElementById('dataInput');
+    const titleInput = document.getElementById('titleInput');
+    const subtitleInput = document.getElementById('subtitleInput');
+    const heatmapMode = document.getElementById('heatmapMode');
+    const maxRowsInput = document.getElementById('maxRows');
+    const showRanksCheckbox = document.getElementById('showRanks');
+    const headerColorInput = document.getElementById('headerColor');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const emptyState = document.getElementById('emptyState');
+    const previewContainer = document.getElementById('previewContainer');
+    const rowCountSpan = document.getElementById('rowCount');
+    const columnCheckboxContainer = document.getElementById('columnCheckboxContainer');
+    const columnCheckboxes = document.getElementById('columnCheckboxes');
+    const colorSwatches = document.getElementById('colorSwatches');
+    const canvas = document.getElementById('canvas');
+
+    // Initialize color swatches
+    function initColorSwatches() {
+      Object.entries(colorSchemes).forEach(([key, scheme]) => {
+        const swatch = document.createElement('div');
+        swatch.className = `color-swatch ${key === selectedColorScheme ? 'selected' : ''}`;
+        swatch.style.background = `linear-gradient(90deg, rgb(${scheme.low.join(',')}) 0%, rgb(${scheme.mid.join(',')}) 50%, rgb(${scheme.high.join(',')}) 100%)`;
+        swatch.title = key;
+        swatch.onclick = () => {
+          document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+          swatch.classList.add('selected');
+          selectedColorScheme = key;
+          renderPreview();
+        };
+        colorSwatches.appendChild(swatch);
+      });
+    }
+
+    // Parse pasted data
+    function parseData(text) {
+      if (!text.trim()) {
+        tableData = { headers: [], rows: [] };
+        return;
+      }
+
+      const lines = text.trim().split('\n');
+      if (lines.length === 0) return;
+
+      const headers = lines[0].split('\t').map(h => h.trim());
+      const rows = lines.slice(1).map(line => 
+        line.split('\t').map(cell => cell.trim())
+      );
+
+      tableData = { headers, rows };
+
+      // Auto-detect numeric columns
+      const numericCols = new Set();
+      headers.forEach((_, colIdx) => {
+        const isNumeric = rows.every(row => {
+          const val = row[colIdx];
+          return val === '' || !isNaN(parseFloat(val.replace(/[$,%]/g, '')));
+        });
+        if (isNumeric && colIdx > 0) numericCols.add(colIdx);
+      });
+      heatmapColumns = numericCols;
+
+      updateColumnCheckboxes();
+    }
+
+    // Update column checkboxes
+    function updateColumnCheckboxes() {
+      columnCheckboxes.innerHTML = '';
+      
+      if (tableData.headers.length === 0) {
+        columnCheckboxContainer.style.display = 'none';
+        return;
+      }
+
+      columnCheckboxContainer.style.display = 'block';
+
+      tableData.headers.forEach((header, idx) => {
+        const label = document.createElement('label');
+        label.className = 'checkbox-label';
+        
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = heatmapColumns.has(idx);
+        checkbox.onchange = () => {
+          if (checkbox.checked) {
+            heatmapColumns.add(idx);
+          } else {
+            heatmapColumns.delete(idx);
+          }
+          renderPreview();
+        };
+
+        label.appendChild(checkbox);
+        label.appendChild(document.createTextNode(header));
+        columnCheckboxes.appendChild(label);
+      });
+    }
+
+    // Get numeric value from cell
+    function getNumericValue(val) {
+      if (!val) return null;
+      const cleaned = val.replace(/[$,%]/g, '');
+      const num = parseFloat(cleaned);
+      return isNaN(num) ? null : num;
+    }
+
+    // Get sorted rows
+    function getSortedRows() {
+      let rows = [...tableData.rows];
+      const maxRows = parseInt(maxRowsInput.value) || 20;
+
+      if (sortColumn !== null) {
+        rows.sort((a, b) => {
+          const aVal = getNumericValue(a[sortColumn]);
+          const bVal = getNumericValue(b[sortColumn]);
+
+          if (aVal === null && bVal === null) return 0;
+          if (aVal === null) return 1;
+          if (bVal === null) return -1;
+
+          return sortDirection === 'asc' ? aVal - bVal : bVal - aVal;
+        });
+      }
+
+      return rows.slice(0, maxRows);
+    }
+
+    // Calculate min/max for heatmap
+    function calculateMinMax(colIdx, rows) {
+      const mode = heatmapMode.value;
+      if (mode === 'none' || !heatmapColumns.has(colIdx)) {
+        return { min: 0, max: 0 };
+      }
+
+      let values = [];
+
+      if (mode === 'column') {
+        values = rows.map(row => getNumericValue(row[colIdx])).filter(v => v !== null);
+      } else if (mode === 'all') {
+        rows.forEach(row => {
+          heatmapColumns.forEach(idx => {
+            const v = getNumericValue(row[idx]);
+            if (v !== null) values.push(v);
+          });
+        });
+      }
+
+      if (values.length === 0) return { min: 0, max: 0 };
+      return { min: Math.min(...values), max: Math.max(...values) };
+    }
+
+    // Calculate row min/max
+    function calculateRowMinMax(row) {
+      const values = [];
+      heatmapColumns.forEach(idx => {
+        const v = getNumericValue(row[idx]);
+        if (v !== null) values.push(v);
+      });
+      if (values.length === 0) return { min: 0, max: 0 };
+      return { min: Math.min(...values), max: Math.max(...values) };
+    }
+
+    // Get heatmap color
+    function getHeatmapColor(value, min, max, colIdx) {
+      if (!heatmapColumns.has(colIdx) || heatmapMode.value === 'none') return null;
+
+      const num = getNumericValue(value);
+      if (num === null || min === max) return null;
+
+      const scheme = colorSchemes[selectedColorScheme];
+      const ratio = (num - min) / (max - min);
+
+      let r, g, b;
+      if (ratio < 0.5) {
+        const t = ratio * 2;
+        r = Math.round(scheme.low[0] + (scheme.mid[0] - scheme.low[0]) * t);
+        g = Math.round(scheme.low[1] + (scheme.mid[1] - scheme.low[1]) * t);
+        b = Math.round(scheme.low[2] + (scheme.mid[2] - scheme.low[2]) * t);
+      } else {
+        const t = (ratio - 0.5) * 2;
+        r = Math.round(scheme.mid[0] + (scheme.high[0] - scheme.mid[0]) * t);
+        g = Math.round(scheme.mid[1] + (scheme.high[1] - scheme.mid[1]) * t);
+        b = Math.round(scheme.mid[2] + (scheme.high[2] - scheme.mid[2]) * t);
+      }
+
+      return `rgb(${r}, ${g}, ${b})`;
+    }
+
+    // Render preview table
+    function renderPreview() {
+      if (tableData.headers.length === 0) {
+        emptyState.style.display = 'flex';
+        previewContainer.style.display = 'none';
+        rowCountSpan.textContent = '';
+        downloadBtn.disabled = true;
+        return;
+      }
+
+      emptyState.style.display = 'none';
+      previewContainer.style.display = 'block';
+      downloadBtn.disabled = false;
+
+      const sortedRows = getSortedRows();
+      const showRanks = showRanksCheckbox.checked;
+      const headerBgColor = headerColorInput.value;
+      const title = titleInput.value;
+      const subtitle = subtitleInput.value;
+
+      rowCountSpan.textContent = `Showing ${sortedRows.length} of ${tableData.rows.length} rows`;
+
+      let html = '';
+
+      if (title) {
+        html += `<div class="preview-title">
+          <h2>${title}</h2>
+          ${subtitle ? `<p>${subtitle}</p>` : ''}
+        </div>`;
+      }
+
+      html += '<table class="preview-table"><thead><tr>';
+      
+      if (showRanks) {
+        html += `<th style="background: ${headerBgColor}; width: 40px;">#</th>`;
+      }
+
+      tableData.headers.forEach((header, idx) => {
+        const sortIndicator = sortColumn === idx 
+          ? (sortDirection === 'asc' ? '▲' : '▼') 
+          : '⇅';
+        html += `<th style="background: ${headerBgColor}">
+          ${header}
+          <button class="sort-btn" onclick="handleSort(${idx})">${sortIndicator}</button>
+        </th>`;
+      });
+
+      html += '</tr></thead><tbody>';
+
+      // Pre-calculate min/max for columns if needed
+      const colMinMax = {};
+      if (heatmapMode.value === 'column' || heatmapMode.value === 'all') {
+        heatmapColumns.forEach(colIdx => {
+          colMinMax[colIdx] = calculateMinMax(colIdx, sortedRows);
+        });
+      }
+
+      sortedRows.forEach((row, rowIdx) => {
+        const rowMinMax = heatmapMode.value === 'row' ? calculateRowMinMax(row) : null;
+
+        html += '<tr>';
+        
+        if (showRanks) {
+          html += `<td style="font-weight: 600; color: #64748b;">${rowIdx + 1}</td>`;
+        }
+
+        row.forEach((cell, colIdx) => {
+          let bgColor = null;
+
+          if (heatmapColumns.has(colIdx) && heatmapMode.value !== 'none') {
+            if (heatmapMode.value === 'row' && rowMinMax) {
+              bgColor = getHeatmapColor(cell, rowMinMax.min, rowMinMax.max, colIdx);
+            } else if (heatmapMode.value === 'column' || heatmapMode.value === 'all') {
+              const { min, max } = colMinMax[colIdx] || { min: 0, max: 0 };
+              bgColor = getHeatmapColor(cell, min, max, colIdx);
+            }
+          }
+
+          const style = bgColor 
+            ? `background: ${bgColor}; color: #1e293b;` 
+            : '';
+          html += `<td style="${style}">${cell}</td>`;
+        });
+
+        html += '</tr>';
+      });
+
+      html += '</tbody></table>';
+      previewContainer.innerHTML = html;
+    }
+
+    // Handle sort
+    window.handleSort = function(colIdx) {
+      if (sortColumn === colIdx) {
+        sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+      } else {
+        sortColumn = colIdx;
+        sortDirection = 'asc';
+      }
+      renderPreview();
+    };
+
+    // Generate and download image
+    function generateImage() {
+      const ctx = canvas.getContext('2d');
+      const width = 1200;
+      const height = 675;
+
+      canvas.width = width;
+      canvas.height = height;
+
+      // Background
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, width, height);
+
+      const rows = getSortedRows();
+      const showRanks = showRanksCheckbox.checked;
+      const headers = showRanks ? ['#', ...tableData.headers] : tableData.headers;
+      const dataRows = showRanks
+        ? rows.map((row, idx) => [(idx + 1).toString(), ...row])
+        : rows;
+
+      const title = titleInput.value;
+      const subtitle = subtitleInput.value;
+      const headerBgColor = headerColorInput.value;
+
+      // Calculate layout
+      const padding = 40;
+      const headerHeight = title ? 70 : 20;
+      const tableTop = padding + headerHeight;
+      const tableBottom = height - padding;
+      const tableHeight = tableBottom - tableTop;
+
+      const rowHeight = Math.min(40, (tableHeight - 45) / (dataRows.length + 1));
+      const colWidth = (width - padding * 2) / headers.length;
+
+      // Title
+      if (title) {
+        ctx.fillStyle = '#1a1a2e';
+        ctx.font = 'bold 28px Inter, system-ui, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(title, width / 2, padding + 30);
+
+        if (subtitle) {
+          ctx.fillStyle = '#64748b';
+          ctx.font = '16px Inter, system-ui, sans-serif';
+          ctx.fillText(subtitle, width / 2, padding + 55);
+        }
+      }
+
+      // Table header background
+      ctx.fillStyle = headerBgColor;
+      ctx.fillRect(padding, tableTop, width - padding * 2, 45);
+
+      // Header text
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 14px Inter, system-ui, sans-serif';
+      ctx.textAlign = 'center';
+
+      headers.forEach((header, idx) => {
+        const x = padding + colWidth * idx + colWidth / 2;
+        ctx.fillText(header, x, tableTop + 28);
+      });
+
+      // Pre-calculate min/max for columns if needed
+      const colMinMax = {};
+      if (heatmapMode.value === 'column' || heatmapMode.value === 'all') {
+        const offset = showRanks ? 1 : 0;
+        heatmapColumns.forEach(colIdx => {
+          colMinMax[colIdx + offset] = calculateMinMax(colIdx, rows);
+        });
+      }
+
+      // Data rows
+      dataRows.forEach((row, rowIdx) => {
+        const y = tableTop + 45 + rowHeight * rowIdx;
+
+        // Row background
+        ctx.fillStyle = rowIdx % 2 === 0 ? '#f8fafc' : '#ffffff';
+        ctx.fillRect(padding, y, width - padding * 2, rowHeight);
+
+        row.forEach((cell, colIdx) => {
+          const x = padding + colWidth * colIdx;
+          const cellCenter = x + colWidth / 2;
+
+          // Determine if this column should have heatmap
+          const originalColIdx = showRanks ? colIdx - 1 : colIdx;
+          const shouldHeatmap = showRanks 
+            ? colIdx > 0 && heatmapColumns.has(originalColIdx) 
+            : heatmapColumns.has(colIdx);
+
+          if (shouldHeatmap && heatmapMode.value !== 'none') {
+            let bgColor = null;
+
+            if (heatmapMode.value === 'row') {
+              const { min, max } = calculateRowMinMax(rows[rowIdx]);
+              bgColor = getHeatmapColor(cell, min, max, originalColIdx);
+            } else {
+              const { min, max } = colMinMax[colIdx] || { min: 0, max: 0 };
+              bgColor = getHeatmapColor(cell, min, max, originalColIdx);
+            }
+
+            if (bgColor) {
+              ctx.fillStyle = bgColor;
+              ctx.fillRect(x + 2, y + 2, colWidth - 4, rowHeight - 4);
+            }
+          }
+
+          // Cell text
+          ctx.fillStyle = '#1e293b';
+          ctx.font = '13px Inter, system-ui, sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(cell, cellCenter, y + rowHeight / 2 + 5);
+        });
+
+        // Row border
+        ctx.strokeStyle = '#e2e8f0';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(padding, y + rowHeight);
+        ctx.lineTo(width - padding, y + rowHeight);
+        ctx.stroke();
+      });
+
+      // Table border
+      ctx.strokeStyle = '#cbd5e1';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(padding, tableTop, width - padding * 2, 45 + rowHeight * dataRows.length);
+
+      // Download
+      const link = document.createElement('a');
+      link.download = `table-${Date.now()}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+
+    // Event listeners
+    dataInput.addEventListener('input', (e) => {
+      parseData(e.target.value);
+      renderPreview();
+    });
+
+    titleInput.addEventListener('input', renderPreview);
+    subtitleInput.addEventListener('input', renderPreview);
+    heatmapMode.addEventListener('change', renderPreview);
+    maxRowsInput.addEventListener('input', renderPreview);
+    showRanksCheckbox.addEventListener('change', renderPreview);
+    headerColorInput.addEventListener('input', renderPreview);
+    downloadBtn.addEventListener('click', generateImage);
+
+    // Initialize
+    initColorSwatches();
+    renderPreview();
+  </script>
+</body>
+</html>
