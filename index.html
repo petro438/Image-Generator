@@ -622,9 +622,49 @@
             <p class="hint">Supports PNG, JPG, and other image formats</p>
           </div>
 
+          <!-- Crop Tool -->
+          <div class="card" id="cropCard" style="display: none;">
+            <h3>✂️ Crop Image</h3>
+            <p class="hint" style="margin-bottom: 12px;">Drag on the image to select the area you want to keep</p>
+            <div id="cropContainer" style="position: relative; display: inline-block; max-width: 100%; cursor: crosshair;">
+              <img id="cropImage" style="max-width: 100%; max-height: 400px; display: block;">
+              <div id="cropOverlay" style="
+                position: absolute;
+                border: 2px dashed #00c358;
+                background: rgba(0, 195, 88, 0.1);
+                pointer-events: none;
+                display: none;
+              "></div>
+            </div>
+            <div style="margin-top: 12px; display: flex; gap: 8px;">
+              <button id="applyCropBtn" class="btn btn-primary" style="flex: 1; padding: 10px;" disabled>
+                ✓ Apply Crop
+              </button>
+              <button id="resetCropBtn" class="btn" style="
+                flex: 1; 
+                padding: 10px; 
+                background: rgba(51, 65, 85, 0.8);
+                color: #e2e8f0;
+                border: 1px solid rgba(148, 163, 184, 0.2);
+              ">
+                ↺ Reset
+              </button>
+            </div>
+          </div>
+
           <!-- Wrapper Options -->
           <div class="card">
             <h3>🎨 Wrapper Options</h3>
+            
+            <label class="label">
+              <span class="label-text">Max output width:</span>
+              <select id="maxOutputWidth" class="select-field">
+                <option value="0">Original size</option>
+                <option value="800" selected>800px (recommended)</option>
+                <option value="600">600px (compact)</option>
+                <option value="400">400px (small)</option>
+              </select>
+            </label>
             
             <label class="label">
               <span class="label-text">Border thickness:</span>
@@ -1272,10 +1312,25 @@
     const showLogoCheckbox = document.getElementById('showLogo');
     const logoPositionSelect = document.getElementById('logoPosition');
     const logoPositionLabel = document.getElementById('logoPositionLabel');
+    const maxOutputWidthSelect = document.getElementById('maxOutputWidth');
     const wrapperCanvas = document.getElementById('wrapperCanvas');
+    
+    // Crop elements
+    const cropCard = document.getElementById('cropCard');
+    const cropContainer = document.getElementById('cropContainer');
+    const cropImage = document.getElementById('cropImage');
+    const cropOverlay = document.getElementById('cropOverlay');
+    const applyCropBtn = document.getElementById('applyCropBtn');
+    const resetCropBtn = document.getElementById('resetCropBtn');
 
     let uploadedImage = null;
+    let originalImage = null; // Store original for reset
     let logoImage = null;
+    
+    // Crop state
+    let cropStart = null;
+    let cropEnd = null;
+    let isCropping = false;
 
     // Load logo
     const logoUrl = 'https://assets.actionnetwork.com/204453_actionlogo.jpeg';
@@ -1340,7 +1395,14 @@
       reader.onload = (e) => {
         const img = new Image();
         img.onload = () => {
+          originalImage = img;
           uploadedImage = img;
+          
+          // Show crop tool
+          cropCard.style.display = 'block';
+          cropImage.src = img.src;
+          resetCropSelection();
+          
           renderWrapperPreview();
           wrapperDownloadBtn.disabled = false;
         };
@@ -1348,6 +1410,107 @@
       };
       reader.readAsDataURL(file);
     }
+    
+    // Crop functionality
+    function resetCropSelection() {
+      cropStart = null;
+      cropEnd = null;
+      cropOverlay.style.display = 'none';
+      applyCropBtn.disabled = true;
+    }
+    
+    function getCropCoords(e) {
+      const rect = cropImage.getBoundingClientRect();
+      const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
+      const y = Math.max(0, Math.min(e.clientY - rect.top, rect.height));
+      return { x, y };
+    }
+    
+    cropContainer.addEventListener('mousedown', (e) => {
+      if (e.target !== cropImage) return;
+      isCropping = true;
+      cropStart = getCropCoords(e);
+      cropEnd = cropStart;
+      updateCropOverlay();
+      cropOverlay.style.display = 'block';
+    });
+    
+    document.addEventListener('mousemove', (e) => {
+      if (!isCropping) return;
+      cropEnd = getCropCoords(e);
+      updateCropOverlay();
+    });
+    
+    document.addEventListener('mouseup', () => {
+      if (!isCropping) return;
+      isCropping = false;
+      
+      // Check if selection is big enough
+      if (cropStart && cropEnd) {
+        const width = Math.abs(cropEnd.x - cropStart.x);
+        const height = Math.abs(cropEnd.y - cropStart.y);
+        if (width > 10 && height > 10) {
+          applyCropBtn.disabled = false;
+        } else {
+          resetCropSelection();
+        }
+      }
+    });
+    
+    function updateCropOverlay() {
+      if (!cropStart || !cropEnd) return;
+      
+      const left = Math.min(cropStart.x, cropEnd.x);
+      const top = Math.min(cropStart.y, cropEnd.y);
+      const width = Math.abs(cropEnd.x - cropStart.x);
+      const height = Math.abs(cropEnd.y - cropStart.y);
+      
+      cropOverlay.style.left = left + 'px';
+      cropOverlay.style.top = top + 'px';
+      cropOverlay.style.width = width + 'px';
+      cropOverlay.style.height = height + 'px';
+    }
+    
+    applyCropBtn.addEventListener('click', () => {
+      if (!cropStart || !cropEnd || !originalImage) return;
+      
+      // Calculate actual image coordinates (accounting for display scaling)
+      const displayWidth = cropImage.clientWidth;
+      const displayHeight = cropImage.clientHeight;
+      const scaleX = originalImage.width / displayWidth;
+      const scaleY = originalImage.height / displayHeight;
+      
+      const left = Math.min(cropStart.x, cropEnd.x) * scaleX;
+      const top = Math.min(cropStart.y, cropEnd.y) * scaleY;
+      const width = Math.abs(cropEnd.x - cropStart.x) * scaleX;
+      const height = Math.abs(cropEnd.y - cropStart.y) * scaleY;
+      
+      // Create cropped image
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = width;
+      tempCanvas.height = height;
+      const tempCtx = tempCanvas.getContext('2d');
+      tempCtx.drawImage(originalImage, left, top, width, height, 0, 0, width, height);
+      
+      // Create new image from cropped canvas
+      const croppedImg = new Image();
+      croppedImg.onload = () => {
+        uploadedImage = croppedImg;
+        cropImage.src = croppedImg.src;
+        resetCropSelection();
+        renderWrapperPreview();
+      };
+      croppedImg.src = tempCanvas.toDataURL('image/png');
+    });
+    
+    resetCropBtn.addEventListener('click', () => {
+      if (originalImage) {
+        uploadedImage = originalImage;
+        cropImage.src = originalImage.src;
+        resetCropSelection();
+        renderWrapperPreview();
+      }
+    });
 
     function renderWrapperPreview() {
       if (!uploadedImage) {
@@ -1420,9 +1583,22 @@
       const padding = parseInt(imagePaddingSelect.value);
       const showLogo = showLogoCheckbox.checked;
       const logoPosition = logoPositionSelect.value;
+      const maxWidth = parseInt(maxOutputWidthSelect.value);
 
-      const imgWidth = uploadedImage.width;
-      const imgHeight = uploadedImage.height;
+      let imgWidth = uploadedImage.width;
+      let imgHeight = uploadedImage.height;
+      
+      // Scale down if max width is set
+      let scale = 1;
+      if (maxWidth > 0) {
+        const totalPaddingWidth = (padding + borderThickness) * 2;
+        const availableWidth = maxWidth - totalPaddingWidth;
+        if (imgWidth > availableWidth) {
+          scale = availableWidth / imgWidth;
+          imgWidth = availableWidth;
+          imgHeight = uploadedImage.height * scale;
+        }
+      }
       
       const totalPadding = padding + borderThickness;
       const canvasWidth = imgWidth + totalPadding * 2;
@@ -1464,7 +1640,7 @@
       );
       ctx.clip();
 
-      // Draw image
+      // Draw image (scaled)
       ctx.drawImage(uploadedImage, totalPadding, totalPadding, imgWidth, imgHeight);
       ctx.restore();
 
@@ -1472,7 +1648,8 @@
       if (showLogo) {
         const logo = await loadLogo();
         if (logo) {
-          const logoHeight = 32;
+          // Scale logo based on image size
+          const logoHeight = Math.max(24, Math.min(36, imgHeight * 0.06));
           const logoWidth = (logo.width / logo.height) * logoHeight;
           const logoMargin = padding / 2 + borderThickness;
 
@@ -1519,6 +1696,7 @@
     imagePaddingSelect.addEventListener('change', renderWrapperPreview);
     showLogoCheckbox.addEventListener('change', renderWrapperPreview);
     logoPositionSelect.addEventListener('change', renderWrapperPreview);
+    maxOutputWidthSelect.addEventListener('change', renderWrapperPreview);
     wrapperDownloadBtn.addEventListener('click', generateWrappedImage);
   </script>
 </body>
