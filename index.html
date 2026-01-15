@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Table Image Generator</title>
+  <title>Action Network Image Tools</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * {
@@ -27,7 +27,7 @@
 
     .header {
       text-align: center;
-      margin-bottom: 40px;
+      margin-bottom: 24px;
     }
 
     .header h1 {
@@ -43,6 +43,45 @@
     .header p {
       color: #94a3b8;
       font-size: 16px;
+    }
+
+    /* Tab Navigation */
+    .tab-nav {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 32px;
+    }
+
+    .tab-btn {
+      padding: 12px 28px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 2px solid transparent;
+      background: rgba(30, 41, 59, 0.6);
+      color: #94a3b8;
+    }
+
+    .tab-btn:hover {
+      background: rgba(51, 65, 85, 0.6);
+      color: #e2e8f0;
+    }
+
+    .tab-btn.active {
+      background: rgba(0, 195, 88, 0.15);
+      border-color: #00c358;
+      color: #00c358;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
     }
 
     .main-grid {
@@ -357,7 +396,7 @@
       font-size: 13px;
     }
 
-    #canvas {
+    #canvas, #wrapperCanvas {
       display: none;
     }
 
@@ -370,16 +409,95 @@
     .inline-inputs .input-field {
       width: 100px;
     }
+
+    /* Screenshot Wrapper Styles */
+    .upload-zone {
+      border: 2px dashed rgba(148, 163, 184, 0.3);
+      border-radius: 12px;
+      padding: 40px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: rgba(30, 41, 59, 0.4);
+    }
+
+    .upload-zone:hover {
+      border-color: #00c358;
+      background: rgba(0, 195, 88, 0.05);
+    }
+
+    .upload-zone.dragover {
+      border-color: #00c358;
+      background: rgba(0, 195, 88, 0.1);
+    }
+
+    .upload-zone .icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+      opacity: 0.6;
+    }
+
+    .upload-zone p {
+      color: #94a3b8;
+      font-size: 14px;
+    }
+
+    .upload-zone input {
+      display: none;
+    }
+
+    .screenshot-preview {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .screenshot-preview img {
+      max-width: 100%;
+      max-height: 500px;
+      border-radius: 12px;
+    }
+
+    .wrapper-preview {
+      background: white;
+      border-radius: 16px;
+      padding: 16px;
+      display: inline-block;
+      border: 4px solid #00c358;
+      position: relative;
+    }
+
+    .wrapper-preview img {
+      display: block;
+      border-radius: 8px;
+    }
+
+    .wrapper-logo {
+      position: absolute;
+      bottom: 8px;
+      left: 8px;
+      height: 24px;
+      border-radius: 4px;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <h1>Table Image Generator</h1>
-      <p>Transform spreadsheet data into beautiful, shareable images</p>
+      <h1>Action Network Image Tools</h1>
+      <p>Create polished, branded images for your articles</p>
     </div>
 
-    <div class="main-grid">
+    <!-- Tab Navigation -->
+    <div class="tab-nav">
+      <button class="tab-btn active" data-tab="table">📊 Table Generator</button>
+      <button class="tab-btn" data-tab="wrapper">🖼️ Screenshot Wrapper</button>
+    </div>
+
+    <!-- Table Generator Tab -->
+    <div id="table-tab" class="tab-content active">
+      <div class="main-grid">
       <!-- Left Panel - Controls -->
       <div class="controls">
         <!-- Data Input -->
@@ -484,12 +602,101 @@
 
         <div id="previewContainer" class="table-wrapper" style="display: none;"></div>
       </div>
+    </div> <!-- End main-grid -->
+
+    </div> <!-- End table-tab -->
+
+    <!-- Screenshot Wrapper Tab -->
+    <div id="wrapper-tab" class="tab-content">
+      <div class="main-grid">
+        <!-- Left Panel - Controls -->
+        <div class="controls">
+          <!-- Upload Zone -->
+          <div class="card">
+            <h3>📤 Upload Screenshot</h3>
+            <div class="upload-zone" id="uploadZone">
+              <div class="icon">🖼️</div>
+              <p>Click or drag & drop an image here</p>
+              <input type="file" id="screenshotInput" accept="image/*">
+            </div>
+            <p class="hint">Supports PNG, JPG, and other image formats</p>
+          </div>
+
+          <!-- Wrapper Options -->
+          <div class="card">
+            <h3>🎨 Wrapper Options</h3>
+            
+            <label class="label">
+              <span class="label-text">Border thickness:</span>
+              <select id="borderThickness" class="select-field">
+                <option value="3">Thin (3px)</option>
+                <option value="5" selected>Medium (5px)</option>
+                <option value="8">Thick (8px)</option>
+              </select>
+            </label>
+
+            <label class="label">
+              <span class="label-text">Corner radius:</span>
+              <select id="cornerRadius" class="select-field">
+                <option value="8">Small (8px)</option>
+                <option value="12" selected>Medium (12px)</option>
+                <option value="20">Large (20px)</option>
+              </select>
+            </label>
+
+            <label class="label">
+              <span class="label-text">Padding around image:</span>
+              <select id="imagePadding" class="select-field">
+                <option value="8">Small (8px)</option>
+                <option value="16" selected>Medium (16px)</option>
+                <option value="24">Large (24px)</option>
+              </select>
+            </label>
+
+            <label class="checkbox-label" style="padding: 8px 0;">
+              <input type="checkbox" id="showLogo" checked>
+              Show Action Network logo
+            </label>
+
+            <label class="label" id="logoPositionLabel">
+              <span class="label-text">Logo position:</span>
+              <select id="logoPosition" class="select-field">
+                <option value="bottom-left" selected>Bottom Left</option>
+                <option value="bottom-right">Bottom Right</option>
+                <option value="top-left">Top Left</option>
+                <option value="top-right">Top Right</option>
+              </select>
+            </label>
+          </div>
+
+          <!-- Generate Button -->
+          <button id="wrapperDownloadBtn" class="btn btn-primary" disabled>
+            📥 Download Wrapped Image
+          </button>
+        </div>
+
+        <!-- Right Panel - Preview -->
+        <div class="card">
+          <div class="preview-header">
+            <h3>👁️ Preview</h3>
+          </div>
+
+          <div id="wrapperEmptyState" class="empty-state">
+            <div class="icon">🖼️</div>
+            <p style="font-size: 16px; margin-bottom: 8px;">No screenshot yet</p>
+            <p style="font-size: 13px;">Upload an image to see the preview</p>
+          </div>
+
+          <div id="wrapperPreviewContainer" class="screenshot-preview" style="display: none;"></div>
+        </div>
+      </div>
     </div>
 
     <canvas id="canvas"></canvas>
+    <canvas id="wrapperCanvas"></canvas>
 
     <div class="footer">
-      Tip: Click column headers to sort • Image size adjusts to fit your table
+      Action Network Image Tools • Create polished visuals for your articles
     </div>
   </div>
 
@@ -1030,6 +1237,289 @@
     // Initialize
     initColorSwatches();
     renderPreview();
+
+    // ============================================
+    // TAB SWITCHING
+    // ============================================
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tabId = btn.dataset.tab;
+        
+        // Update buttons
+        tabBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        // Update content
+        document.querySelectorAll('.tab-content').forEach(content => {
+          content.classList.remove('active');
+        });
+        document.getElementById(`${tabId}-tab`).classList.add('active');
+      });
+    });
+
+    // ============================================
+    // SCREENSHOT WRAPPER FUNCTIONALITY
+    // ============================================
+    const uploadZone = document.getElementById('uploadZone');
+    const screenshotInput = document.getElementById('screenshotInput');
+    const wrapperDownloadBtn = document.getElementById('wrapperDownloadBtn');
+    const wrapperEmptyState = document.getElementById('wrapperEmptyState');
+    const wrapperPreviewContainer = document.getElementById('wrapperPreviewContainer');
+    const borderThicknessSelect = document.getElementById('borderThickness');
+    const cornerRadiusSelect = document.getElementById('cornerRadius');
+    const imagePaddingSelect = document.getElementById('imagePadding');
+    const showLogoCheckbox = document.getElementById('showLogo');
+    const logoPositionSelect = document.getElementById('logoPosition');
+    const logoPositionLabel = document.getElementById('logoPositionLabel');
+    const wrapperCanvas = document.getElementById('wrapperCanvas');
+
+    let uploadedImage = null;
+    let logoImage = null;
+
+    // Load logo
+    const logoUrl = 'https://assets.actionnetwork.com/204453_actionlogo.jpeg';
+    
+    function loadLogo() {
+      return new Promise((resolve) => {
+        if (logoImage) {
+          resolve(logoImage);
+          return;
+        }
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => {
+          logoImage = img;
+          resolve(img);
+        };
+        img.onerror = () => {
+          console.log('Could not load logo');
+          resolve(null);
+        };
+        img.src = logoUrl;
+      });
+    }
+
+    // Pre-load logo
+    loadLogo();
+
+    // Upload zone click
+    uploadZone.addEventListener('click', () => {
+      screenshotInput.click();
+    });
+
+    // Drag and drop
+    uploadZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadZone.classList.add('dragover');
+    });
+
+    uploadZone.addEventListener('dragleave', () => {
+      uploadZone.classList.remove('dragover');
+    });
+
+    uploadZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadZone.classList.remove('dragover');
+      const file = e.dataTransfer.files[0];
+      if (file && file.type.startsWith('image/')) {
+        handleImageUpload(file);
+      }
+    });
+
+    // File input change
+    screenshotInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        handleImageUpload(file);
+      }
+    });
+
+    function handleImageUpload(file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          uploadedImage = img;
+          renderWrapperPreview();
+          wrapperDownloadBtn.disabled = false;
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function renderWrapperPreview() {
+      if (!uploadedImage) {
+        wrapperEmptyState.style.display = 'flex';
+        wrapperPreviewContainer.style.display = 'none';
+        return;
+      }
+
+      wrapperEmptyState.style.display = 'none';
+      wrapperPreviewContainer.style.display = 'flex';
+
+      const borderThickness = parseInt(borderThicknessSelect.value);
+      const cornerRadius = parseInt(cornerRadiusSelect.value);
+      const padding = parseInt(imagePaddingSelect.value);
+      const showLogo = showLogoCheckbox.checked;
+      const logoPosition = logoPositionSelect.value;
+
+      // Update logo position visibility
+      logoPositionLabel.style.display = showLogo ? 'block' : 'none';
+
+      // Create preview HTML
+      const totalPadding = padding + borderThickness;
+      
+      let html = `
+        <div style="
+          background: white;
+          border-radius: ${cornerRadius + 4}px;
+          padding: ${padding}px;
+          display: inline-block;
+          border: ${borderThickness}px solid #00c358;
+          position: relative;
+          max-width: 100%;
+        ">
+          <img src="${uploadedImage.src}" style="
+            display: block;
+            border-radius: ${Math.max(0, cornerRadius - 4)}px;
+            max-width: 100%;
+            max-height: 400px;
+          ">
+      `;
+
+      if (showLogo && logoImage) {
+        const posStyles = {
+          'bottom-left': 'bottom: 4px; left: 4px;',
+          'bottom-right': 'bottom: 4px; right: 4px;',
+          'top-left': 'top: 4px; left: 4px;',
+          'top-right': 'top: 4px; right: 4px;'
+        };
+        
+        html += `
+          <img src="${logoUrl}" style="
+            position: absolute;
+            ${posStyles[logoPosition]}
+            height: 28px;
+            border-radius: 4px;
+          ">
+        `;
+      }
+
+      html += '</div>';
+      wrapperPreviewContainer.innerHTML = html;
+    }
+
+    async function generateWrappedImage() {
+      if (!uploadedImage) return;
+
+      const ctx = wrapperCanvas.getContext('2d');
+      const borderThickness = parseInt(borderThicknessSelect.value);
+      const cornerRadius = parseInt(cornerRadiusSelect.value);
+      const padding = parseInt(imagePaddingSelect.value);
+      const showLogo = showLogoCheckbox.checked;
+      const logoPosition = logoPositionSelect.value;
+
+      const imgWidth = uploadedImage.width;
+      const imgHeight = uploadedImage.height;
+      
+      const totalPadding = padding + borderThickness;
+      const canvasWidth = imgWidth + totalPadding * 2;
+      const canvasHeight = imgHeight + totalPadding * 2;
+
+      wrapperCanvas.width = canvasWidth;
+      wrapperCanvas.height = canvasHeight;
+
+      // Clear canvas
+      ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+      // Draw outer rounded rect (border color)
+      ctx.fillStyle = '#00c358';
+      ctx.beginPath();
+      ctx.roundRect(0, 0, canvasWidth, canvasHeight, cornerRadius);
+      ctx.fill();
+
+      // Draw inner white background
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.roundRect(
+        borderThickness, 
+        borderThickness, 
+        canvasWidth - borderThickness * 2, 
+        canvasHeight - borderThickness * 2, 
+        Math.max(0, cornerRadius - borderThickness / 2)
+      );
+      ctx.fill();
+
+      // Clip for image with rounded corners
+      ctx.save();
+      ctx.beginPath();
+      ctx.roundRect(
+        totalPadding, 
+        totalPadding, 
+        imgWidth, 
+        imgHeight, 
+        Math.max(0, cornerRadius - borderThickness - padding / 2)
+      );
+      ctx.clip();
+
+      // Draw image
+      ctx.drawImage(uploadedImage, totalPadding, totalPadding, imgWidth, imgHeight);
+      ctx.restore();
+
+      // Draw logo if enabled
+      if (showLogo) {
+        const logo = await loadLogo();
+        if (logo) {
+          const logoHeight = 32;
+          const logoWidth = (logo.width / logo.height) * logoHeight;
+          const logoMargin = padding / 2 + borderThickness;
+
+          let logoX, logoY;
+          switch (logoPosition) {
+            case 'bottom-left':
+              logoX = logoMargin;
+              logoY = canvasHeight - logoHeight - logoMargin;
+              break;
+            case 'bottom-right':
+              logoX = canvasWidth - logoWidth - logoMargin;
+              logoY = canvasHeight - logoHeight - logoMargin;
+              break;
+            case 'top-left':
+              logoX = logoMargin;
+              logoY = logoMargin;
+              break;
+            case 'top-right':
+              logoX = canvasWidth - logoWidth - logoMargin;
+              logoY = logoMargin;
+              break;
+          }
+
+          // Draw logo with slight rounding
+          ctx.save();
+          ctx.beginPath();
+          ctx.roundRect(logoX, logoY, logoWidth, logoHeight, 4);
+          ctx.clip();
+          ctx.drawImage(logo, logoX, logoY, logoWidth, logoHeight);
+          ctx.restore();
+        }
+      }
+
+      // Download
+      const link = document.createElement('a');
+      link.download = `wrapped-${Date.now()}.png`;
+      link.href = wrapperCanvas.toDataURL('image/png');
+      link.click();
+    }
+
+    // Event listeners for wrapper
+    borderThicknessSelect.addEventListener('change', renderWrapperPreview);
+    cornerRadiusSelect.addEventListener('change', renderWrapperPreview);
+    imagePaddingSelect.addEventListener('change', renderWrapperPreview);
+    showLogoCheckbox.addEventListener('change', renderWrapperPreview);
+    logoPositionSelect.addEventListener('change', renderWrapperPreview);
+    wrapperDownloadBtn.addEventListener('click', generateWrappedImage);
   </script>
 </body>
 </html>
