@@ -541,7 +541,7 @@
             <span class="label-text">Apply heatmap:</span>
             <select id="heatmapMode" class="select-field">
               <option value="row">Across each row</option>
-              <option value="column">Across each column</option>
+              <option value="column" selected>Across each column</option>
               <option value="all">Across entire dataset</option>
               <option value="none">No heatmap</option>
             </select>
@@ -626,14 +626,15 @@
           <div class="card" id="cropCard" style="display: none;">
             <h3>✂️ Crop Image</h3>
             <p class="hint" style="margin-bottom: 12px;">Drag on the image to select the area you want to keep</p>
-            <div id="cropContainer" style="position: relative; display: inline-block; max-width: 100%; cursor: crosshair;">
-              <img id="cropImage" style="max-width: 100%; max-height: 400px; display: block;">
+            <div id="cropContainer" style="position: relative; display: inline-block; max-width: 100%; touch-action: none; user-select: none;">
+              <img id="cropImage" style="max-width: 100%; max-height: 400px; display: block; pointer-events: none; user-select: none; -webkit-user-drag: none;">
               <div id="cropOverlay" style="
                 position: absolute;
-                border: 2px dashed #00c358;
-                background: rgba(0, 195, 88, 0.1);
+                border: 3px dashed #00c358;
+                background: rgba(0, 195, 88, 0.15);
                 pointer-events: none;
                 display: none;
+                box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.4);
               "></div>
             </div>
             <div style="margin-top: 12px; display: flex; gap: 8px;">
@@ -669,8 +670,8 @@
             <label class="label">
               <span class="label-text">Border thickness:</span>
               <select id="borderThickness" class="select-field">
-                <option value="3">Thin (3px)</option>
-                <option value="5" selected>Medium (5px)</option>
+                <option value="3" selected>Thin (3px)</option>
+                <option value="5">Medium (5px)</option>
                 <option value="8">Thick (8px)</option>
               </select>
             </label>
@@ -687,8 +688,8 @@
             <label class="label">
               <span class="label-text">Padding around image:</span>
               <select id="imagePadding" class="select-field">
-                <option value="8">Small (8px)</option>
-                <option value="16" selected>Medium (16px)</option>
+                <option value="8" selected>Small (8px)</option>
+                <option value="16">Medium (16px)</option>
                 <option value="24">Large (24px)</option>
               </select>
             </label>
@@ -1420,28 +1421,43 @@
     }
     
     function getCropCoords(e) {
-      const rect = cropImage.getBoundingClientRect();
-      const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
-      const y = Math.max(0, Math.min(e.clientY - rect.top, rect.height));
+      const rect = cropContainer.getBoundingClientRect();
+      let clientX, clientY;
+      
+      // Handle both mouse and touch events
+      if (e.touches && e.touches.length > 0) {
+        clientX = e.touches[0].clientX;
+        clientY = e.touches[0].clientY;
+      } else if (e.changedTouches && e.changedTouches.length > 0) {
+        clientX = e.changedTouches[0].clientX;
+        clientY = e.changedTouches[0].clientY;
+      } else {
+        clientX = e.clientX;
+        clientY = e.clientY;
+      }
+      
+      const x = Math.max(0, Math.min(clientX - rect.left, rect.width));
+      const y = Math.max(0, Math.min(clientY - rect.top, rect.height));
       return { x, y };
     }
     
-    cropContainer.addEventListener('mousedown', (e) => {
-      if (e.target !== cropImage) return;
+    function startCrop(e) {
+      e.preventDefault();
       isCropping = true;
       cropStart = getCropCoords(e);
       cropEnd = cropStart;
       updateCropOverlay();
       cropOverlay.style.display = 'block';
-    });
+    }
     
-    document.addEventListener('mousemove', (e) => {
+    function moveCrop(e) {
       if (!isCropping) return;
+      e.preventDefault();
       cropEnd = getCropCoords(e);
       updateCropOverlay();
-    });
+    }
     
-    document.addEventListener('mouseup', () => {
+    function endCrop(e) {
       if (!isCropping) return;
       isCropping = false;
       
@@ -1455,7 +1471,17 @@
           resetCropSelection();
         }
       }
-    });
+    }
+    
+    // Mouse events
+    cropContainer.addEventListener('mousedown', startCrop);
+    document.addEventListener('mousemove', moveCrop);
+    document.addEventListener('mouseup', endCrop);
+    
+    // Touch events
+    cropContainer.addEventListener('touchstart', startCrop, { passive: false });
+    document.addEventListener('touchmove', moveCrop, { passive: false });
+    document.addEventListener('touchend', endCrop);
     
     function updateCropOverlay() {
       if (!cropStart || !cropEnd) return;
