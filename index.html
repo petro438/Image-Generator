@@ -6,12 +6,7 @@
   <title>Action Network Image Tools</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       min-height: 100vh;
       background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
@@ -19,524 +14,208 @@
       color: #e2e8f0;
       padding: 32px;
     }
-
-    .container {
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-
-    .header {
-      text-align: center;
-      margin-bottom: 24px;
-    }
-
+    .container { max-width: 1400px; margin: 0 auto; }
+    .header { text-align: center; margin-bottom: 24px; }
     .header h1 {
-      font-size: 36px;
-      font-weight: 700;
+      font-size: 36px; font-weight: 700;
       background: linear-gradient(135deg, #00c358 0%, #60a5fa 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
       margin-bottom: 8px;
     }
-
-    .header p {
-      color: #94a3b8;
-      font-size: 16px;
-    }
-
-    /* Tab Navigation */
-    .tab-nav {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      margin-bottom: 32px;
-    }
-
+    .header p { color: #94a3b8; font-size: 16px; }
+    .tab-nav { display: flex; justify-content: center; gap: 8px; margin-bottom: 32px; flex-wrap: wrap; }
     .tab-btn {
-      padding: 12px 28px;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 14px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      border: 2px solid transparent;
-      background: rgba(30, 41, 59, 0.6);
-      color: #94a3b8;
+      padding: 12px 28px; border-radius: 8px; font-weight: 600; font-size: 14px;
+      cursor: pointer; transition: all 0.2s ease; border: 2px solid transparent;
+      background: rgba(30, 41, 59, 0.6); color: #94a3b8;
     }
-
-    .tab-btn:hover {
-      background: rgba(51, 65, 85, 0.6);
-      color: #e2e8f0;
-    }
-
-    .tab-btn.active {
-      background: rgba(0, 195, 88, 0.15);
-      border-color: #00c358;
-      color: #00c358;
-    }
-
-    .tab-content {
-      display: none;
-    }
-
-    .tab-content.active {
-      display: block;
-    }
-
-    .main-grid {
-      display: grid;
-      grid-template-columns: 400px 1fr;
-      gap: 24px;
-    }
-
-    @media (max-width: 900px) {
-      .main-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .controls {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
+    .tab-btn:hover { background: rgba(51, 65, 85, 0.6); color: #e2e8f0; }
+    .tab-btn.active { background: rgba(0, 195, 88, 0.15); border-color: #00c358; color: #00c358; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .main-grid { display: grid; grid-template-columns: 400px 1fr; gap: 24px; }
+    @media (max-width: 900px) { .main-grid { grid-template-columns: 1fr; } }
+    .controls { display: flex; flex-direction: column; gap: 20px; }
     .card {
-      background: rgba(30, 41, 59, 0.6);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(148, 163, 184, 0.1);
-      border-radius: 16px;
-      padding: 24px;
+      background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(10px);
+      border: 1px solid rgba(148, 163, 184, 0.1); border-radius: 16px; padding: 24px;
     }
-
-    .card h3 {
-      margin-bottom: 16px;
-      font-weight: 600;
-      font-size: 16px;
-    }
-
+    .card h3 { margin-bottom: 16px; font-weight: 600; font-size: 16px; }
     .input-field {
-      background: rgba(30, 41, 59, 0.8);
-      border: 1px solid rgba(148, 163, 184, 0.2);
-      border-radius: 8px;
-      padding: 12px 16px;
-      color: #e2e8f0;
-      font-size: 14px;
-      width: 100%;
-      transition: all 0.2s ease;
+      background: rgba(30, 41, 59, 0.8); border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 8px; padding: 12px 16px; color: #e2e8f0; font-size: 14px;
+      width: 100%; transition: all 0.2s ease;
     }
-
-    .input-field:focus {
-      outline: none;
-      border-color: #00c358;
-      box-shadow: 0 0 0 3px rgba(0, 195, 88, 0.2);
-    }
-
-    textarea.input-field {
-      height: 120px;
-      resize: vertical;
-      font-family: 'Monaco', 'Consolas', monospace;
-      font-size: 12px;
-    }
-
-    .hint {
-      font-size: 12px;
-      color: #64748b;
-      margin-top: 8px;
-    }
-
+    .input-field:focus { outline: none; border-color: #00c358; box-shadow: 0 0 0 3px rgba(0, 195, 88, 0.2); }
+    textarea.input-field { height: 120px; resize: vertical; font-family: 'Monaco', 'Consolas', monospace; font-size: 12px; }
+    .hint { font-size: 12px; color: #64748b; margin-top: 8px; }
     .select-field {
-      background: rgba(30, 41, 59, 0.8);
-      border: 1px solid rgba(148, 163, 184, 0.2);
-      border-radius: 8px;
-      padding: 10px 14px;
-      color: #e2e8f0;
-      font-size: 14px;
-      cursor: pointer;
-      width: 100%;
+      background: rgba(30, 41, 59, 0.8); border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 8px; padding: 10px 14px; color: #e2e8f0; font-size: 14px;
+      cursor: pointer; width: 100%;
     }
-
-    .label {
-      display: block;
-      margin-bottom: 12px;
-    }
-
-    .label-text {
-      font-size: 13px;
-      color: #94a3b8;
-      margin-bottom: 6px;
-      display: block;
-    }
-
+    .label { display: block; margin-bottom: 12px; }
+    .label-text { font-size: 13px; color: #94a3b8; margin-bottom: 6px; display: block; }
     .checkbox-label {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-      padding: 8px 12px;
-      border-radius: 6px;
-      transition: background 0.2s;
-      font-size: 13px;
+      display: flex; align-items: center; gap: 8px; cursor: pointer;
+      padding: 8px 12px; border-radius: 6px; transition: background 0.2s; font-size: 13px;
     }
-
-    .checkbox-label:hover {
-      background: rgba(51, 65, 85, 0.5);
-    }
-
-    .checkbox-label input {
-      accent-color: #00c358;
-    }
-
-    .color-swatches {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
-    }
-
+    .checkbox-label:hover { background: rgba(51, 65, 85, 0.5); }
+    .checkbox-label input { accent-color: #00c358; }
+    .color-swatches { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
     .color-swatch {
-      height: 28px;
-      border-radius: 6px;
-      border: 2px solid transparent;
-      cursor: pointer;
-      transition: all 0.2s;
-      padding: 2px 12px;
-      font-size: 11px;
-      display: flex;
-      align-items: center;
-      color: #1e293b;
-      font-weight: 500;
+      height: 28px; border-radius: 6px; border: 2px solid transparent; cursor: pointer;
+      transition: all 0.2s; padding: 2px 12px; font-size: 11px; display: flex;
+      align-items: center; color: #1e293b; font-weight: 500;
     }
-
-    .color-swatch.selected {
-      border-color: #fff;
-      transform: scale(1.05);
+    .color-swatch.selected { border-color: #fff; transform: scale(1.05); }
+    .column-config { max-height: 200px; overflow-y: auto; border: 1px solid rgba(148, 163, 184, 0.1); border-radius: 8px; padding: 8px; }
+    .column-row { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 4px; font-size: 13px; }
+    .column-row:hover { background: rgba(51, 65, 85, 0.3); }
+    .column-row label { flex: 1; display: flex; align-items: center; gap: 8px; cursor: pointer; }
+    .lower-better-btn {
+      font-size: 10px; padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(148, 163, 184, 0.3);
+      background: rgba(30, 41, 59, 0.8); color: #94a3b8; cursor: pointer; transition: all 0.2s; white-space: nowrap;
     }
+    .lower-better-btn.active { background: #00c358; color: #fff; border-color: #00c358; }
+    .lower-better-btn:hover { border-color: #00c358; }
+    .btn { padding: 12px 24px; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.2s ease; border: none; }
+    .btn-primary { background: linear-gradient(135deg, #00c358 0%, #00a34a 100%); color: white; width: 100%; padding: 16px; font-size: 16px; }
+    .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0, 195, 88, 0.4); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .preview-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .preview-count { font-size: 13px; color: #64748b; }
+    .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 40px; color: #64748b; text-align: center; }
+    .empty-state .icon { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
+    .table-wrapper { overflow-x: auto; }
+    .preview-title { text-align: center; margin-bottom: 16px; }
+    .preview-title h2 { font-size: 20px; font-weight: 700; color: #f1f5f9; }
+    .preview-title p { font-size: 14px; color: #94a3b8; }
+    .preview-table { width: 100%; border-collapse: collapse; font-size: 13px; border-radius: 12px; overflow: hidden; }
+    .preview-table th { background: #00c358; padding: 12px 8px; text-align: center; font-weight: 600; color: white; white-space: nowrap; }
+    .preview-table td { padding: 10px 8px; text-align: center; }
+    .preview-table tr:nth-child(odd) td { background: #ebecf5; }
+    .preview-table tr:nth-child(even) td { background: #f6f8fd; }
+    .preview-table tr td { color: #1e293b; }
+    .sort-btn { background: none; border: none; color: rgba(255,255,255,0.7); cursor: pointer; padding: 2px 6px; margin-left: 4px; font-size: 12px; }
+    .sort-btn:hover { color: white; }
+    .footer { text-align: center; margin-top: 40px; color: #475569; font-size: 13px; }
+    #canvas, #wrapperCanvas, #pickGridCanvas { display: none; }
+    .upload-zone {
+      border: 2px dashed rgba(148, 163, 184, 0.3); border-radius: 12px; padding: 40px;
+      text-align: center; cursor: pointer; transition: all 0.2s ease; background: rgba(30, 41, 59, 0.4);
+    }
+    .upload-zone:hover { border-color: #00c358; background: rgba(0, 195, 88, 0.05); }
+    .upload-zone.dragover { border-color: #00c358; background: rgba(0, 195, 88, 0.1); }
+    .upload-zone .icon { font-size: 48px; margin-bottom: 12px; opacity: 0.6; }
+    .upload-zone p { color: #94a3b8; font-size: 14px; }
+    .upload-zone input { display: none; }
 
-    .column-config {
-      max-height: 200px;
-      overflow-y: auto;
-      border: 1px solid rgba(148, 163, 184, 0.1);
-      border-radius: 8px;
+    /* ─── Pick Grid Styles ─── */
+    .pick-grid-preview {
+      overflow-x: auto;
       padding: 8px;
     }
-
-    .column-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 8px;
-      border-radius: 4px;
-      font-size: 13px;
-    }
-
-    .column-row:hover {
-      background: rgba(51, 65, 85, 0.3);
-    }
-
-    .column-row label {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-    }
-
-    .lower-better-btn {
-      font-size: 10px;
-      padding: 3px 8px;
-      border-radius: 4px;
-      border: 1px solid rgba(148, 163, 184, 0.3);
-      background: rgba(30, 41, 59, 0.8);
-      color: #94a3b8;
-      cursor: pointer;
-      transition: all 0.2s;
-      white-space: nowrap;
-    }
-
-    .lower-better-btn.active {
-      background: #00c358;
-      color: #fff;
-      border-color: #00c358;
-    }
-
-    .lower-better-btn:hover {
-      border-color: #00c358;
-    }
-
-    .btn {
-      padding: 12px 24px;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 14px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      border: none;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #00c358 0%, #00a34a 100%);
-      color: white;
-      width: 100%;
-      padding: 16px;
-      font-size: 16px;
-    }
-
-    .btn-primary:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(0, 195, 88, 0.4);
-    }
-
-    .btn-primary:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    .preview-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-    }
-
-    .preview-count {
-      font-size: 13px;
-      color: #64748b;
-    }
-
-    .empty-state {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 80px 40px;
-      color: #64748b;
-      text-align: center;
-    }
-
-    .empty-state .icon {
-      font-size: 48px;
-      margin-bottom: 16px;
-      opacity: 0.5;
-    }
-
-    .table-wrapper {
-      overflow-x: auto;
-    }
-
-    .preview-title {
-      text-align: center;
-      margin-bottom: 16px;
-    }
-
-    .preview-title h2 {
-      font-size: 20px;
-      font-weight: 700;
-      color: #f1f5f9;
-    }
-
-    .preview-title p {
-      font-size: 14px;
-      color: #94a3b8;
-    }
-
-    .preview-table {
-      width: 100%;
+    .pick-grid-table {
       border-collapse: collapse;
       font-size: 13px;
-      border-radius: 12px;
-      overflow: hidden;
     }
-
-    .preview-table th {
+    .pick-grid-table th {
       background: #00c358;
-      padding: 12px 8px;
-      text-align: center;
-      font-weight: 600;
       color: white;
+      padding: 10px 14px;
+      font-weight: 600;
+      font-size: 12px;
+      text-align: center;
       white-space: nowrap;
     }
-
-    .preview-table td {
-      padding: 10px 8px;
+    .pick-grid-table th.picker-col {
+      text-align: left;
+      min-width: 120px;
+    }
+    .pick-grid-table td {
+      padding: 6px 8px;
       text-align: center;
+      vertical-align: middle;
     }
-
-    .preview-table tr:nth-child(odd) td {
-      background: #ebecf5;
-    }
-
-    .preview-table tr:nth-child(even) td {
-      background: #f6f8fd;
-    }
-
-    .preview-table tr td {
+    .pick-grid-table td.picker-name {
+      text-align: left;
+      font-weight: 600;
       color: #1e293b;
+      padding-left: 14px;
+      white-space: nowrap;
     }
-
-    .sort-btn {
-      background: none;
-      border: none;
-      color: rgba(255,255,255,0.7);
-      cursor: pointer;
-      padding: 2px 6px;
-      margin-left: 4px;
-      font-size: 12px;
-    }
-
-    .sort-btn:hover {
-      color: white;
-    }
-
-    .footer {
-      text-align: center;
-      margin-top: 40px;
-      color: #475569;
-      font-size: 13px;
-    }
-
-    #canvas, #wrapperCanvas {
-      display: none;
-    }
-
-    .inline-inputs {
+    .pick-grid-table tr:nth-child(odd) td { background: #ebecf5; }
+    .pick-grid-table tr:nth-child(even) td { background: #f6f8fd; }
+    .logo-cell {
       display: flex;
-      gap: 12px;
       align-items: center;
-    }
-
-    .inline-inputs .input-field {
-      width: 100px;
-    }
-
-    /* Screenshot Wrapper Styles */
-    .upload-zone {
-      border: 2px dashed rgba(148, 163, 184, 0.3);
-      border-radius: 12px;
-      padding: 40px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      background: rgba(30, 41, 59, 0.4);
-    }
-
-    .upload-zone:hover {
-      border-color: #00c358;
-      background: rgba(0, 195, 88, 0.05);
-    }
-
-    .upload-zone.dragover {
-      border-color: #00c358;
-      background: rgba(0, 195, 88, 0.1);
-    }
-
-    .upload-zone .icon {
-      font-size: 48px;
-      margin-bottom: 12px;
-      opacity: 0.6;
-    }
-
-    .upload-zone p {
-      color: #94a3b8;
-      font-size: 14px;
-    }
-
-    .upload-zone input {
-      display: none;
-    }
-
-    .screenshot-preview {
-      display: flex;
       justify-content: center;
-      align-items: center;
-      padding: 20px;
+      gap: 6px;
     }
-
-    .screenshot-preview img {
-      max-width: 100%;
-      max-height: 500px;
-      border-radius: 12px;
+    .logo-cell img {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
     }
-
-    .wrapper-preview {
-      background: white;
-      border-radius: 16px;
-      padding: 16px;
-      display: inline-block;
-      border: 4px solid #00c358;
-      position: relative;
+    .logo-cell .team-abbr {
+      font-size: 11px;
+      color: #64748b;
+      font-weight: 500;
     }
-
-    .wrapper-preview img {
-      display: block;
+    .logo-status {
+      margin-top: 12px;
+      padding: 10px 14px;
       border-radius: 8px;
+      font-size: 12px;
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid rgba(148, 163, 184, 0.1);
     }
-
-    .wrapper-logo {
-      position: absolute;
-      bottom: 8px;
-      left: 8px;
-      height: 24px;
-      border-radius: 4px;
+    .logo-status .found { color: #00c358; }
+    .logo-status .missing { color: #f87171; }
+    .team-override-list { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+    .team-override-row { display: flex; gap: 8px; align-items: center; }
+    .team-override-row .team-name { flex: 1; font-size: 12px; color: #94a3b8; padding: 6px 10px; background: rgba(30,41,59,0.6); border-radius: 4px; }
+    .team-override-row input { flex: 2; font-size: 11px; }
+    .badge {
+      display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;
     }
+    .badge-green { background: rgba(0,195,88,0.15); color: #00c358; }
+    .badge-red { background: rgba(248,113,113,0.15); color: #f87171; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <h1>Action Network Image Tools</h1>
-      <p>Create polished, branded images for your articles</p>
-    </div>
+<div class="container">
+  <div class="header">
+    <h1>Action Network Image Tools</h1>
+    <p>Create polished, branded images for your articles</p>
+  </div>
 
-    <!-- Tab Navigation -->
-    <div class="tab-nav">
-      <button class="tab-btn active" data-tab="table">📊 Table Generator</button>
-      <button class="tab-btn" data-tab="wrapper">🖼️ Screenshot Wrapper</button>
-    </div>
+  <div class="tab-nav">
+    <button class="tab-btn active" data-tab="table">📊 Table Generator</button>
+    <button class="tab-btn" data-tab="wrapper">🖼️ Screenshot Wrapper</button>
+    <button class="tab-btn" data-tab="pickgrid">🏆 Pick Grid</button>
+  </div>
 
-    <!-- Table Generator Tab -->
-    <div id="table-tab" class="tab-content active">
-      <div class="main-grid">
-      <!-- Left Panel - Controls -->
+  <!-- ══════════════════════════════════════════ TABLE TAB ══════════════════════════════════════════ -->
+  <div id="table-tab" class="tab-content active">
+    <div class="main-grid">
       <div class="controls">
-        <!-- Data Input -->
         <div class="card">
           <h3>📋 Paste Data</h3>
-          <textarea 
-            id="dataInput" 
-            class="input-field" 
-            placeholder="Paste cells from Excel or Google Sheets here..."
-          ></textarea>
+          <textarea id="dataInput" class="input-field" placeholder="Paste cells from Excel or Google Sheets here..."></textarea>
           <p class="hint">Copy cells directly from your spreadsheet (Ctrl+C) and paste here</p>
         </div>
-
-        <!-- Title & Subtitle -->
         <div class="card">
           <h3>✏️ Title & Subtitle</h3>
           <label class="checkbox-label" style="margin-bottom: 12px; padding: 0;">
-            <input type="checkbox" id="showTitle" checked>
-            Show title on image
+            <input type="checkbox" id="showTitle" checked> Show title on image
           </label>
-          <input 
-            type="text" 
-            id="titleInput" 
-            class="input-field" 
-            placeholder="Table Title"
-            style="margin-bottom: 12px;"
-          >
-          <input 
-            type="text" 
-            id="subtitleInput" 
-            class="input-field" 
-            placeholder="Subtitle (optional)"
-          >
+          <input type="text" id="titleInput" class="input-field" placeholder="Table Title" style="margin-bottom: 12px;">
+          <input type="text" id="subtitleInput" class="input-field" placeholder="Subtitle (optional)">
         </div>
-
-        <!-- Heatmap Settings -->
         <div class="card">
           <h3>🎨 Conditional Formatting</h3>
-          
           <label class="label">
             <span class="label-text">Apply heatmap:</span>
             <select id="heatmapMode" class="select-field">
@@ -546,1184 +225,1208 @@
               <option value="none">No heatmap</option>
             </select>
           </label>
-
           <div>
             <span class="label-text">Color scheme:</span>
             <div class="color-swatches" id="colorSwatches"></div>
           </div>
-
           <div id="columnCheckboxContainer" style="display: none;">
             <span class="label-text">Columns to format (click "Lower is better" to flip):</span>
             <div class="column-config" id="columnCheckboxes"></div>
           </div>
         </div>
-
-        <!-- Display Options -->
         <div class="card">
           <h3>⚙️ Display Options</h3>
-          
           <label class="label">
             <span class="label-text">Max rows to show:</span>
-            <input 
-              type="number" 
-              id="maxRows" 
-              class="input-field" 
-              value="20" 
-              min="1" 
-              max="50"
-              style="width: 100px;"
-            >
+            <input type="number" id="maxRows" class="input-field" value="20" min="1" max="50" style="width: 100px;">
           </label>
-
           <label class="checkbox-label" style="padding: 8px 0;">
-            <input type="checkbox" id="showRanks">
-            Show rank numbers (#)
+            <input type="checkbox" id="showRanks"> Show rank numbers (#)
           </label>
         </div>
-
-        <!-- Generate Button -->
-        <button id="downloadBtn" class="btn btn-primary" disabled>
-          📥 Download Image
-        </button>
+        <button id="downloadBtn" class="btn btn-primary" disabled>📥 Download Image</button>
       </div>
-
-      <!-- Right Panel - Preview -->
       <div class="card">
         <div class="preview-header">
           <h3>👁️ Preview</h3>
           <span id="rowCount" class="preview-count"></span>
         </div>
-
         <div id="emptyState" class="empty-state">
           <div class="icon">📊</div>
           <p style="font-size: 16px; margin-bottom: 8px;">No data yet</p>
           <p style="font-size: 13px;">Paste data from Excel or Google Sheets to get started</p>
         </div>
-
         <div id="previewContainer" class="table-wrapper" style="display: none;"></div>
       </div>
-    </div> <!-- End main-grid -->
-
-    </div> <!-- End table-tab -->
-
-    <!-- Screenshot Wrapper Tab -->
-    <div id="wrapper-tab" class="tab-content">
-      <div class="main-grid">
-        <!-- Left Panel - Controls -->
-        <div class="controls">
-          <!-- Upload Zone -->
-          <div class="card">
-            <h3>📤 Upload Screenshot</h3>
-            <div class="upload-zone" id="uploadZone">
-              <div class="icon">🖼️</div>
-              <p>Click or drag & drop an image here</p>
-              <input type="file" id="screenshotInput" accept="image/*">
-            </div>
-            <p class="hint">Supports PNG, JPG, and other image formats</p>
-          </div>
-
-          <!-- Crop Tool -->
-          <div class="card" id="cropCard" style="display: none;">
-            <h3>✂️ Crop Image</h3>
-            <p class="hint" style="margin-bottom: 12px;">Drag on the image to select the area you want to keep</p>
-            <div id="cropContainer" style="position: relative; display: inline-block; max-width: 100%; touch-action: none; user-select: none;">
-              <img id="cropImage" style="max-width: 100%; max-height: 400px; display: block; pointer-events: none; user-select: none; -webkit-user-drag: none;">
-              <div id="cropOverlay" style="
-                position: absolute;
-                border: 3px dashed #00c358;
-                background: rgba(0, 195, 88, 0.15);
-                pointer-events: none;
-                display: none;
-                box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.4);
-              "></div>
-            </div>
-            <div style="margin-top: 12px; display: flex; gap: 8px;">
-              <button id="applyCropBtn" class="btn btn-primary" style="flex: 1; padding: 10px;" disabled>
-                ✓ Apply Crop
-              </button>
-              <button id="resetCropBtn" class="btn" style="
-                flex: 1; 
-                padding: 10px; 
-                background: rgba(51, 65, 85, 0.8);
-                color: #e2e8f0;
-                border: 1px solid rgba(148, 163, 184, 0.2);
-              ">
-                ↺ Reset
-              </button>
-            </div>
-          </div>
-
-          <!-- Wrapper Options -->
-          <div class="card">
-            <h3>🎨 Wrapper Options</h3>
-            
-            <label class="label">
-              <span class="label-text">Max output width:</span>
-              <select id="maxOutputWidth" class="select-field">
-                <option value="0">Original size</option>
-                <option value="800" selected>800px (recommended)</option>
-                <option value="600">600px (compact)</option>
-                <option value="400">400px (small)</option>
-              </select>
-            </label>
-            
-            <label class="label">
-              <span class="label-text">Border thickness:</span>
-              <select id="borderThickness" class="select-field">
-                <option value="3" selected>Thin (3px)</option>
-                <option value="5">Medium (5px)</option>
-                <option value="8">Thick (8px)</option>
-              </select>
-            </label>
-
-            <label class="label">
-              <span class="label-text">Corner radius:</span>
-              <select id="cornerRadius" class="select-field">
-                <option value="8">Small (8px)</option>
-                <option value="12" selected>Medium (12px)</option>
-                <option value="20">Large (20px)</option>
-              </select>
-            </label>
-
-            <label class="label">
-              <span class="label-text">Padding around image:</span>
-              <select id="imagePadding" class="select-field">
-                <option value="8" selected>Small (8px)</option>
-                <option value="16">Medium (16px)</option>
-                <option value="24">Large (24px)</option>
-              </select>
-            </label>
-
-            <label class="checkbox-label" style="padding: 8px 0;">
-              <input type="checkbox" id="showLogo" checked>
-              Show Action Network logo
-            </label>
-
-            <label class="label" id="logoPositionLabel">
-              <span class="label-text">Logo position:</span>
-              <select id="logoPosition" class="select-field">
-                <option value="bottom-left" selected>Bottom Left</option>
-                <option value="bottom-right">Bottom Right</option>
-                <option value="top-left">Top Left</option>
-                <option value="top-right">Top Right</option>
-              </select>
-            </label>
-          </div>
-
-          <!-- Generate Button -->
-          <button id="wrapperDownloadBtn" class="btn btn-primary" disabled>
-            📥 Download Wrapped Image
-          </button>
-        </div>
-
-        <!-- Right Panel - Preview -->
-        <div class="card">
-          <div class="preview-header">
-            <h3>👁️ Preview</h3>
-          </div>
-
-          <div id="wrapperEmptyState" class="empty-state">
-            <div class="icon">🖼️</div>
-            <p style="font-size: 16px; margin-bottom: 8px;">No screenshot yet</p>
-            <p style="font-size: 13px;">Upload an image to see the preview</p>
-          </div>
-
-          <div id="wrapperPreviewContainer" class="screenshot-preview" style="display: none;"></div>
-        </div>
-      </div>
-    </div>
-
-    <canvas id="canvas"></canvas>
-    <canvas id="wrapperCanvas"></canvas>
-
-    <div class="footer">
-      Action Network Image Tools • Create polished visuals for your articles
     </div>
   </div>
 
-  <script>
-    // State
-    let tableData = { headers: [], rows: [] };
-    let heatmapColumns = new Set();
-    let lowerIsBetterColumns = new Set();
-    let sortColumn = null;
-    let sortDirection = 'asc';
+  <!-- ══════════════════════════════════════════ WRAPPER TAB ══════════════════════════════════════════ -->
+  <div id="wrapper-tab" class="tab-content">
+    <div class="main-grid">
+      <div class="controls">
+        <div class="card">
+          <h3>📤 Upload Screenshot</h3>
+          <div class="upload-zone" id="uploadZone">
+            <div class="icon">🖼️</div>
+            <p>Click or drag & drop an image here</p>
+            <input type="file" id="screenshotInput" accept="image/*">
+          </div>
+          <p class="hint">Supports PNG, JPG, and other image formats</p>
+        </div>
+        <div class="card" id="cropCard" style="display: none;">
+          <h3>✂️ Crop Image</h3>
+          <p class="hint" style="margin-bottom: 12px;">Drag on the image to select the area you want to keep</p>
+          <div id="cropContainer" style="position: relative; display: inline-block; max-width: 100%; touch-action: none; user-select: none;">
+            <img id="cropImage" style="max-width: 100%; max-height: 400px; display: block; pointer-events: none; user-select: none; -webkit-user-drag: none;">
+            <div id="cropOverlay" style="position: absolute; border: 3px dashed #00c358; background: rgba(0, 195, 88, 0.15); pointer-events: none; display: none; box-shadow: 0 0 0 9999px rgba(0,0,0,0.4);"></div>
+          </div>
+          <div style="margin-top: 12px; display: flex; gap: 8px;">
+            <button id="applyCropBtn" class="btn btn-primary" style="flex: 1; padding: 10px;" disabled>✓ Apply Crop</button>
+            <button id="resetCropBtn" class="btn" style="flex: 1; padding: 10px; background: rgba(51,65,85,0.8); color: #e2e8f0; border: 1px solid rgba(148,163,184,0.2);">↺ Reset</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>🎨 Wrapper Options</h3>
+          <label class="label">
+            <span class="label-text">Max output width:</span>
+            <select id="maxOutputWidth" class="select-field">
+              <option value="0">Original size</option>
+              <option value="800" selected>800px (recommended)</option>
+              <option value="600">600px (compact)</option>
+              <option value="400">400px (small)</option>
+            </select>
+          </label>
+          <label class="label">
+            <span class="label-text">Border thickness:</span>
+            <select id="borderThickness" class="select-field">
+              <option value="3" selected>Thin (3px)</option>
+              <option value="5">Medium (5px)</option>
+              <option value="8">Thick (8px)</option>
+            </select>
+          </label>
+          <label class="label">
+            <span class="label-text">Corner radius:</span>
+            <select id="cornerRadius" class="select-field">
+              <option value="8">Small (8px)</option>
+              <option value="12" selected>Medium (12px)</option>
+              <option value="20">Large (20px)</option>
+            </select>
+          </label>
+          <label class="label">
+            <span class="label-text">Padding around image:</span>
+            <select id="imagePadding" class="select-field">
+              <option value="8" selected>Small (8px)</option>
+              <option value="16">Medium (16px)</option>
+              <option value="24">Large (24px)</option>
+            </select>
+          </label>
+          <label class="checkbox-label" style="padding: 8px 0;">
+            <input type="checkbox" id="showLogo" checked> Show Action Network logo
+          </label>
+          <label class="label" id="logoPositionLabel">
+            <span class="label-text">Logo position:</span>
+            <select id="logoPosition" class="select-field">
+              <option value="bottom-left" selected>Bottom Left</option>
+              <option value="bottom-right">Bottom Right</option>
+              <option value="top-left">Top Left</option>
+              <option value="top-right">Top Right</option>
+            </select>
+          </label>
+        </div>
+        <button id="wrapperDownloadBtn" class="btn btn-primary" disabled>📥 Download Wrapped Image</button>
+      </div>
+      <div class="card">
+        <div class="preview-header"><h3>👁️ Preview</h3></div>
+        <div id="wrapperEmptyState" class="empty-state">
+          <div class="icon">🖼️</div>
+          <p style="font-size: 16px; margin-bottom: 8px;">No screenshot yet</p>
+          <p style="font-size: 13px;">Upload an image to see the preview</p>
+        </div>
+        <div id="wrapperPreviewContainer" class="screenshot-preview" style="display: none;"></div>
+      </div>
+    </div>
+  </div>
 
-    // 10-step color scales based on percentiles
-    const colorSchemes = {
-      'green-red': [
-        '#f8696b', // 0-9th percentile (worst)
-        '#f98370',
-        '#fa9d75',
-        '#fbb77a',
-        '#fcd17f',
-        '#ffeb84',
-        '#d8e082',
-        '#b1d580',
-        '#8aca7e',
-        '#63be7b'  // 90-100th percentile (best)
-      ],
-      'green-grey': [
-        '#d0d0d0', // 0-9th percentile (worst) - grey
-        '#b8d4bc',
-        '#a0d8a8',
-        '#88dc94',
-        '#70e080',
-        '#63be7b',
-        '#57b574',
-        '#4bac6d',
-        '#3fa366',
-        '#339a5f'  // 90-100th percentile (best) - dark green
-      ]
-    };
+  <!-- ══════════════════════════════════════════ PICK GRID TAB ══════════════════════════════════════════ -->
+  <div id="pickgrid-tab" class="tab-content">
+    <div class="main-grid">
+      <div class="controls">
 
-    let selectedColorScheme = 'green-red';
+        <!-- Data Input -->
+        <div class="card">
+          <h3>📋 Paste Pick Data</h3>
+          <textarea id="pgDataInput" class="input-field" style="height: 160px;"
+            placeholder="Paste from spreadsheet...&#10;&#10;Row 1 = headers (leave A1 blank, then category names)&#10;Col 1 = picker names&#10;Cells = team names"></textarea>
+          <p class="hint">Example: A1 blank, B1="Champion", C1="Best QB" / A2="Steve", B2="Alabama", C2="Ohio State"</p>
+        </div>
 
-    // Row colors
-    const rowColors = {
-      odd: '#ebecf5',
-      even: '#f6f8fd'
-    };
+        <!-- Title -->
+        <div class="card">
+          <h3>✏️ Title</h3>
+          <input type="text" id="pgTitle" class="input-field" placeholder="2025 Staff Picks" style="margin-bottom: 10px;">
+          <input type="text" id="pgSubtitle" class="input-field" placeholder="Subtitle (optional)">
+        </div>
 
-    const headerBgColor = '#00c358';
+        <!-- Logo Settings -->
+        <div class="card">
+          <h3>🏷️ Logo Settings</h3>
+          <label class="label">
+            <span class="label-text">Sport (for ESPN logo lookup):</span>
+            <select id="pgSport" class="select-field">
+              <option value="nfl">NFL</option>
+              <option value="college-football" selected>College Football</option>
+              <option value="mens-college-basketball">College Basketball (Men's)</option>
+              <option value="womens-college-basketball">College Basketball (Women's)</option>
+              <option value="mlb">MLB</option>
+              <option value="nba">NBA</option>
+              <option value="nhl">NHL</option>
+              <option value="soccer/usa.1">MLS</option>
+            </select>
+          </label>
+          <label class="label">
+            <span class="label-text">Logo size in grid:</span>
+            <select id="pgLogoSize" class="select-field">
+              <option value="32">Small (32px)</option>
+              <option value="44" selected>Medium (44px)</option>
+              <option value="56">Large (56px)</option>
+            </select>
+          </label>
+          <label class="checkbox-label" style="padding: 8px 0; margin-bottom: 8px;">
+            <input type="checkbox" id="pgShowTeamName"> Show team abbreviation below logo
+          </label>
+        </div>
 
-    // DOM Elements
-    const dataInput = document.getElementById('dataInput');
-    const titleInput = document.getElementById('titleInput');
-    const subtitleInput = document.getElementById('subtitleInput');
-    const showTitleCheckbox = document.getElementById('showTitle');
-    const heatmapMode = document.getElementById('heatmapMode');
-    const maxRowsInput = document.getElementById('maxRows');
-    const showRanksCheckbox = document.getElementById('showRanks');
-    const downloadBtn = document.getElementById('downloadBtn');
-    const emptyState = document.getElementById('emptyState');
-    const previewContainer = document.getElementById('previewContainer');
-    const rowCountSpan = document.getElementById('rowCount');
-    const columnCheckboxContainer = document.getElementById('columnCheckboxContainer');
-    const columnCheckboxes = document.getElementById('columnCheckboxes');
-    const colorSwatches = document.getElementById('colorSwatches');
-    const canvas = document.getElementById('canvas');
+        <!-- Manual overrides for unmatched teams -->
+        <div class="card" id="pgOverrideCard" style="display: none;">
+          <h3>⚠️ Manual Logo URLs</h3>
+          <p class="hint" style="margin-bottom: 12px;">These teams weren't auto-matched. Paste a direct image URL for each, or leave blank to show initials.</p>
+          <div id="pgOverrideList" class="team-override-list"></div>
+        </div>
 
-    // Initialize color swatches
-    function initColorSwatches() {
-      const schemeLabels = {
-        'green-red': 'Green → Red',
-        'green-grey': 'Green → Grey'
-      };
+        <!-- Style -->
+        <div class="card">
+          <h3>🎨 Style</h3>
+          <label class="label">
+            <span class="label-text">Header color:</span>
+            <select id="pgHeaderColor" class="select-field">
+              <option value="#00c358">AN Green</option>
+              <option value="#1e3a5f">Navy</option>
+              <option value="#1e293b">Dark Slate</option>
+              <option value="#7c3aed">Purple</option>
+              <option value="#b91c1c">Red</option>
+            </select>
+          </label>
+          <label class="label">
+            <span class="label-text">AN logo on image:</span>
+            <select id="pgLogoPosition" class="select-field">
+              <option value="none">None</option>
+              <option value="bottom-right" selected>Bottom Right</option>
+              <option value="bottom-left">Bottom Left</option>
+            </select>
+          </label>
+        </div>
 
-      Object.entries(colorSchemes).forEach(([key, colors]) => {
-        const swatch = document.createElement('div');
-        swatch.className = `color-swatch ${key === selectedColorScheme ? 'selected' : ''}`;
-        swatch.style.background = `linear-gradient(90deg, ${colors[9]} 0%, ${colors[5]} 50%, ${colors[0]} 100%)`;
-        swatch.textContent = schemeLabels[key];
-        swatch.onclick = () => {
-          document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
-          swatch.classList.add('selected');
-          selectedColorScheme = key;
-          renderPreview();
-        };
-        colorSwatches.appendChild(swatch);
-      });
-    }
+        <button id="pgDownloadBtn" class="btn btn-primary" disabled>📥 Download Pick Grid</button>
+      </div>
 
-    // Parse pasted data
-    function parseData(text) {
-      if (!text.trim()) {
-        tableData = { headers: [], rows: [] };
-        return;
-      }
+      <!-- Preview -->
+      <div class="card">
+        <div class="preview-header">
+          <h3>👁️ Preview</h3>
+          <span id="pgStatusBadge"></span>
+        </div>
+        <div id="pgEmptyState" class="empty-state">
+          <div class="icon">🏆</div>
+          <p style="font-size: 16px; margin-bottom: 8px;">No picks yet</p>
+          <p style="font-size: 13px;">Paste pick data to get started</p>
+        </div>
+        <div id="pgPreviewContainer" style="display: none;">
+          <div id="pgLogoStatus" class="logo-status" style="margin-bottom: 14px; display: none;"></div>
+          <div class="pick-grid-preview">
+            <div id="pgTableContainer"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-      const lines = text.trim().split('\n');
-      if (lines.length === 0) return;
+  <canvas id="canvas"></canvas>
+  <canvas id="wrapperCanvas"></canvas>
+  <canvas id="pickGridCanvas"></canvas>
 
-      const headers = lines[0].split('\t').map(h => h.trim());
-      const rows = lines.slice(1).map(line => 
-        line.split('\t').map(cell => cell.trim())
-      );
+  <div class="footer">Action Network Image Tools • Create polished visuals for your articles</div>
+</div>
 
-      tableData = { headers, rows };
+<script>
+// ════════════════════════════════════════════════════════════════
+// TABLE GENERATOR (unchanged)
+// ════════════════════════════════════════════════════════════════
+let tableData = { headers: [], rows: [] };
+let heatmapColumns = new Set();
+let lowerIsBetterColumns = new Set();
+let sortColumn = null;
+let sortDirection = 'asc';
 
-      // Auto-detect numeric columns
-      const numericCols = new Set();
-      headers.forEach((_, colIdx) => {
-        const isNumeric = rows.every(row => {
-          const val = row[colIdx];
-          return val === '' || !isNaN(parseFloat(val.replace(/[$,%]/g, '')));
-        });
-        if (isNumeric && colIdx > 0) numericCols.add(colIdx);
-      });
-      heatmapColumns = numericCols;
-      lowerIsBetterColumns = new Set(); // Reset
+const colorSchemes = {
+  'green-red': ['#f8696b','#f98370','#fa9d75','#fbb77a','#fcd17f','#ffeb84','#d8e082','#b1d580','#8aca7e','#63be7b'],
+  'green-grey': ['#d0d0d0','#b8d4bc','#a0d8a8','#88dc94','#70e080','#63be7b','#57b574','#4bac6d','#3fa366','#339a5f']
+};
+let selectedColorScheme = 'green-red';
+const rowColors = { odd: '#ebecf5', even: '#f6f8fd' };
+const headerBgColor = '#00c358';
 
-      updateColumnCheckboxes();
-    }
+const dataInput = document.getElementById('dataInput');
+const titleInput = document.getElementById('titleInput');
+const subtitleInput = document.getElementById('subtitleInput');
+const showTitleCheckbox = document.getElementById('showTitle');
+const heatmapMode = document.getElementById('heatmapMode');
+const maxRowsInput = document.getElementById('maxRows');
+const showRanksCheckbox = document.getElementById('showRanks');
+const downloadBtn = document.getElementById('downloadBtn');
+const emptyState = document.getElementById('emptyState');
+const previewContainer = document.getElementById('previewContainer');
+const rowCountSpan = document.getElementById('rowCount');
+const columnCheckboxContainer = document.getElementById('columnCheckboxContainer');
+const columnCheckboxes = document.getElementById('columnCheckboxes');
+const colorSwatches = document.getElementById('colorSwatches');
+const canvas = document.getElementById('canvas');
 
-    // Update column checkboxes
-    function updateColumnCheckboxes() {
-      columnCheckboxes.innerHTML = '';
-      
-      if (tableData.headers.length === 0) {
-        columnCheckboxContainer.style.display = 'none';
-        return;
-      }
-
-      columnCheckboxContainer.style.display = 'block';
-
-      tableData.headers.forEach((header, idx) => {
-        const row = document.createElement('div');
-        row.className = 'column-row';
-        
-        const label = document.createElement('label');
-        
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.checked = heatmapColumns.has(idx);
-        checkbox.onchange = () => {
-          if (checkbox.checked) {
-            heatmapColumns.add(idx);
-          } else {
-            heatmapColumns.delete(idx);
-          }
-          renderPreview();
-        };
-
-        label.appendChild(checkbox);
-        label.appendChild(document.createTextNode(header));
-        
-        const lowerBtn = document.createElement('button');
-        lowerBtn.className = `lower-better-btn ${lowerIsBetterColumns.has(idx) ? 'active' : ''}`;
-        lowerBtn.textContent = 'Lower is better';
-        lowerBtn.onclick = (e) => {
-          e.preventDefault();
-          if (lowerIsBetterColumns.has(idx)) {
-            lowerIsBetterColumns.delete(idx);
-            lowerBtn.classList.remove('active');
-          } else {
-            lowerIsBetterColumns.add(idx);
-            lowerBtn.classList.add('active');
-          }
-          renderPreview();
-        };
-
-        row.appendChild(label);
-        row.appendChild(lowerBtn);
-        columnCheckboxes.appendChild(row);
-      });
-    }
-
-    // Get numeric value from cell
-    function getNumericValue(val) {
-      if (!val) return null;
-      const cleaned = val.replace(/[$,%]/g, '');
-      const num = parseFloat(cleaned);
-      return isNaN(num) ? null : num;
-    }
-
-    // Get sorted rows
-    function getSortedRows() {
-      let rows = [...tableData.rows];
-      const maxRows = parseInt(maxRowsInput.value) || 20;
-
-      if (sortColumn !== null) {
-        rows.sort((a, b) => {
-          const aVal = getNumericValue(a[sortColumn]);
-          const bVal = getNumericValue(b[sortColumn]);
-
-          if (aVal === null && bVal === null) return 0;
-          if (aVal === null) return 1;
-          if (bVal === null) return -1;
-
-          return sortDirection === 'asc' ? aVal - bVal : bVal - aVal;
-        });
-      }
-
-      return rows.slice(0, maxRows);
-    }
-
-    // Get all values for percentile calculation
-    function getValuesForPercentile(colIdx, rows, mode) {
-      let values = [];
-
-      if (mode === 'column') {
-        values = rows.map(row => getNumericValue(row[colIdx])).filter(v => v !== null);
-      } else if (mode === 'all') {
-        rows.forEach(row => {
-          heatmapColumns.forEach(idx => {
-            const v = getNumericValue(row[idx]);
-            if (v !== null) values.push(v);
-          });
-        });
-      } else if (mode === 'row') {
-        // Will be calculated per-row
-        return null;
-      }
-
-      return values.sort((a, b) => a - b);
-    }
-
-    // Get row values for percentile
-    function getRowValues(row) {
-      const values = [];
-      heatmapColumns.forEach(idx => {
-        const v = getNumericValue(row[idx]);
-        if (v !== null) values.push(v);
-      });
-      return values.sort((a, b) => a - b);
-    }
-
-    // Get percentile bucket (0-9) for a value
-    function getPercentileBucket(value, sortedValues, lowerIsBetter) {
-      if (sortedValues.length === 0) return null;
-      if (sortedValues.length === 1) return lowerIsBetter ? 9 : 9; // Single value gets best color
-      
-      // Find position in sorted array
-      let position = 0;
-      for (let i = 0; i < sortedValues.length; i++) {
-        if (sortedValues[i] <= value) position = i;
-      }
-      
-      // Calculate percentile (0-100)
-      const percentile = (position / (sortedValues.length - 1)) * 100;
-      
-      // Convert to bucket (0-9)
-      let bucket = Math.min(9, Math.floor(percentile / 10));
-      
-      // Flip if lower is better
-      if (lowerIsBetter) {
-        bucket = 9 - bucket;
-      }
-      
-      return bucket;
-    }
-
-    // Get heatmap color based on percentile bucket
-    function getHeatmapColor(value, sortedValues, colIdx) {
-      if (!heatmapColumns.has(colIdx) || heatmapMode.value === 'none') return null;
-
-      const num = getNumericValue(value);
-      if (num === null || sortedValues.length === 0) return null;
-
-      const lowerIsBetter = lowerIsBetterColumns.has(colIdx);
-      const bucket = getPercentileBucket(num, sortedValues, lowerIsBetter);
-      
-      if (bucket === null) return null;
-
-      return colorSchemes[selectedColorScheme][bucket];
-    }
-
-    // Render preview table
-    function renderPreview() {
-      if (tableData.headers.length === 0) {
-        emptyState.style.display = 'flex';
-        previewContainer.style.display = 'none';
-        rowCountSpan.textContent = '';
-        downloadBtn.disabled = true;
-        return;
-      }
-
-      emptyState.style.display = 'none';
-      previewContainer.style.display = 'block';
-      downloadBtn.disabled = false;
-
-      const sortedRows = getSortedRows();
-      const showRanks = showRanksCheckbox.checked;
-      const showTitle = showTitleCheckbox.checked;
-      const title = titleInput.value;
-      const subtitle = subtitleInput.value;
-
-      rowCountSpan.textContent = `Showing ${sortedRows.length} of ${tableData.rows.length} rows`;
-
-      // Pre-calculate values for percentiles
-      const mode = heatmapMode.value;
-      const colValues = {};
-      
-      if (mode === 'column' || mode === 'all') {
-        heatmapColumns.forEach(colIdx => {
-          colValues[colIdx] = getValuesForPercentile(colIdx, sortedRows, mode);
-        });
-      }
-
-      let html = '';
-
-      if (showTitle && title) {
-        html += `<div class="preview-title">
-          <h2>${title}</h2>
-          ${subtitle ? `<p>${subtitle}</p>` : ''}
-        </div>`;
-      }
-
-      html += '<table class="preview-table"><thead><tr>';
-      
-      if (showRanks) {
-        html += `<th style="width: 40px;">#</th>`;
-      }
-
-      tableData.headers.forEach((header, idx) => {
-        const sortIndicator = sortColumn === idx 
-          ? (sortDirection === 'asc' ? '▲' : '▼') 
-          : '⇅';
-        html += `<th>
-          ${header}
-          <button class="sort-btn" onclick="handleSort(${idx})">${sortIndicator}</button>
-        </th>`;
-      });
-
-      html += '</tr></thead><tbody>';
-
-      sortedRows.forEach((row, rowIdx) => {
-        // Get row values for row-based percentile
-        const rowValues = mode === 'row' ? getRowValues(row) : null;
-
-        html += '<tr>';
-        
-        if (showRanks) {
-          const bgColor = rowIdx % 2 === 0 ? rowColors.odd : rowColors.even;
-          html += `<td style="font-weight: 600; color: #64748b; background: ${bgColor};">${rowIdx + 1}</td>`;
-        }
-
-        row.forEach((cell, colIdx) => {
-          let bgColor = rowIdx % 2 === 0 ? rowColors.odd : rowColors.even;
-          let textColor = '#1e293b';
-
-          if (heatmapColumns.has(colIdx) && mode !== 'none') {
-            const sortedVals = mode === 'row' ? rowValues : colValues[colIdx];
-            const heatColor = getHeatmapColor(cell, sortedVals || [], colIdx);
-            if (heatColor) {
-              bgColor = heatColor;
-            }
-          }
-
-          html += `<td style="background: ${bgColor}; color: ${textColor};">${cell}</td>`;
-        });
-
-        html += '</tr>';
-      });
-
-      html += '</tbody></table>';
-      previewContainer.innerHTML = html;
-    }
-
-    // Handle sort
-    window.handleSort = function(colIdx) {
-      if (sortColumn === colIdx) {
-        sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
-      } else {
-        sortColumn = colIdx;
-        sortDirection = 'asc';
-      }
+function initColorSwatches() {
+  const schemeLabels = { 'green-red': 'Green → Red', 'green-grey': 'Green → Grey' };
+  Object.entries(colorSchemes).forEach(([key, colors]) => {
+    const swatch = document.createElement('div');
+    swatch.className = `color-swatch ${key === selectedColorScheme ? 'selected' : ''}`;
+    swatch.style.background = `linear-gradient(90deg, ${colors[9]} 0%, ${colors[5]} 50%, ${colors[0]} 100%)`;
+    swatch.textContent = schemeLabels[key];
+    swatch.onclick = () => {
+      document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+      swatch.classList.add('selected');
+      selectedColorScheme = key;
       renderPreview();
     };
+    colorSwatches.appendChild(swatch);
+  });
+}
 
-    // Generate and download image
-    function generateImage() {
-      const ctx = canvas.getContext('2d');
-      
-      const rows = getSortedRows();
-      const showRanks = showRanksCheckbox.checked;
-      const showTitle = showTitleCheckbox.checked;
-      const headers = showRanks ? ['#', ...tableData.headers] : tableData.headers;
-      const dataRows = showRanks
-        ? rows.map((row, idx) => [(idx + 1).toString(), ...row])
-        : rows;
+function parseData(text) {
+  if (!text.trim()) { tableData = { headers: [], rows: [] }; return; }
+  const lines = text.trim().split('\n');
+  if (lines.length === 0) return;
+  const headers = lines[0].split('\t').map(h => h.trim());
+  const rows = lines.slice(1).map(line => line.split('\t').map(cell => cell.trim()));
+  tableData = { headers, rows };
+  const numericCols = new Set();
+  headers.forEach((_, colIdx) => {
+    const isNumeric = rows.every(row => { const val = row[colIdx]; return val === '' || !isNaN(parseFloat(val.replace(/[$,%]/g, ''))); });
+    if (isNumeric && colIdx > 0) numericCols.add(colIdx);
+  });
+  heatmapColumns = numericCols;
+  lowerIsBetterColumns = new Set();
+  updateColumnCheckboxes();
+}
 
-      const title = titleInput.value;
-      const subtitle = subtitleInput.value;
-
-      // Calculate dynamic dimensions
-      const padding = 24;
-      const cornerRadius = 16;
-      const titleHeight = (showTitle && title) ? (subtitle ? 65 : 45) : 0;
-      const rowHeight = 36;
-      const headerRowHeight = 42;
-      
-      // Calculate column widths based on content
-      const colWidths = headers.map((header, idx) => {
-        let maxLen = header.length;
-        dataRows.forEach(row => {
-          if (row[idx] && row[idx].length > maxLen) {
-            maxLen = row[idx].length;
-          }
-        });
-        return Math.max(50, maxLen * 8.5 + 20);
-      });
-      
-      const tableWidth = colWidths.reduce((a, b) => a + b, 0);
-      const tableContentHeight = headerRowHeight + rowHeight * dataRows.length;
-      
-      const width = tableWidth + padding * 2;
-      const height = titleHeight + tableContentHeight + padding * 2;
-
-      canvas.width = width;
-      canvas.height = height;
-
-      // Clear and draw rounded background
-      ctx.clearRect(0, 0, width, height);
-      ctx.fillStyle = '#ffffff';
-      ctx.beginPath();
-      ctx.roundRect(0, 0, width, height, cornerRadius);
-      ctx.fill();
-
-      const tableTop = padding + titleHeight;
-      const tableLeft = padding;
-
-      // Title
-      if (showTitle && title) {
-        ctx.fillStyle = '#1a1a2e';
-        ctx.font = 'bold 22px Inter, system-ui, sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText(title, width / 2, padding + 26);
-
-        if (subtitle) {
-          ctx.fillStyle = '#64748b';
-          ctx.font = '13px Inter, system-ui, sans-serif';
-          ctx.fillText(subtitle, width / 2, padding + 48);
-        }
-      }
-
-      // Table with rounded corners - clip path
-      ctx.save();
-      ctx.beginPath();
-      ctx.roundRect(tableLeft, tableTop, tableWidth, tableContentHeight, 10);
-      ctx.clip();
-
-      // Table header background
-      ctx.fillStyle = headerBgColor;
-      ctx.fillRect(tableLeft, tableTop, tableWidth, headerRowHeight);
-
-      // Header text
-      ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 12px Inter, system-ui, sans-serif';
-      ctx.textAlign = 'center';
-
-      let xPos = tableLeft;
-      headers.forEach((header, idx) => {
-        const x = xPos + colWidths[idx] / 2;
-        ctx.fillText(header, x, tableTop + 26);
-        xPos += colWidths[idx];
-      });
-
-      // Pre-calculate values for percentiles
-      const mode = heatmapMode.value;
-      const colValues = {};
-      
-      if (mode === 'column' || mode === 'all') {
-        heatmapColumns.forEach(colIdx => {
-          colValues[colIdx] = getValuesForPercentile(colIdx, rows, mode);
-        });
-      }
-
-      // Data rows
-      dataRows.forEach((row, rowIdx) => {
-        const y = tableTop + headerRowHeight + rowHeight * rowIdx;
-        const rowBgColor = rowIdx % 2 === 0 ? rowColors.odd : rowColors.even;
-
-        // Row background
-        ctx.fillStyle = rowBgColor;
-        ctx.fillRect(tableLeft, y, tableWidth, rowHeight);
-
-        // Get row values for row-based percentile
-        const rowValues = mode === 'row' ? getRowValues(rows[rowIdx]) : null;
-
-        let cellX = tableLeft;
-        row.forEach((cell, colIdx) => {
-          // Determine if this column should have heatmap
-          const originalColIdx = showRanks ? colIdx - 1 : colIdx;
-          const shouldHeatmap = showRanks 
-            ? colIdx > 0 && heatmapColumns.has(originalColIdx) 
-            : heatmapColumns.has(colIdx);
-
-          if (shouldHeatmap && mode !== 'none') {
-            const sortedVals = mode === 'row' ? rowValues : colValues[originalColIdx];
-            const heatColor = getHeatmapColor(cell, sortedVals || [], originalColIdx);
-            
-            if (heatColor) {
-              ctx.fillStyle = heatColor;
-              ctx.fillRect(cellX + 1, y + 1, colWidths[colIdx] - 2, rowHeight - 2);
-            }
-          }
-
-          // Cell text
-          ctx.fillStyle = '#1e293b';
-          ctx.font = '11px Inter, system-ui, sans-serif';
-          ctx.textAlign = 'center';
-          ctx.fillText(cell, cellX + colWidths[colIdx] / 2, y + rowHeight / 2 + 4);
-
-          cellX += colWidths[colIdx];
-        });
-      });
-
-      ctx.restore();
-
-      // Download
-      const link = document.createElement('a');
-      link.download = `table-${Date.now()}.png`;
-      link.href = canvas.toDataURL('image/png');
-      link.click();
-    }
-
-    // Event listeners
-    dataInput.addEventListener('input', (e) => {
-      parseData(e.target.value);
+function updateColumnCheckboxes() {
+  columnCheckboxes.innerHTML = '';
+  if (tableData.headers.length === 0) { columnCheckboxContainer.style.display = 'none'; return; }
+  columnCheckboxContainer.style.display = 'block';
+  tableData.headers.forEach((header, idx) => {
+    const row = document.createElement('div');
+    row.className = 'column-row';
+    const label = document.createElement('label');
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.checked = heatmapColumns.has(idx);
+    checkbox.onchange = () => { if (checkbox.checked) heatmapColumns.add(idx); else heatmapColumns.delete(idx); renderPreview(); };
+    label.appendChild(checkbox);
+    label.appendChild(document.createTextNode(header));
+    const lowerBtn = document.createElement('button');
+    lowerBtn.className = `lower-better-btn ${lowerIsBetterColumns.has(idx) ? 'active' : ''}`;
+    lowerBtn.textContent = 'Lower is better';
+    lowerBtn.onclick = (e) => {
+      e.preventDefault();
+      if (lowerIsBetterColumns.has(idx)) { lowerIsBetterColumns.delete(idx); lowerBtn.classList.remove('active'); }
+      else { lowerIsBetterColumns.add(idx); lowerBtn.classList.add('active'); }
       renderPreview();
+    };
+    row.appendChild(label);
+    row.appendChild(lowerBtn);
+    columnCheckboxes.appendChild(row);
+  });
+}
+
+function getNumericValue(val) {
+  if (!val) return null;
+  const cleaned = val.replace(/[$,%]/g, '');
+  const num = parseFloat(cleaned);
+  return isNaN(num) ? null : num;
+}
+
+function getSortedRows() {
+  let rows = [...tableData.rows];
+  const maxRows = parseInt(maxRowsInput.value) || 20;
+  if (sortColumn !== null) {
+    rows.sort((a, b) => {
+      const aVal = getNumericValue(a[sortColumn]);
+      const bVal = getNumericValue(b[sortColumn]);
+      if (aVal === null && bVal === null) return 0;
+      if (aVal === null) return 1;
+      if (bVal === null) return -1;
+      return sortDirection === 'asc' ? aVal - bVal : bVal - aVal;
     });
+  }
+  return rows.slice(0, maxRows);
+}
 
-    titleInput.addEventListener('input', renderPreview);
-    subtitleInput.addEventListener('input', renderPreview);
-    showTitleCheckbox.addEventListener('change', renderPreview);
-    heatmapMode.addEventListener('change', renderPreview);
-    maxRowsInput.addEventListener('input', renderPreview);
-    showRanksCheckbox.addEventListener('change', renderPreview);
-    downloadBtn.addEventListener('click', generateImage);
+function getValuesForPercentile(colIdx, rows, mode) {
+  let values = [];
+  if (mode === 'column') values = rows.map(row => getNumericValue(row[colIdx])).filter(v => v !== null);
+  else if (mode === 'all') { rows.forEach(row => { heatmapColumns.forEach(idx => { const v = getNumericValue(row[idx]); if (v !== null) values.push(v); }); }); }
+  else if (mode === 'row') return null;
+  return values.sort((a, b) => a - b);
+}
 
-    // Initialize
-    initColorSwatches();
-    renderPreview();
+function getRowValues(row) {
+  const values = [];
+  heatmapColumns.forEach(idx => { const v = getNumericValue(row[idx]); if (v !== null) values.push(v); });
+  return values.sort((a, b) => a - b);
+}
 
-    // ============================================
-    // TAB SWITCHING
-    // ============================================
-    const tabBtns = document.querySelectorAll('.tab-btn');
-    tabBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const tabId = btn.dataset.tab;
-        
-        // Update buttons
-        tabBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        
-        // Update content
-        document.querySelectorAll('.tab-content').forEach(content => {
-          content.classList.remove('active');
-        });
-        document.getElementById(`${tabId}-tab`).classList.add('active');
-      });
-    });
+function getPercentileBucket(value, sortedValues, lowerIsBetter) {
+  if (sortedValues.length === 0) return null;
+  if (sortedValues.length === 1) return 9;
+  let position = 0;
+  for (let i = 0; i < sortedValues.length; i++) { if (sortedValues[i] <= value) position = i; }
+  const percentile = (position / (sortedValues.length - 1)) * 100;
+  let bucket = Math.min(9, Math.floor(percentile / 10));
+  if (lowerIsBetter) bucket = 9 - bucket;
+  return bucket;
+}
 
-    // ============================================
-    // SCREENSHOT WRAPPER FUNCTIONALITY
-    // ============================================
-    const uploadZone = document.getElementById('uploadZone');
-    const screenshotInput = document.getElementById('screenshotInput');
-    const wrapperDownloadBtn = document.getElementById('wrapperDownloadBtn');
-    const wrapperEmptyState = document.getElementById('wrapperEmptyState');
-    const wrapperPreviewContainer = document.getElementById('wrapperPreviewContainer');
-    const borderThicknessSelect = document.getElementById('borderThickness');
-    const cornerRadiusSelect = document.getElementById('cornerRadius');
-    const imagePaddingSelect = document.getElementById('imagePadding');
-    const showLogoCheckbox = document.getElementById('showLogo');
-    const logoPositionSelect = document.getElementById('logoPosition');
-    const logoPositionLabel = document.getElementById('logoPositionLabel');
-    const maxOutputWidthSelect = document.getElementById('maxOutputWidth');
-    const wrapperCanvas = document.getElementById('wrapperCanvas');
-    
-    // Crop elements
-    const cropCard = document.getElementById('cropCard');
-    const cropContainer = document.getElementById('cropContainer');
-    const cropImage = document.getElementById('cropImage');
-    const cropOverlay = document.getElementById('cropOverlay');
-    const applyCropBtn = document.getElementById('applyCropBtn');
-    const resetCropBtn = document.getElementById('resetCropBtn');
+function getHeatmapColor(value, sortedValues, colIdx) {
+  if (!heatmapColumns.has(colIdx) || heatmapMode.value === 'none') return null;
+  const num = getNumericValue(value);
+  if (num === null || sortedValues.length === 0) return null;
+  const lowerIsBetter = lowerIsBetterColumns.has(colIdx);
+  const bucket = getPercentileBucket(num, sortedValues, lowerIsBetter);
+  if (bucket === null) return null;
+  return colorSchemes[selectedColorScheme][bucket];
+}
 
-    let uploadedImage = null;
-    let originalImage = null; // Store original for reset
-    let logoImage = null;
-    
-    // Crop state
-    let cropStart = null;
-    let cropEnd = null;
-    let isCropping = false;
-
-    // Load logo
-    const logoUrl = 'https://assets.actionnetwork.com/890922_855290_logo2.png';
-    
-    function loadLogo() {
-      return new Promise((resolve) => {
-        if (logoImage) {
-          resolve(logoImage);
-          return;
-        }
-        const img = new Image();
-        img.crossOrigin = 'anonymous';
-        img.onload = () => {
-          logoImage = img;
-          resolve(img);
-        };
-        img.onerror = () => {
-          console.log('Could not load logo');
-          resolve(null);
-        };
-        img.src = logoUrl;
-      });
-    }
-
-    // Pre-load logo
-    loadLogo();
-
-    // Upload zone click
-    uploadZone.addEventListener('click', () => {
-      screenshotInput.click();
-    });
-
-    // Drag and drop
-    uploadZone.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      uploadZone.classList.add('dragover');
-    });
-
-    uploadZone.addEventListener('dragleave', () => {
-      uploadZone.classList.remove('dragover');
-    });
-
-    uploadZone.addEventListener('drop', (e) => {
-      e.preventDefault();
-      uploadZone.classList.remove('dragover');
-      const file = e.dataTransfer.files[0];
-      if (file && file.type.startsWith('image/')) {
-        handleImageUpload(file);
+function renderPreview() {
+  if (tableData.headers.length === 0) {
+    emptyState.style.display = 'flex'; previewContainer.style.display = 'none';
+    rowCountSpan.textContent = ''; downloadBtn.disabled = true; return;
+  }
+  emptyState.style.display = 'none'; previewContainer.style.display = 'block'; downloadBtn.disabled = false;
+  const sortedRows = getSortedRows();
+  const showRanks = showRanksCheckbox.checked;
+  const showTitle = showTitleCheckbox.checked;
+  const title = titleInput.value;
+  const subtitle = subtitleInput.value;
+  rowCountSpan.textContent = `Showing ${sortedRows.length} of ${tableData.rows.length} rows`;
+  const mode = heatmapMode.value;
+  const colValues = {};
+  if (mode === 'column' || mode === 'all') { heatmapColumns.forEach(colIdx => { colValues[colIdx] = getValuesForPercentile(colIdx, sortedRows, mode); }); }
+  let html = '';
+  if (showTitle && title) { html += `<div class="preview-title"><h2>${title}</h2>${subtitle ? `<p>${subtitle}</p>` : ''}</div>`; }
+  html += '<table class="preview-table"><thead><tr>';
+  if (showRanks) html += `<th style="width: 40px;">#</th>`;
+  tableData.headers.forEach((header, idx) => {
+    const sortIndicator = sortColumn === idx ? (sortDirection === 'asc' ? '▲' : '▼') : '⇅';
+    html += `<th>${header}<button class="sort-btn" onclick="handleSort(${idx})">${sortIndicator}</button></th>`;
+  });
+  html += '</tr></thead><tbody>';
+  sortedRows.forEach((row, rowIdx) => {
+    const rowValues = mode === 'row' ? getRowValues(row) : null;
+    html += '<tr>';
+    if (showRanks) { const bgColor = rowIdx % 2 === 0 ? rowColors.odd : rowColors.even; html += `<td style="font-weight: 600; color: #64748b; background: ${bgColor};">${rowIdx + 1}</td>`; }
+    row.forEach((cell, colIdx) => {
+      let bgColor = rowIdx % 2 === 0 ? rowColors.odd : rowColors.even;
+      if (heatmapColumns.has(colIdx) && mode !== 'none') {
+        const sortedVals = mode === 'row' ? rowValues : colValues[colIdx];
+        const heatColor = getHeatmapColor(cell, sortedVals || [], colIdx);
+        if (heatColor) bgColor = heatColor;
       }
+      html += `<td style="background: ${bgColor}; color: #1e293b;">${cell}</td>`;
     });
+    html += '</tr>';
+  });
+  html += '</tbody></table>';
+  previewContainer.innerHTML = html;
+}
 
-    // File input change
-    screenshotInput.addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        handleImageUpload(file);
+window.handleSort = function(colIdx) {
+  if (sortColumn === colIdx) sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+  else { sortColumn = colIdx; sortDirection = 'asc'; }
+  renderPreview();
+};
+
+function generateImage() {
+  const ctx = canvas.getContext('2d');
+  const rows = getSortedRows();
+  const showRanks = showRanksCheckbox.checked;
+  const showTitle = showTitleCheckbox.checked;
+  const headers = showRanks ? ['#', ...tableData.headers] : tableData.headers;
+  const dataRows = showRanks ? rows.map((row, idx) => [(idx + 1).toString(), ...row]) : rows;
+  const title = titleInput.value;
+  const subtitle = subtitleInput.value;
+  const padding = 24, cornerRadius = 16;
+  const titleHeight = (showTitle && title) ? (subtitle ? 65 : 45) : 0;
+  const rowHeight = 36, headerRowHeight = 42;
+  const colWidths = headers.map((header, idx) => {
+    let maxLen = header.length;
+    dataRows.forEach(row => { if (row[idx] && row[idx].length > maxLen) maxLen = row[idx].length; });
+    return Math.max(50, maxLen * 8.5 + 20);
+  });
+  const tableWidth = colWidths.reduce((a, b) => a + b, 0);
+  const tableContentHeight = headerRowHeight + rowHeight * dataRows.length;
+  const width = tableWidth + padding * 2;
+  const height = titleHeight + tableContentHeight + padding * 2;
+  canvas.width = width; canvas.height = height;
+  const ctx2 = canvas.getContext('2d');
+  ctx2.clearRect(0, 0, width, height);
+  ctx2.fillStyle = '#ffffff';
+  ctx2.beginPath(); ctx2.roundRect(0, 0, width, height, cornerRadius); ctx2.fill();
+  const tableTop = padding + titleHeight, tableLeft = padding;
+  if (showTitle && title) {
+    ctx2.fillStyle = '#1a1a2e'; ctx2.font = 'bold 22px Inter, system-ui, sans-serif'; ctx2.textAlign = 'center';
+    ctx2.fillText(title, width / 2, padding + 26);
+    if (subtitle) { ctx2.fillStyle = '#64748b'; ctx2.font = '13px Inter, system-ui, sans-serif'; ctx2.fillText(subtitle, width / 2, padding + 48); }
+  }
+  ctx2.save(); ctx2.beginPath(); ctx2.roundRect(tableLeft, tableTop, tableWidth, tableContentHeight, 10); ctx2.clip();
+  ctx2.fillStyle = headerBgColor; ctx2.fillRect(tableLeft, tableTop, tableWidth, headerRowHeight);
+  ctx2.fillStyle = '#ffffff'; ctx2.font = 'bold 12px Inter, system-ui, sans-serif'; ctx2.textAlign = 'center';
+  let xPos = tableLeft;
+  headers.forEach((header, idx) => { ctx2.fillText(header, xPos + colWidths[idx] / 2, tableTop + 26); xPos += colWidths[idx]; });
+  const mode = heatmapMode.value, colValues = {};
+  if (mode === 'column' || mode === 'all') { heatmapColumns.forEach(colIdx => { colValues[colIdx] = getValuesForPercentile(colIdx, rows, mode); }); }
+  dataRows.forEach((row, rowIdx) => {
+    const y = tableTop + headerRowHeight + rowHeight * rowIdx;
+    ctx2.fillStyle = rowIdx % 2 === 0 ? rowColors.odd : rowColors.even;
+    ctx2.fillRect(tableLeft, y, tableWidth, rowHeight);
+    const rowValues = mode === 'row' ? getRowValues(rows[rowIdx]) : null;
+    let cellX = tableLeft;
+    row.forEach((cell, colIdx) => {
+      const originalColIdx = showRanks ? colIdx - 1 : colIdx;
+      const shouldHeatmap = showRanks ? colIdx > 0 && heatmapColumns.has(originalColIdx) : heatmapColumns.has(colIdx);
+      if (shouldHeatmap && mode !== 'none') {
+        const sortedVals = mode === 'row' ? rowValues : colValues[originalColIdx];
+        const heatColor = getHeatmapColor(cell, sortedVals || [], originalColIdx);
+        if (heatColor) { ctx2.fillStyle = heatColor; ctx2.fillRect(cellX + 1, y + 1, colWidths[colIdx] - 2, rowHeight - 2); }
       }
+      ctx2.fillStyle = '#1e293b'; ctx2.font = '11px Inter, system-ui, sans-serif'; ctx2.textAlign = 'center';
+      ctx2.fillText(cell, cellX + colWidths[colIdx] / 2, y + rowHeight / 2 + 4);
+      cellX += colWidths[colIdx];
     });
+  });
+  ctx2.restore();
+  const link = document.createElement('a');
+  link.download = `table-${Date.now()}.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
 
-    function handleImageUpload(file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const img = new Image();
-        img.onload = () => {
-          originalImage = img;
-          uploadedImage = img;
-          
-          // Show crop tool
-          cropCard.style.display = 'block';
-          cropImage.src = img.src;
-          resetCropSelection();
-          
-          renderWrapperPreview();
-          wrapperDownloadBtn.disabled = false;
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
+dataInput.addEventListener('input', (e) => { parseData(e.target.value); renderPreview(); });
+titleInput.addEventListener('input', renderPreview);
+subtitleInput.addEventListener('input', renderPreview);
+showTitleCheckbox.addEventListener('change', renderPreview);
+heatmapMode.addEventListener('change', renderPreview);
+maxRowsInput.addEventListener('input', renderPreview);
+showRanksCheckbox.addEventListener('change', renderPreview);
+downloadBtn.addEventListener('click', generateImage);
+initColorSwatches();
+renderPreview();
+
+// ════════════════════════════════════════════════════════════════
+// TAB SWITCHING
+// ════════════════════════════════════════════════════════════════
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tabId = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.getElementById(`${tabId}-tab`).classList.add('active');
+  });
+});
+
+// ════════════════════════════════════════════════════════════════
+// SCREENSHOT WRAPPER (unchanged)
+// ════════════════════════════════════════════════════════════════
+const uploadZone = document.getElementById('uploadZone');
+const screenshotInput = document.getElementById('screenshotInput');
+const wrapperDownloadBtn = document.getElementById('wrapperDownloadBtn');
+const wrapperEmptyState = document.getElementById('wrapperEmptyState');
+const wrapperPreviewContainer = document.getElementById('wrapperPreviewContainer');
+const borderThicknessSelect = document.getElementById('borderThickness');
+const cornerRadiusSelect = document.getElementById('cornerRadius');
+const imagePaddingSelect = document.getElementById('imagePadding');
+const showLogoCheckbox = document.getElementById('showLogo');
+const logoPositionSelect = document.getElementById('logoPosition');
+const logoPositionLabel = document.getElementById('logoPositionLabel');
+const maxOutputWidthSelect = document.getElementById('maxOutputWidth');
+const wrapperCanvas = document.getElementById('wrapperCanvas');
+const cropCard = document.getElementById('cropCard');
+const cropContainer = document.getElementById('cropContainer');
+const cropImage = document.getElementById('cropImage');
+const cropOverlay = document.getElementById('cropOverlay');
+const applyCropBtn = document.getElementById('applyCropBtn');
+const resetCropBtn = document.getElementById('resetCropBtn');
+
+let uploadedImage = null, originalImage = null, logoImage = null;
+let cropStart = null, cropEnd = null, isCropping = false;
+const logoUrl = 'https://assets.actionnetwork.com/890922_855290_logo2.png';
+
+function loadLogo() {
+  return new Promise((resolve) => {
+    if (logoImage) { resolve(logoImage); return; }
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => { logoImage = img; resolve(img); };
+    img.onerror = () => resolve(null);
+    img.src = logoUrl;
+  });
+}
+loadLogo();
+
+uploadZone.addEventListener('click', () => screenshotInput.click());
+uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+uploadZone.addEventListener('drop', (e) => {
+  e.preventDefault(); uploadZone.classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) handleImageUpload(file);
+});
+screenshotInput.addEventListener('change', (e) => { if (e.target.files[0]) handleImageUpload(e.target.files[0]); });
+
+function handleImageUpload(file) {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const img = new Image();
+    img.onload = () => { originalImage = img; uploadedImage = img; cropCard.style.display = 'block'; cropImage.src = img.src; resetCropSelection(); renderWrapperPreview(); wrapperDownloadBtn.disabled = false; };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function resetCropSelection() { cropStart = null; cropEnd = null; cropOverlay.style.display = 'none'; applyCropBtn.disabled = true; }
+
+function getCropCoords(e) {
+  const rect = cropContainer.getBoundingClientRect();
+  let clientX, clientY;
+  if (e.touches && e.touches.length > 0) { clientX = e.touches[0].clientX; clientY = e.touches[0].clientY; }
+  else if (e.changedTouches && e.changedTouches.length > 0) { clientX = e.changedTouches[0].clientX; clientY = e.changedTouches[0].clientY; }
+  else { clientX = e.clientX; clientY = e.clientY; }
+  return { x: Math.max(0, Math.min(clientX - rect.left, rect.width)), y: Math.max(0, Math.min(clientY - rect.top, rect.height)) };
+}
+
+function startCrop(e) { e.preventDefault(); isCropping = true; cropStart = getCropCoords(e); cropEnd = cropStart; updateCropOverlay(); cropOverlay.style.display = 'block'; }
+function moveCrop(e) { if (!isCropping) return; e.preventDefault(); cropEnd = getCropCoords(e); updateCropOverlay(); }
+function endCrop(e) {
+  if (!isCropping) return; isCropping = false;
+  if (cropStart && cropEnd) { const w = Math.abs(cropEnd.x - cropStart.x), h = Math.abs(cropEnd.y - cropStart.y); if (w > 10 && h > 10) applyCropBtn.disabled = false; else resetCropSelection(); }
+}
+cropContainer.addEventListener('mousedown', startCrop);
+document.addEventListener('mousemove', moveCrop);
+document.addEventListener('mouseup', endCrop);
+cropContainer.addEventListener('touchstart', startCrop, { passive: false });
+document.addEventListener('touchmove', moveCrop, { passive: false });
+document.addEventListener('touchend', endCrop);
+
+function updateCropOverlay() {
+  if (!cropStart || !cropEnd) return;
+  const left = Math.min(cropStart.x, cropEnd.x), top = Math.min(cropStart.y, cropEnd.y);
+  const width = Math.abs(cropEnd.x - cropStart.x), height = Math.abs(cropEnd.y - cropStart.y);
+  Object.assign(cropOverlay.style, { left: left+'px', top: top+'px', width: width+'px', height: height+'px' });
+}
+
+applyCropBtn.addEventListener('click', () => {
+  if (!cropStart || !cropEnd || !originalImage) return;
+  const scaleX = originalImage.width / cropImage.clientWidth, scaleY = originalImage.height / cropImage.clientHeight;
+  const left = Math.min(cropStart.x, cropEnd.x) * scaleX, top = Math.min(cropStart.y, cropEnd.y) * scaleY;
+  const width = Math.abs(cropEnd.x - cropStart.x) * scaleX, height = Math.abs(cropEnd.y - cropStart.y) * scaleY;
+  const tempCanvas = document.createElement('canvas');
+  tempCanvas.width = width; tempCanvas.height = height;
+  tempCanvas.getContext('2d').drawImage(originalImage, left, top, width, height, 0, 0, width, height);
+  const croppedImg = new Image();
+  croppedImg.onload = () => { uploadedImage = croppedImg; cropImage.src = croppedImg.src; resetCropSelection(); renderWrapperPreview(); };
+  croppedImg.src = tempCanvas.toDataURL('image/png');
+});
+
+resetCropBtn.addEventListener('click', () => { if (originalImage) { uploadedImage = originalImage; cropImage.src = originalImage.src; resetCropSelection(); renderWrapperPreview(); } });
+
+function renderWrapperPreview() {
+  if (!uploadedImage) { wrapperEmptyState.style.display = 'flex'; wrapperPreviewContainer.style.display = 'none'; return; }
+  wrapperEmptyState.style.display = 'none'; wrapperPreviewContainer.style.display = 'flex';
+  const borderThickness = parseInt(borderThicknessSelect.value);
+  const cornerRadius = parseInt(cornerRadiusSelect.value);
+  const padding = parseInt(imagePaddingSelect.value);
+  const showLogo = showLogoCheckbox.checked;
+  const logoPosition = logoPositionSelect.value;
+  logoPositionLabel.style.display = showLogo ? 'block' : 'none';
+  let html = `<div style="background:white;border-radius:${cornerRadius+4}px;padding:${padding}px;display:inline-block;border:${borderThickness}px solid #00c358;position:relative;max-width:100%;">
+    <img src="${uploadedImage.src}" style="display:block;border-radius:${Math.max(0,cornerRadius-4)}px;max-width:100%;max-height:400px;">`;
+  if (showLogo && logoImage) {
+    const posStyles = {'bottom-left':'bottom:4px;left:4px;','bottom-right':'bottom:4px;right:4px;','top-left':'top:4px;left:4px;','top-right':'top:4px;right:4px;'};
+    html += `<img src="${logoUrl}" style="position:absolute;${posStyles[logoPosition]}height:28px;border-radius:4px;">`;
+  }
+  html += '</div>';
+  wrapperPreviewContainer.innerHTML = html;
+}
+
+async function generateWrappedImage() {
+  if (!uploadedImage) return;
+  const ctx = wrapperCanvas.getContext('2d');
+  const borderThickness = parseInt(borderThicknessSelect.value);
+  const cornerRadius = parseInt(cornerRadiusSelect.value);
+  const padding = parseInt(imagePaddingSelect.value);
+  const showLogo = showLogoCheckbox.checked;
+  const logoPosition = logoPositionSelect.value;
+  const maxWidth = parseInt(maxOutputWidthSelect.value);
+  let imgWidth = uploadedImage.width, imgHeight = uploadedImage.height, scale = 1;
+  if (maxWidth > 0) { const avail = maxWidth - (padding + borderThickness) * 2; if (imgWidth > avail) { scale = avail / imgWidth; imgWidth = avail; imgHeight = uploadedImage.height * scale; } }
+  const totalPadding = padding + borderThickness;
+  const canvasWidth = imgWidth + totalPadding * 2, canvasHeight = imgHeight + totalPadding * 2;
+  wrapperCanvas.width = canvasWidth; wrapperCanvas.height = canvasHeight;
+  ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+  ctx.fillStyle = '#00c358'; ctx.beginPath(); ctx.roundRect(0, 0, canvasWidth, canvasHeight, cornerRadius); ctx.fill();
+  ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.roundRect(borderThickness, borderThickness, canvasWidth - borderThickness*2, canvasHeight - borderThickness*2, Math.max(0, cornerRadius - borderThickness/2)); ctx.fill();
+  ctx.save(); ctx.beginPath(); ctx.roundRect(totalPadding, totalPadding, imgWidth, imgHeight, Math.max(0, cornerRadius - borderThickness - padding/2)); ctx.clip();
+  ctx.drawImage(uploadedImage, totalPadding, totalPadding, imgWidth, imgHeight);
+  ctx.restore();
+  if (showLogo) {
+    const logo = await loadLogo();
+    if (logo) {
+      const logoHeight = Math.max(24, Math.min(36, imgHeight * 0.06));
+      const logoWidth = (logo.width / logo.height) * logoHeight;
+      const logoMargin = padding / 2 + borderThickness;
+      let logoX, logoY;
+      if (logoPosition === 'bottom-left') { logoX = logoMargin; logoY = canvasHeight - logoHeight - logoMargin; }
+      else if (logoPosition === 'bottom-right') { logoX = canvasWidth - logoWidth - logoMargin; logoY = canvasHeight - logoHeight - logoMargin; }
+      else if (logoPosition === 'top-left') { logoX = logoMargin; logoY = logoMargin; }
+      else { logoX = canvasWidth - logoWidth - logoMargin; logoY = logoMargin; }
+      ctx.save(); ctx.beginPath(); ctx.roundRect(logoX, logoY, logoWidth, logoHeight, 4); ctx.clip();
+      ctx.drawImage(logo, logoX, logoY, logoWidth, logoHeight); ctx.restore();
     }
-    
-    // Crop functionality
-    function resetCropSelection() {
-      cropStart = null;
-      cropEnd = null;
-      cropOverlay.style.display = 'none';
-      applyCropBtn.disabled = true;
+  }
+  const link = document.createElement('a');
+  link.download = `wrapped-${Date.now()}.png`; link.href = wrapperCanvas.toDataURL('image/png'); link.click();
+}
+
+borderThicknessSelect.addEventListener('change', renderWrapperPreview);
+cornerRadiusSelect.addEventListener('change', renderWrapperPreview);
+imagePaddingSelect.addEventListener('change', renderWrapperPreview);
+showLogoCheckbox.addEventListener('change', renderWrapperPreview);
+logoPositionSelect.addEventListener('change', renderWrapperPreview);
+maxOutputWidthSelect.addEventListener('change', renderWrapperPreview);
+wrapperDownloadBtn.addEventListener('click', generateWrappedImage);
+
+// ════════════════════════════════════════════════════════════════
+// PICK GRID
+// ════════════════════════════════════════════════════════════════
+
+// ESPN logo URL builder
+// Pattern: https://a.espncdn.com/i/teamlogos/{sport}/500/{id}.png
+// For college teams, ESPN uses numeric IDs. We store a large lookup map.
+// For pro sports, ESPN uses abbreviation-based URLs.
+
+const ESPN_PRO_ABBREVS = {
+  // NFL
+  'arizona cardinals':'ari','atlanta falcons':'atl','baltimore ravens':'bal','buffalo bills':'buf',
+  'carolina panthers':'car','chicago bears':'chi','cincinnati bengals':'cin','cleveland browns':'cle',
+  'dallas cowboys':'dal','denver broncos':'den','detroit lions':'det','green bay packers':'gb',
+  'houston texans':'hou','indianapolis colts':'ind','jacksonville jaguars':'jax','kansas city chiefs':'kc',
+  'las vegas raiders':'lv','los angeles chargers':'lac','los angeles rams':'lar','miami dolphins':'mia',
+  'minnesota vikings':'min','new england patriots':'ne','new orleans saints':'no','new york giants':'nyg',
+  'new york jets':'nyj','philadelphia eagles':'phi','pittsburgh steelers':'pit','san francisco 49ers':'sf',
+  'seattle seahawks':'sea','tampa bay buccaneers':'tb','tennessee titans':'ten','washington commanders':'wsh',
+  // Short names
+  'cardinals':'ari','falcons':'atl','ravens':'bal','bills':'buf','panthers':'car','bears':'chi',
+  'bengals':'cin','browns':'cle','cowboys':'dal','broncos':'den','lions':'det','packers':'gb',
+  'texans':'hou','colts':'ind','jaguars':'jax','chiefs':'kc','raiders':'lv','chargers':'lac',
+  'rams':'lar','dolphins':'mia','vikings':'min','patriots':'ne','saints':'no','giants':'nyg',
+  'jets':'nyj','eagles':'phi','steelers':'pit','49ers':'sf','seahawks':'sea','buccaneers':'tb',
+  'titans':'ten','commanders':'wsh',
+  // NBA
+  'atlanta hawks':'atl','boston celtics':'bos','brooklyn nets':'bkn','charlotte hornets':'cha',
+  'chicago bulls':'chi','cleveland cavaliers':'cle','dallas mavericks':'dal','denver nuggets':'den',
+  'detroit pistons':'det','golden state warriors':'gs','houston rockets':'hou','indiana pacers':'ind',
+  'los angeles clippers':'lac','los angeles lakers':'lal','memphis grizzlies':'mem','miami heat':'mia',
+  'milwaukee bucks':'mil','minnesota timberwolves':'min','new orleans pelicans':'no','new york knicks':'ny',
+  'oklahoma city thunder':'okc','orlando magic':'orl','philadelphia 76ers':'phi','phoenix suns':'phx',
+  'portland trail blazers':'por','sacramento kings':'sac','san antonio spurs':'sa','toronto raptors':'tor',
+  'utah jazz':'utah','washington wizards':'wsh',
+  'hawks':'atl','celtics':'bos','nets':'bkn','hornets':'cha','bulls':'chi','cavaliers':'cle',
+  'cavs':'cle','mavericks':'dal','mavs':'dal','nuggets':'den','pistons':'det','warriors':'gs',
+  'rockets':'hou','pacers':'ind','clippers':'lac','lakers':'lal','grizzlies':'mem','heat':'mia',
+  'bucks':'mil','timberwolves':'min','wolves':'min','pelicans':'no','knicks':'ny','thunder':'okc',
+  'magic':'orl','76ers':'phi','sixers':'phi','suns':'phx','blazers':'por','trail blazers':'por',
+  'kings':'sac','spurs':'sa','raptors':'tor','jazz':'utah','wizards':'wsh',
+  // MLB
+  'arizona diamondbacks':'ari','atlanta braves':'atl','baltimore orioles':'bal','boston red sox':'bos',
+  'chicago cubs':'chc','chicago white sox':'chw','cincinnati reds':'cin','cleveland guardians':'cle',
+  'colorado rockies':'col','detroit tigers':'det','houston astros':'hou','kansas city royals':'kc',
+  'los angeles angels':'laa','los angeles dodgers':'lad','miami marlins':'mia','milwaukee brewers':'mil',
+  'minnesota twins':'min','new york mets':'nym','new york yankees':'nyy','oakland athletics':'oak',
+  'philadelphia phillies':'phi','pittsburgh pirates':'pit','san diego padres':'sd','san francisco giants':'sf',
+  'seattle mariners':'sea','st. louis cardinals':'stl','tampa bay rays':'tb','texas rangers':'tex',
+  'toronto blue jays':'tor','washington nationals':'wsh',
+  'diamondbacks':'ari','braves':'atl','orioles':'bal','red sox':'bos','cubs':'chc','white sox':'chw',
+  'reds':'cin','guardians':'cle','rockies':'col','tigers':'det','astros':'hou','royals':'kc',
+  'angels':'laa','dodgers':'lad','marlins':'mia','brewers':'mil','twins':'min','mets':'nym',
+  'yankees':'nyy','athletics':'oak',"a's":'oak','phillies':'phi','pirates':'pit','padres':'sd',
+  'giants':'sf','mariners':'sea','cardinals':'stl','rays':'tb','rangers':'tex','blue jays':'tor','nationals':'wsh',
+  // NHL
+  'anaheim ducks':'ana','arizona coyotes':'ari','boston bruins':'bos','buffalo sabres':'buf',
+  'calgary flames':'cgy','carolina hurricanes':'car','chicago blackhawks':'chi','colorado avalanche':'col',
+  'columbus blue jackets':'cbj','dallas stars':'dal','detroit red wings':'det','edmonton oilers':'edm',
+  'florida panthers':'fla','los angeles kings':'la','minnesota wild':'min','montreal canadiens':'mtl',
+  'nashville predators':'nsh','new jersey devils':'nj','new york islanders':'nyi','new york rangers':'nyr',
+  'ottawa senators':'ott','philadelphia flyers':'phi','pittsburgh penguins':'pit','san jose sharks':'sjs',
+  'seattle kraken':'sea','st. louis blues':'stl','tampa bay lightning':'tb','toronto maple leafs':'tor',
+  'vancouver canucks':'van','vegas golden knights':'vgk','washington capitals':'wsh','winnipeg jets':'wpg',
+  'ducks':'ana','bruins':'bos','sabres':'buf','flames':'cgy','hurricanes':'car','blackhawks':'chi',
+  'avalanche':'col','blue jackets':'cbj','stars':'dal','red wings':'det','oilers':'edm',
+  'kings':'la','wild':'min','canadiens':'mtl','habs':'mtl','predators':'nsh','preds':'nsh',
+  'devils':'nj','islanders':'nyi','rangers':'nyr','senators':'ott','sens':'ott','flyers':'phi',
+  'penguins':'pit','sharks':'sjs','kraken':'sea','blues':'stl','lightning':'tb','maple leafs':'tor',
+  'leafs':'tor','canucks':'van','golden knights':'vgk','capitals':'wsh','caps':'wsh','jets':'wpg'
+};
+
+// College football / basketball ESPN IDs (large but necessary)
+const ESPN_COLLEGE_IDS = {
+  // Top 25 programs + common ones
+  'alabama':333,'ohio state':194,'georgia':61,'michigan':130,'clemson':228,
+  'notre dame':87,'oklahoma':201,'lsu':99,'penn state':213,'texas':251,
+  'florida':57,'usc':30,'oregon':2483,'auburn':2,'miami':97,
+  'texas a&m':245,'utah':254,'baylor':239,'ole miss':145,'tennessee':2633,
+  'iowa':2294,'kentucky':96,'arkansas':8,'florida state':52,'washington':264,
+  'wisconsin':275,'michigan state':127,'nc state':152,'kansas state':2306,
+  'oklahoma state':197,'west virginia':277,'stanford':24,'colorado':38,
+  'ucla':26,'arizona':12,'arizona state':9,'byu':252,'iowa state':66,
+  'kansas':2305,'minnesota':135,'indiana':84,'purdue':2509,'rutgers':164,
+  'maryland':120,'nebraska':158,'northwestern':77,'illinois':356,'wake forest':154,
+  'virginia tech':259,'virginia':258,'duke':150,'north carolina':153,'pittsburgh':221,
+  'syracuse':183,'louisville':97,'boston college':103,'georgia tech':59,
+  'navy':2426,'army':349,'air force':2005,'hawaii':62,'memphis':235,
+  'cincinnati':2132,'ucf':2116,'houston':248,'smu':2567,'tulane':2655,
+  'tulsa':202,'east carolina':2199,'temple':218,'south florida':58,'rice':242,
+  'utsa':2636,'north texas':249,'louisiana tech':2348,'marshall':276,
+  'southern miss':2572,'middle tennessee':2393,'utep':2638,'old dominion':295,
+  'charlotte':2429,'fiu':2229,'western kentucky':2751,'liberty':2335,
+  'coastal carolina':324,'appalachian state':2026,'georgia southern':290,
+  'troy':2653,'louisiana':309,'south alabama':6,'texas state':326,'southern':2582,
+  'james madison':256,'kennesaw state':338,'sam houston':2534,'western michigan':2711,
+  'central michigan':2117,'eastern michigan':2199,'ball state':2050,'ohio':195,
+  'toledo':2649,'bowling green':189,'northern illinois':2459,'miami ohio':193,
+  'buffalo':2084,'akron':2006,'kent state':2309,'massachusetts':113,
+  'nevada':2440,'unlv':2439,'fresno state':278,'san jose state':23,'wyoming':2751,
+  'boise state':68,'colorado state':36,'new mexico':167,'air force':2005,
+  'uconn':41,'temple':218,'fordham':2210,'holy cross':2289,'colgate':2116,
+  'villanova':222,'delaware':48,'maine':311,'new hampshire':161,
+  'northeastern':111,'rhode island':227,'richmond':257,'stony brook':164,
+  'towson':119,'william & mary':2718,'james madison':256,
+  // College basketball specific
+  'gonzaga':2250,'duke':150,'kansas':2305,'baylor':239,'villanova':222,
+  'connecticut':41,'uconn':41,'houston':248,'purdue':2509,'san diego state':21,
+  'creighton':156,'xavier':2752,'marquette':269,'providence':2507,
+  'seton hall':2550,'st. john\'s':2569,'butler':2086,'depaul':305,
+  'georgetown':46,'memphis':235
+};
+
+let pgData = { headers: [], rows: [] };
+let pgLogoCache = {}; // teamName -> { url, loaded, img }
+let pgManualOverrides = {}; // teamName -> url
+let pgMissingTeams = new Set();
+
+const pgDataInput = document.getElementById('pgDataInput');
+const pgTitleInput = document.getElementById('pgTitle');
+const pgSubtitleInput = document.getElementById('pgSubtitle');
+const pgSportSelect = document.getElementById('pgSport');
+const pgLogoSizeSelect = document.getElementById('pgLogoSize');
+const pgShowTeamNameCheckbox = document.getElementById('pgShowTeamName');
+const pgHeaderColorSelect = document.getElementById('pgHeaderColor');
+const pgLogoPositionSelect = document.getElementById('pgLogoPosition');
+const pgDownloadBtn = document.getElementById('pgDownloadBtn');
+const pgEmptyState = document.getElementById('pgEmptyState');
+const pgPreviewContainer = document.getElementById('pgPreviewContainer');
+const pgOverrideCard = document.getElementById('pgOverrideCard');
+const pgOverrideList = document.getElementById('pgOverrideList');
+const pgTableContainer = document.getElementById('pgTableContainer');
+const pgLogoStatus = document.getElementById('pgLogoStatus');
+const pgStatusBadge = document.getElementById('pgStatusBadge');
+const pickGridCanvas = document.getElementById('pickGridCanvas');
+
+function parsePgData(text) {
+  if (!text.trim()) { pgData = { headers: [], rows: [] }; return; }
+  const lines = text.trim().split('\n');
+  if (lines.length < 2) { pgData = { headers: [], rows: [] }; return; }
+  // First row: blank cell + category names
+  const headers = lines[0].split('\t').map(h => h.trim());
+  // categories = headers[1], headers[2], ...
+  // rows: col0 = picker name, rest = team names
+  const rows = lines.slice(1).map(line => line.split('\t').map(c => c.trim()));
+  pgData = { headers, rows };
+}
+
+function getEspnLogoUrl(teamName, sport) {
+  const key = teamName.toLowerCase().trim();
+  if (!key) return null;
+
+  // Check manual overrides first
+  if (pgManualOverrides[key]) return pgManualOverrides[key];
+
+  const isCollegeSport = sport.includes('college') || sport.includes('ncaa');
+
+  if (isCollegeSport) {
+    // Try exact match first
+    const id = ESPN_COLLEGE_IDS[key];
+    if (id) return `https://a.espncdn.com/i/teamlogos/${sport}/500/${id}.png`;
+    // Try partial match
+    for (const [name, id2] of Object.entries(ESPN_COLLEGE_IDS)) {
+      if (key.includes(name) || name.includes(key)) return `https://a.espncdn.com/i/teamlogos/${sport}/500/${id2}.png`;
     }
-    
-    function getCropCoords(e) {
-      const rect = cropContainer.getBoundingClientRect();
-      let clientX, clientY;
-      
-      // Handle both mouse and touch events
-      if (e.touches && e.touches.length > 0) {
-        clientX = e.touches[0].clientX;
-        clientY = e.touches[0].clientY;
-      } else if (e.changedTouches && e.changedTouches.length > 0) {
-        clientX = e.changedTouches[0].clientX;
-        clientY = e.changedTouches[0].clientY;
-      } else {
-        clientX = e.clientX;
-        clientY = e.clientY;
-      }
-      
-      const x = Math.max(0, Math.min(clientX - rect.left, rect.width));
-      const y = Math.max(0, Math.min(clientY - rect.top, rect.height));
-      return { x, y };
+  }
+
+  // Pro sports — use abbreviation
+  const abbrev = ESPN_PRO_ABBREVS[key];
+  if (abbrev) {
+    // Map sport to ESPN path
+    const sportPaths = {
+      'nfl': 'nfl', 'nba': 'nba', 'mlb': 'mlb', 'nhl': 'nhl',
+      'soccer/usa.1': 'soccer/usa.1'
+    };
+    const path = sportPaths[sport] || sport;
+    return `https://a.espncdn.com/i/teamlogos/${path}/500/${abbrev}.png`;
+  }
+
+  // Try abbreviation lookup regardless of selected sport (helpful for mixed tables)
+  for (const [name, abbr] of Object.entries(ESPN_PRO_ABBREVS)) {
+    if (key === name) {
+      const sp = sport.includes('college') ? 'nfl' : sport;
+      return `https://a.espncdn.com/i/teamlogos/${sp}/500/${abbr}.png`;
     }
-    
-    function startCrop(e) {
-      e.preventDefault();
-      isCropping = true;
-      cropStart = getCropCoords(e);
-      cropEnd = cropStart;
-      updateCropOverlay();
-      cropOverlay.style.display = 'block';
+  }
+
+  return null; // Will show initials
+}
+
+function getTeamInitials(name) {
+  return name.split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0, 3);
+}
+
+function getAllTeams() {
+  const teams = new Set();
+  pgData.rows.forEach(row => {
+    for (let i = 1; i < row.length; i++) {
+      if (row[i]) teams.add(row[i].trim());
     }
-    
-    function moveCrop(e) {
-      if (!isCropping) return;
-      e.preventDefault();
-      cropEnd = getCropCoords(e);
-      updateCropOverlay();
-    }
-    
-    function endCrop(e) {
-      if (!isCropping) return;
-      isCropping = false;
-      
-      // Check if selection is big enough
-      if (cropStart && cropEnd) {
-        const width = Math.abs(cropEnd.x - cropStart.x);
-        const height = Math.abs(cropEnd.y - cropStart.y);
-        if (width > 10 && height > 10) {
-          applyCropBtn.disabled = false;
+  });
+  return [...teams];
+}
+
+async function preloadLogos() {
+  const sport = pgSportSelect.value;
+  const teams = getAllTeams();
+  pgMissingTeams = new Set();
+  const promises = teams.map(team => new Promise(resolve => {
+    const key = team.toLowerCase().trim();
+    if (pgLogoCache[key] && pgLogoCache[key].sport === sport) { resolve(); return; }
+    const url = getEspnLogoUrl(team, sport);
+    if (!url) { pgMissingTeams.add(team); pgLogoCache[key] = { url: null, loaded: false, img: null, sport }; resolve(); return; }
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => { pgLogoCache[key] = { url, loaded: true, img, sport }; resolve(); };
+    img.onerror = () => { pgMissingTeams.add(team); pgLogoCache[key] = { url, loaded: false, img: null, sport }; resolve(); };
+    img.src = url;
+  }));
+  await Promise.all(promises);
+}
+
+function renderPgOverrides() {
+  const missing = [...pgMissingTeams].filter(t => !pgManualOverrides[t.toLowerCase().trim()]);
+  if (missing.length === 0) { pgOverrideCard.style.display = 'none'; return; }
+  pgOverrideCard.style.display = 'block';
+  pgOverrideList.innerHTML = '';
+  missing.forEach(team => {
+    const row = document.createElement('div');
+    row.className = 'team-override-row';
+    const nameEl = document.createElement('span');
+    nameEl.className = 'team-name';
+    nameEl.textContent = team;
+    const urlInput = document.createElement('input');
+    urlInput.type = 'text';
+    urlInput.className = 'input-field';
+    urlInput.placeholder = 'Logo URL (optional)';
+    urlInput.value = pgManualOverrides[team.toLowerCase().trim()] || '';
+    urlInput.addEventListener('change', () => {
+      const val = urlInput.value.trim();
+      if (val) { pgManualOverrides[team.toLowerCase().trim()] = val; }
+      else { delete pgManualOverrides[team.toLowerCase().trim()]; }
+      // Re-preload and re-render
+      delete pgLogoCache[team.toLowerCase().trim()];
+      updatePgPreview();
+    });
+    row.appendChild(nameEl);
+    row.appendChild(urlInput);
+    pgOverrideList.appendChild(row);
+  });
+}
+
+async function updatePgPreview() {
+  if (pgData.headers.length === 0 || pgData.rows.length === 0) {
+    pgEmptyState.style.display = 'flex';
+    pgPreviewContainer.style.display = 'none';
+    pgDownloadBtn.disabled = true;
+    return;
+  }
+
+  pgEmptyState.style.display = 'none';
+  pgPreviewContainer.style.display = 'block';
+  pgDownloadBtn.disabled = false;
+
+  await preloadLogos();
+  renderPgOverrides();
+
+  const sport = pgSportSelect.value;
+  const logoSize = parseInt(pgLogoSizeSelect.value);
+  const showName = pgShowTeamNameCheckbox.checked;
+  const headerColor = pgHeaderColorSelect.value;
+  const categories = pgData.headers.slice(1); // skip first (picker col)
+
+  // Status
+  const total = getAllTeams().length;
+  const matched = total - pgMissingTeams.size;
+  pgLogoStatus.style.display = 'block';
+  pgLogoStatus.innerHTML = `<span class="found">✓ ${matched} teams matched</span> &nbsp;|&nbsp; <span class="${pgMissingTeams.size > 0 ? 'missing' : 'found'}">${pgMissingTeams.size > 0 ? '⚠ ' + pgMissingTeams.size + ' not found (showing initials)' : '✓ All matched'}</span>`;
+
+  // Build table HTML
+  let html = `<table class="pick-grid-table">
+    <thead><tr>
+      <th class="picker-col" style="background:${headerColor};">Picker</th>
+      ${categories.map(c => `<th style="background:${headerColor};">${c}</th>`).join('')}
+    </tr></thead>
+    <tbody>`;
+
+  pgData.rows.forEach(row => {
+    const pickerName = row[0] || '';
+    html += `<tr><td class="picker-name">${pickerName}</td>`;
+
+    for (let i = 1; i < pgData.headers.length; i++) {
+      const teamName = (row[i] || '').trim();
+      const key = teamName.toLowerCase();
+      const cached = pgLogoCache[key];
+      const logoUrl2 = pgManualOverrides[key] || (cached && cached.url) || null;
+      const loaded = cached && cached.loaded;
+
+      html += `<td>`;
+      if (teamName) {
+        if (loaded && logoUrl2) {
+          html += `<div class="logo-cell">
+            <img src="${logoUrl2}" alt="${teamName}" style="width:${logoSize}px;height:${logoSize}px;object-fit:contain;">
+            ${showName ? `<span class="team-abbr">${getTeamInitials(teamName)}</span>` : ''}
+          </div>`;
+        } else if (logoUrl2) {
+          // URL exists but may still be loading — show initials with fallback
+          html += `<div class="logo-cell">
+            <div style="width:${logoSize}px;height:${logoSize}px;border-radius:50%;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-size:${Math.floor(logoSize*0.28)}px;font-weight:700;color:#475569;">${getTeamInitials(teamName)}</div>
+            ${showName ? `<span class="team-abbr">${getTeamInitials(teamName)}</span>` : ''}
+          </div>`;
         } else {
-          resetCropSelection();
+          // No URL — show initials circle
+          html += `<div class="logo-cell">
+            <div style="width:${logoSize}px;height:${logoSize}px;border-radius:50%;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-size:${Math.floor(logoSize*0.28)}px;font-weight:700;color:#475569;">${getTeamInitials(teamName)}</div>
+            ${showName ? `<span class="team-abbr">${getTeamInitials(teamName)}</span>` : ''}
+          </div>`;
         }
       }
+      html += `</td>`;
     }
-    
-    // Mouse events
-    cropContainer.addEventListener('mousedown', startCrop);
-    document.addEventListener('mousemove', moveCrop);
-    document.addEventListener('mouseup', endCrop);
-    
-    // Touch events
-    cropContainer.addEventListener('touchstart', startCrop, { passive: false });
-    document.addEventListener('touchmove', moveCrop, { passive: false });
-    document.addEventListener('touchend', endCrop);
-    
-    function updateCropOverlay() {
-      if (!cropStart || !cropEnd) return;
-      
-      const left = Math.min(cropStart.x, cropEnd.x);
-      const top = Math.min(cropStart.y, cropEnd.y);
-      const width = Math.abs(cropEnd.x - cropStart.x);
-      const height = Math.abs(cropEnd.y - cropStart.y);
-      
-      cropOverlay.style.left = left + 'px';
-      cropOverlay.style.top = top + 'px';
-      cropOverlay.style.width = width + 'px';
-      cropOverlay.style.height = height + 'px';
+    html += `</tr>`;
+  });
+
+  html += `</tbody></table>`;
+  pgTableContainer.innerHTML = html;
+}
+
+// Canvas-based download for Pick Grid
+async function generatePickGrid() {
+  if (pgData.headers.length === 0) return;
+
+  await preloadLogos();
+
+  const sport = pgSportSelect.value;
+  const logoSize = parseInt(pgLogoSizeSelect.value);
+  const showName = pgShowTeamNameCheckbox.checked;
+  const headerColor = pgHeaderColorSelect.value;
+  const categories = pgData.headers.slice(1);
+  const title = pgTitleInput.value;
+  const subtitle = pgSubtitleInput.value;
+  const anLogoPos = pgLogoPositionSelect.value;
+
+  const ctx = pickGridCanvas.getContext('2d');
+
+  // Layout constants
+  const PAD = 24;
+  const CORNER = 14;
+  const HEADER_ROW_H = 44;
+  const PICKER_COL_W = 160;
+  const CELL_W = logoSize + (showName ? 24 : 16) + 20;
+  const CELL_H = logoSize + (showName ? 22 : 10) + 8;
+  const TITLE_H = title ? (subtitle ? 68 : 44) : 0;
+
+  const numCols = categories.length;
+  const numRows = pgData.rows.length;
+
+  const tableW = PICKER_COL_W + CELL_W * numCols;
+  const tableH = HEADER_ROW_H + CELL_H * numRows;
+
+  const W = tableW + PAD * 2;
+  const H = TITLE_H + tableH + PAD * 2 + (anLogoPos !== 'none' ? 32 : 0);
+
+  pickGridCanvas.width = W;
+  pickGridCanvas.height = H;
+
+  // White background
+  ctx.fillStyle = '#ffffff';
+  ctx.beginPath(); ctx.roundRect(0, 0, W, H, CORNER); ctx.fill();
+
+  const tableTop = PAD + TITLE_H;
+  const tableLeft = PAD;
+
+  // Title
+  if (title) {
+    ctx.fillStyle = '#1a1a2e';
+    ctx.font = 'bold 22px Inter, system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(title, W / 2, PAD + 26);
+    if (subtitle) {
+      ctx.fillStyle = '#64748b';
+      ctx.font = '13px Inter, system-ui, sans-serif';
+      ctx.fillText(subtitle, W / 2, PAD + 48);
     }
-    
-    applyCropBtn.addEventListener('click', () => {
-      if (!cropStart || !cropEnd || !originalImage) return;
-      
-      // Calculate actual image coordinates (accounting for display scaling)
-      const displayWidth = cropImage.clientWidth;
-      const displayHeight = cropImage.clientHeight;
-      const scaleX = originalImage.width / displayWidth;
-      const scaleY = originalImage.height / displayHeight;
-      
-      const left = Math.min(cropStart.x, cropEnd.x) * scaleX;
-      const top = Math.min(cropStart.y, cropEnd.y) * scaleY;
-      const width = Math.abs(cropEnd.x - cropStart.x) * scaleX;
-      const height = Math.abs(cropEnd.y - cropStart.y) * scaleY;
-      
-      // Create cropped image
-      const tempCanvas = document.createElement('canvas');
-      tempCanvas.width = width;
-      tempCanvas.height = height;
-      const tempCtx = tempCanvas.getContext('2d');
-      tempCtx.drawImage(originalImage, left, top, width, height, 0, 0, width, height);
-      
-      // Create new image from cropped canvas
-      const croppedImg = new Image();
-      croppedImg.onload = () => {
-        uploadedImage = croppedImg;
-        cropImage.src = croppedImg.src;
-        resetCropSelection();
-        renderWrapperPreview();
-      };
-      croppedImg.src = tempCanvas.toDataURL('image/png');
-    });
-    
-    resetCropBtn.addEventListener('click', () => {
-      if (originalImage) {
-        uploadedImage = originalImage;
-        cropImage.src = originalImage.src;
-        resetCropSelection();
-        renderWrapperPreview();
-      }
-    });
+  }
 
-    function renderWrapperPreview() {
-      if (!uploadedImage) {
-        wrapperEmptyState.style.display = 'flex';
-        wrapperPreviewContainer.style.display = 'none';
-        return;
-      }
+  // Clip table
+  ctx.save();
+  ctx.beginPath();
+  ctx.roundRect(tableLeft, tableTop, tableW, tableH, 10);
+  ctx.clip();
 
-      wrapperEmptyState.style.display = 'none';
-      wrapperPreviewContainer.style.display = 'flex';
+  // Header row
+  ctx.fillStyle = headerColor;
+  ctx.fillRect(tableLeft, tableTop, tableW, HEADER_ROW_H);
 
-      const borderThickness = parseInt(borderThicknessSelect.value);
-      const cornerRadius = parseInt(cornerRadiusSelect.value);
-      const padding = parseInt(imagePaddingSelect.value);
-      const showLogo = showLogoCheckbox.checked;
-      const logoPosition = logoPositionSelect.value;
+  // Header text
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 13px Inter, system-ui, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
 
-      // Update logo position visibility
-      logoPositionLabel.style.display = showLogo ? 'block' : 'none';
+  // Picker col header
+  ctx.textAlign = 'left';
+  ctx.fillText('Picker', tableLeft + 14, tableTop + HEADER_ROW_H / 2);
 
-      // Create preview HTML
-      const totalPadding = padding + borderThickness;
-      
-      let html = `
-        <div style="
-          background: white;
-          border-radius: ${cornerRadius + 4}px;
-          padding: ${padding}px;
-          display: inline-block;
-          border: ${borderThickness}px solid #00c358;
-          position: relative;
-          max-width: 100%;
-        ">
-          <img src="${uploadedImage.src}" style="
-            display: block;
-            border-radius: ${Math.max(0, cornerRadius - 4)}px;
-            max-width: 100%;
-            max-height: 400px;
-          ">
-      `;
+  categories.forEach((cat, i) => {
+    const x = tableLeft + PICKER_COL_W + i * CELL_W + CELL_W / 2;
+    ctx.textAlign = 'center';
+    ctx.fillText(cat.length > 12 ? cat.slice(0, 11) + '…' : cat, x, tableTop + HEADER_ROW_H / 2);
+  });
 
-      if (showLogo && logoImage) {
-        const posStyles = {
-          'bottom-left': 'bottom: 4px; left: 4px;',
-          'bottom-right': 'bottom: 4px; right: 4px;',
-          'top-left': 'top: 4px; left: 4px;',
-          'top-right': 'top: 4px; right: 4px;'
-        };
-        
-        html += `
-          <img src="${logoUrl}" style="
-            position: absolute;
-            ${posStyles[logoPosition]}
-            height: 28px;
-            border-radius: 4px;
-          ">
-        `;
-      }
+  // Data rows
+  pgData.rows.forEach((row, rowIdx) => {
+    const y = tableTop + HEADER_ROW_H + rowIdx * CELL_H;
+    const rowBg = rowIdx % 2 === 0 ? '#ebecf5' : '#f6f8fd';
+    ctx.fillStyle = rowBg;
+    ctx.fillRect(tableLeft, y, tableW, CELL_H);
 
-      html += '</div>';
-      wrapperPreviewContainer.innerHTML = html;
-    }
+    // Picker name
+    ctx.fillStyle = '#1e293b';
+    ctx.font = 'bold 13px Inter, system-ui, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    const pickerName = row[0] || '';
+    ctx.fillText(pickerName.length > 14 ? pickerName.slice(0, 13) + '…' : pickerName, tableLeft + 14, y + CELL_H / 2);
 
-    async function generateWrappedImage() {
-      if (!uploadedImage) return;
+    // Team logo cells
+    for (let i = 1; i < pgData.headers.length; i++) {
+      const teamName = (row[i] || '').trim();
+      const key = teamName.toLowerCase();
+      const cached = pgLogoCache[key];
+      const cellX = tableLeft + PICKER_COL_W + (i - 1) * CELL_W;
+      const cellCenterX = cellX + CELL_W / 2;
+      const logoY = y + (CELL_H - logoSize - (showName ? 16 : 0)) / 2;
 
-      const ctx = wrapperCanvas.getContext('2d');
-      const borderThickness = parseInt(borderThicknessSelect.value);
-      const cornerRadius = parseInt(cornerRadiusSelect.value);
-      const padding = parseInt(imagePaddingSelect.value);
-      const showLogo = showLogoCheckbox.checked;
-      const logoPosition = logoPositionSelect.value;
-      const maxWidth = parseInt(maxOutputWidthSelect.value);
-
-      let imgWidth = uploadedImage.width;
-      let imgHeight = uploadedImage.height;
-      
-      // Scale down if max width is set
-      let scale = 1;
-      if (maxWidth > 0) {
-        const totalPaddingWidth = (padding + borderThickness) * 2;
-        const availableWidth = maxWidth - totalPaddingWidth;
-        if (imgWidth > availableWidth) {
-          scale = availableWidth / imgWidth;
-          imgWidth = availableWidth;
-          imgHeight = uploadedImage.height * scale;
-        }
-      }
-      
-      const totalPadding = padding + borderThickness;
-      const canvasWidth = imgWidth + totalPadding * 2;
-      const canvasHeight = imgHeight + totalPadding * 2;
-
-      wrapperCanvas.width = canvasWidth;
-      wrapperCanvas.height = canvasHeight;
-
-      // Clear canvas
-      ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-
-      // Draw outer rounded rect (border color)
-      ctx.fillStyle = '#00c358';
-      ctx.beginPath();
-      ctx.roundRect(0, 0, canvasWidth, canvasHeight, cornerRadius);
-      ctx.fill();
-
-      // Draw inner white background
-      ctx.fillStyle = '#ffffff';
-      ctx.beginPath();
-      ctx.roundRect(
-        borderThickness, 
-        borderThickness, 
-        canvasWidth - borderThickness * 2, 
-        canvasHeight - borderThickness * 2, 
-        Math.max(0, cornerRadius - borderThickness / 2)
-      );
-      ctx.fill();
-
-      // Clip for image with rounded corners
-      ctx.save();
-      ctx.beginPath();
-      ctx.roundRect(
-        totalPadding, 
-        totalPadding, 
-        imgWidth, 
-        imgHeight, 
-        Math.max(0, cornerRadius - borderThickness - padding / 2)
-      );
-      ctx.clip();
-
-      // Draw image (scaled)
-      ctx.drawImage(uploadedImage, totalPadding, totalPadding, imgWidth, imgHeight);
-      ctx.restore();
-
-      // Draw logo if enabled
-      if (showLogo) {
-        const logo = await loadLogo();
-        if (logo) {
-          // Scale logo based on image size
-          const logoHeight = Math.max(24, Math.min(36, imgHeight * 0.06));
-          const logoWidth = (logo.width / logo.height) * logoHeight;
-          const logoMargin = padding / 2 + borderThickness;
-
-          let logoX, logoY;
-          switch (logoPosition) {
-            case 'bottom-left':
-              logoX = logoMargin;
-              logoY = canvasHeight - logoHeight - logoMargin;
-              break;
-            case 'bottom-right':
-              logoX = canvasWidth - logoWidth - logoMargin;
-              logoY = canvasHeight - logoHeight - logoMargin;
-              break;
-            case 'top-left':
-              logoX = logoMargin;
-              logoY = logoMargin;
-              break;
-            case 'top-right':
-              logoX = canvasWidth - logoWidth - logoMargin;
-              logoY = logoMargin;
-              break;
-          }
-
-          // Draw logo with slight rounding
-          ctx.save();
+      if (teamName) {
+        if (cached && cached.loaded && cached.img) {
+          // Draw logo centered
+          ctx.drawImage(cached.img, cellCenterX - logoSize / 2, logoY, logoSize, logoSize);
+        } else {
+          // Draw initials circle
+          const r = logoSize / 2;
+          ctx.fillStyle = '#e2e8f0';
           ctx.beginPath();
-          ctx.roundRect(logoX, logoY, logoWidth, logoHeight, 4);
-          ctx.clip();
-          ctx.drawImage(logo, logoX, logoY, logoWidth, logoHeight);
-          ctx.restore();
+          ctx.arc(cellCenterX, logoY + r, r, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = '#475569';
+          ctx.font = `bold ${Math.floor(logoSize * 0.28)}px Inter, system-ui, sans-serif`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(getTeamInitials(teamName), cellCenterX, logoY + r);
+        }
+
+        if (showName) {
+          ctx.fillStyle = '#64748b';
+          ctx.font = `10px Inter, system-ui, sans-serif`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'top';
+          ctx.fillText(getTeamInitials(teamName), cellCenterX, logoY + logoSize + 3);
         }
       }
-
-      // Download
-      const link = document.createElement('a');
-      link.download = `wrapped-${Date.now()}.png`;
-      link.href = wrapperCanvas.toDataURL('image/png');
-      link.click();
     }
+  });
 
-    // Event listeners for wrapper
-    borderThicknessSelect.addEventListener('change', renderWrapperPreview);
-    cornerRadiusSelect.addEventListener('change', renderWrapperPreview);
-    imagePaddingSelect.addEventListener('change', renderWrapperPreview);
-    showLogoCheckbox.addEventListener('change', renderWrapperPreview);
-    logoPositionSelect.addEventListener('change', renderWrapperPreview);
-    maxOutputWidthSelect.addEventListener('change', renderWrapperPreview);
-    wrapperDownloadBtn.addEventListener('click', generateWrappedImage);
-  </script>
+  ctx.restore();
+
+  // Vertical divider between picker col and cells
+  ctx.strokeStyle = 'rgba(148,163,184,0.3)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(tableLeft + PICKER_COL_W, tableTop);
+  ctx.lineTo(tableLeft + PICKER_COL_W, tableTop + tableH);
+  ctx.stroke();
+
+  // AN logo watermark
+  if (anLogoPos !== 'none') {
+    const logo = await loadLogo();
+    if (logo) {
+      const lh = 24, lw = (logo.width / logo.height) * lh;
+      const lx = anLogoPos === 'bottom-right' ? W - lw - 10 : 10;
+      const ly = H - lh - 8;
+      ctx.save();
+      ctx.globalAlpha = 0.7;
+      ctx.drawImage(logo, lx, ly, lw, lh);
+      ctx.restore();
+    }
+  }
+
+  const link = document.createElement('a');
+  link.download = `pick-grid-${Date.now()}.png`;
+  link.href = pickGridCanvas.toDataURL('image/png');
+  link.click();
+}
+
+// Event listeners
+pgDataInput.addEventListener('input', () => { parsePgData(pgDataInput.value); updatePgPreview(); });
+pgTitleInput.addEventListener('input', updatePgPreview);
+pgSubtitleInput.addEventListener('input', updatePgPreview);
+pgSportSelect.addEventListener('change', () => { pgLogoCache = {}; updatePgPreview(); });
+pgLogoSizeSelect.addEventListener('change', updatePgPreview);
+pgShowTeamNameCheckbox.addEventListener('change', updatePgPreview);
+pgHeaderColorSelect.addEventListener('change', updatePgPreview);
+pgLogoPositionSelect.addEventListener('change', updatePgPreview);
+pgDownloadBtn.addEventListener('click', generatePickGrid);
+</script>
 </body>
 </html>
