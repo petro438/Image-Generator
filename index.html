@@ -182,6 +182,18 @@
     }
     .badge-green { background: rgba(0,195,88,0.15); color: #00c358; }
     .badge-red { background: rgba(248,113,113,0.15); color: #f87171; }
+
+    /* Size selector buttons */
+    .size-btn {
+      background: rgba(30,41,59,0.8); border: 2px solid rgba(148,163,184,0.2);
+      border-radius: 10px; padding: 10px 8px; cursor: pointer; transition: all 0.2s;
+      text-align: center; color: #94a3b8;
+    }
+    .size-btn:hover { border-color: rgba(0,195,88,0.4); color: #e2e8f0; background: rgba(51,65,85,0.6); }
+    .size-btn.active { border-color: #00c358; background: rgba(0,195,88,0.1); color: #00c358; }
+    .size-icon { font-size: 18px; margin-bottom: 3px; line-height: 1; }
+    .size-label { font-size: 12px; font-weight: 600; }
+    .size-sub { font-size: 10px; opacity: 0.7; margin-top: 2px; }
   </style>
 </head>
 <body>
@@ -356,9 +368,9 @@
         <!-- Data Input -->
         <div class="card">
           <h3>📋 Paste Pick Data</h3>
-          <textarea id="pgDataInput" class="input-field" style="height: 160px;"
-            placeholder="Paste from spreadsheet...&#10;&#10;Row 1 = headers (leave A1 blank, then category names)&#10;Col 1 = picker names&#10;Cells = team names"></textarea>
-          <p class="hint">Example: A1 blank, B1="Champion", C1="Best QB" / A2="Steve", B2="Alabama", C2="Ohio State"</p>
+          <textarea id="pgDataInput" class="input-field" style="height: 200px;"
+            placeholder="Paste from spreadsheet...&#10;&#10;Row 1 = headers (leave A1 blank, then category names)&#10;Col 1 = picker names&#10;Cells = team names&#10;&#10;No row limit — paste as many pickers as you want."></textarea>
+          <p class="hint">Example: A1 blank, B1="Champion", C1="Best QB" → A2="Steve", B2="Alabama", C2="Ohio State"</p>
         </div>
 
         <!-- Title -->
@@ -375,13 +387,11 @@
             <span class="label-text">Sport (for ESPN logo lookup):</span>
             <select id="pgSport" class="select-field">
               <option value="nfl">NFL</option>
-              <option value="college-football" selected>College Football</option>
-              <option value="mens-college-basketball">College Basketball (Men's)</option>
-              <option value="womens-college-basketball">College Basketball (Women's)</option>
+              <option value="ncaa" selected>College Football / Basketball</option>
               <option value="mlb">MLB</option>
               <option value="nba">NBA</option>
               <option value="nhl">NHL</option>
-              <option value="soccer/usa.1">MLS</option>
+              <option value="mls">MLS</option>
             </select>
           </label>
           <label class="label">
@@ -393,14 +403,14 @@
             </select>
           </label>
           <label class="checkbox-label" style="padding: 8px 0; margin-bottom: 8px;">
-            <input type="checkbox" id="pgShowTeamName"> Show team abbreviation below logo
+            <input type="checkbox" id="pgShowTeamName"> Show team name below logo
           </label>
         </div>
 
         <!-- Manual overrides for unmatched teams -->
         <div class="card" id="pgOverrideCard" style="display: none;">
           <h3>⚠️ Manual Logo URLs</h3>
-          <p class="hint" style="margin-bottom: 12px;">These teams weren't auto-matched. Paste a direct image URL for each, or leave blank to show initials.</p>
+          <p class="hint" style="margin-bottom: 12px;">These teams weren't auto-matched. Paste a direct ESPN or other image URL, or leave blank to show initials.</p>
           <div id="pgOverrideList" class="team-override-list"></div>
         </div>
 
@@ -423,6 +433,54 @@
               <option value="none">None</option>
               <option value="bottom-right" selected>Bottom Right</option>
               <option value="bottom-left">Bottom Left</option>
+            </select>
+          </label>
+        </div>
+
+        <!-- Output Size -->
+        <div class="card">
+          <h3>📐 Output Size</h3>
+          <p class="hint" style="margin-bottom: 12px;">Image will auto-size to fit content, then scaled/padded to fill the chosen canvas.</p>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;" id="pgSizeGrid">
+            <button class="size-btn active" data-size="auto">
+              <div class="size-icon">⚡</div>
+              <div class="size-label">Auto</div>
+              <div class="size-sub">Fit to content</div>
+            </button>
+            <button class="size-btn" data-size="twitter">
+              <div class="size-icon">𝕏</div>
+              <div class="size-label">Twitter/X</div>
+              <div class="size-sub">1200 × 675</div>
+            </button>
+            <button class="size-btn" data-size="instagram-square">
+              <div class="size-icon">◻</div>
+              <div class="size-label">Instagram</div>
+              <div class="size-sub">1080 × 1080</div>
+            </button>
+            <button class="size-btn" data-size="instagram-story">
+              <div class="size-icon">▯</div>
+              <div class="size-label">Story/Reel</div>
+              <div class="size-sub">1080 × 1920</div>
+            </button>
+            <button class="size-btn" data-size="facebook">
+              <div class="size-icon">𝒇</div>
+              <div class="size-label">Facebook</div>
+              <div class="size-sub">1200 × 630</div>
+            </button>
+            <button class="size-btn" data-size="article">
+              <div class="size-icon">📰</div>
+              <div class="size-label">Article</div>
+              <div class="size-sub">1200 × 800</div>
+            </button>
+          </div>
+          <label class="label" style="margin-top: 14px; margin-bottom: 0;">
+            <span class="label-text">Background fill color (for letterboxing):</span>
+            <select id="pgBgColor" class="select-field">
+              <option value="#ffffff">White</option>
+              <option value="#f1f5f9">Light Gray</option>
+              <option value="#0f172a">Dark Navy</option>
+              <option value="#1e293b">Dark Slate</option>
+              <option value="#00c358">AN Green</option>
             </select>
           </label>
         </div>
@@ -926,11 +984,17 @@ wrapperDownloadBtn.addEventListener('click', generateWrappedImage);
 // PICK GRID
 // ════════════════════════════════════════════════════════════════
 
-// ESPN logo URL builder
-// Pattern: https://a.espncdn.com/i/teamlogos/{sport}/500/{id}.png
-// For college teams, ESPN uses numeric IDs. We store a large lookup map.
-// For pro sports, ESPN uses abbreviation-based URLs.
+// ESPN CDN pattern (HTTP, not HTTPS — ESPN CDN requires http):
+//   College/NCAA: http://a.espncdn.com/i/teamlogos/ncaa/500/{numericId}.png
+//   Pro (NFL/NBA/etc): http://a.espncdn.com/i/teamlogos/{sport}/500/{abbrev}.png
+//
+// CORS note: ESPN CDN does NOT send CORS headers, so canvas drawImage() will
+// taint the canvas. We load logos via <img> for preview (no CORS needed),
+// and use corsproxy.io for the canvas download path.
 
+const CORS_PROXY = 'https://corsproxy.io/?url=';
+
+// Pro sport abbreviation map
 const ESPN_PRO_ABBREVS = {
   // NFL
   'arizona cardinals':'ari','atlanta falcons':'atl','baltimore ravens':'bal','buffalo bills':'buf',
@@ -1036,9 +1100,21 @@ const ESPN_COLLEGE_IDS = {
 };
 
 let pgData = { headers: [], rows: [] };
-let pgLogoCache = {}; // teamName -> { url, loaded, img }
-let pgManualOverrides = {}; // teamName -> url
+// Two caches: previewCache (direct URL, no crossOrigin) and canvasCache (proxied, crossOrigin)
+let pgPreviewCache = {}; // key -> { url, img, loaded }
+let pgCanvasCache = {};  // key -> { img, loaded }
+let pgManualOverrides = {};
 let pgMissingTeams = new Set();
+let pgSelectedSize = 'auto';
+
+const SOCIAL_SIZES = {
+  auto:              null,
+  twitter:           { w: 1200, h: 675 },
+  'instagram-square':{ w: 1080, h: 1080 },
+  'instagram-story': { w: 1080, h: 1920 },
+  facebook:          { w: 1200, h: 630 },
+  article:           { w: 1200, h: 800 },
+};
 
 const pgDataInput = document.getElementById('pgDataInput');
 const pgTitleInput = document.getElementById('pgTitle');
@@ -1048,6 +1124,7 @@ const pgLogoSizeSelect = document.getElementById('pgLogoSize');
 const pgShowTeamNameCheckbox = document.getElementById('pgShowTeamName');
 const pgHeaderColorSelect = document.getElementById('pgHeaderColor');
 const pgLogoPositionSelect = document.getElementById('pgLogoPosition');
+const pgBgColorSelect = document.getElementById('pgBgColor');
 const pgDownloadBtn = document.getElementById('pgDownloadBtn');
 const pgEmptyState = document.getElementById('pgEmptyState');
 const pgPreviewContainer = document.getElementById('pgPreviewContainer');
@@ -1058,58 +1135,58 @@ const pgLogoStatus = document.getElementById('pgLogoStatus');
 const pgStatusBadge = document.getElementById('pgStatusBadge');
 const pickGridCanvas = document.getElementById('pickGridCanvas');
 
+// Size button selection
+document.getElementById('pgSizeGrid').addEventListener('click', e => {
+  const btn = e.target.closest('.size-btn');
+  if (!btn) return;
+  document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  pgSelectedSize = btn.dataset.size;
+});
+
 function parsePgData(text) {
   if (!text.trim()) { pgData = { headers: [], rows: [] }; return; }
   const lines = text.trim().split('\n');
   if (lines.length < 2) { pgData = { headers: [], rows: [] }; return; }
-  // First row: blank cell + category names
   const headers = lines[0].split('\t').map(h => h.trim());
-  // categories = headers[1], headers[2], ...
-  // rows: col0 = picker name, rest = team names
-  const rows = lines.slice(1).map(line => line.split('\t').map(c => c.trim()));
+  const rows = lines.slice(1)
+    .filter(l => l.trim())
+    .map(line => line.split('\t').map(c => c.trim()));
   pgData = { headers, rows };
 }
 
 function getEspnLogoUrl(teamName, sport) {
   const key = teamName.toLowerCase().trim();
   if (!key) return null;
-
-  // Check manual overrides first
   if (pgManualOverrides[key]) return pgManualOverrides[key];
 
-  const isCollegeSport = sport.includes('college') || sport.includes('ncaa');
-
-  if (isCollegeSport) {
-    // Try exact match first
+  // College sports — use ncaa path with numeric ID
+  if (sport === 'ncaa') {
     const id = ESPN_COLLEGE_IDS[key];
-    if (id) return `https://a.espncdn.com/i/teamlogos/${sport}/500/${id}.png`;
-    // Try partial match
+    if (id) return `http://a.espncdn.com/i/teamlogos/ncaa/500/${id}.png`;
+    // Partial match
     for (const [name, id2] of Object.entries(ESPN_COLLEGE_IDS)) {
-      if (key.includes(name) || name.includes(key)) return `https://a.espncdn.com/i/teamlogos/${sport}/500/${id2}.png`;
+      if (key === name || key.includes(name) || name.includes(key)) {
+        return `http://a.espncdn.com/i/teamlogos/ncaa/500/${id2}.png`;
+      }
     }
   }
 
-  // Pro sports — use abbreviation
+  // Pro sports — abbreviation-based
   const abbrev = ESPN_PRO_ABBREVS[key];
   if (abbrev) {
-    // Map sport to ESPN path
-    const sportPaths = {
-      'nfl': 'nfl', 'nba': 'nba', 'mlb': 'mlb', 'nhl': 'nhl',
-      'soccer/usa.1': 'soccer/usa.1'
-    };
-    const path = sportPaths[sport] || sport;
-    return `https://a.espncdn.com/i/teamlogos/${path}/500/${abbrev}.png`;
+    return `http://a.espncdn.com/i/teamlogos/${sport}/500/${abbrev}.png`;
   }
 
-  // Try abbreviation lookup regardless of selected sport (helpful for mixed tables)
+  // Fallback: try pro abbrev regardless of sport (handles mixed tables)
   for (const [name, abbr] of Object.entries(ESPN_PRO_ABBREVS)) {
     if (key === name) {
-      const sp = sport.includes('college') ? 'nfl' : sport;
-      return `https://a.espncdn.com/i/teamlogos/${sp}/500/${abbr}.png`;
+      const fallbackSport = sport === 'ncaa' ? 'nfl' : sport;
+      return `http://a.espncdn.com/i/teamlogos/${fallbackSport}/500/${abbr}.png`;
     }
   }
 
-  return null; // Will show initials
+  return null;
 }
 
 function getTeamInitials(name) {
@@ -1120,27 +1197,65 @@ function getAllTeams() {
   const teams = new Set();
   pgData.rows.forEach(row => {
     for (let i = 1; i < row.length; i++) {
-      if (row[i]) teams.add(row[i].trim());
+      if (row[i] && row[i].trim()) teams.add(row[i].trim());
     }
   });
   return [...teams];
 }
 
-async function preloadLogos() {
+// Preview uses direct URL (no crossOrigin) — ESPN serves fine in <img> tags
+async function preloadPreviewLogos() {
   const sport = pgSportSelect.value;
   const teams = getAllTeams();
   pgMissingTeams = new Set();
+
   const promises = teams.map(team => new Promise(resolve => {
     const key = team.toLowerCase().trim();
-    if (pgLogoCache[key] && pgLogoCache[key].sport === sport) { resolve(); return; }
     const url = getEspnLogoUrl(team, sport);
-    if (!url) { pgMissingTeams.add(team); pgLogoCache[key] = { url: null, loaded: false, img: null, sport }; resolve(); return; }
+    if (!url) {
+      pgMissingTeams.add(team);
+      pgPreviewCache[key] = { url: null, loaded: false, img: null };
+      resolve(); return;
+    }
+    if (pgPreviewCache[key] && pgPreviewCache[key].url === url && pgPreviewCache[key].loaded) {
+      resolve(); return;
+    }
     const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.onload = () => { pgLogoCache[key] = { url, loaded: true, img, sport }; resolve(); };
-    img.onerror = () => { pgMissingTeams.add(team); pgLogoCache[key] = { url, loaded: false, img: null, sport }; resolve(); };
+    // No crossOrigin here — ESPN doesn't need it for <img> display
+    img.onload = () => { pgPreviewCache[key] = { url, loaded: true, img }; resolve(); };
+    img.onerror = () => {
+      pgMissingTeams.add(team);
+      pgPreviewCache[key] = { url, loaded: false, img: null };
+      resolve();
+    };
     img.src = url;
   }));
+
+  await Promise.all(promises);
+}
+
+// Canvas uses CORS proxy to avoid tainted canvas
+async function preloadCanvasLogos() {
+  const sport = pgSportSelect.value;
+  const teams = getAllTeams();
+
+  const promises = teams.map(team => new Promise(resolve => {
+    const key = team.toLowerCase().trim();
+    const directUrl = getEspnLogoUrl(team, sport);
+    if (!directUrl) { pgCanvasCache[key] = { loaded: false, img: null }; resolve(); return; }
+
+    // Use proxy to bypass CORS
+    const proxyUrl = CORS_PROXY + encodeURIComponent(directUrl);
+    if (pgCanvasCache[key] && pgCanvasCache[key].proxyUrl === proxyUrl && pgCanvasCache[key].loaded) {
+      resolve(); return;
+    }
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => { pgCanvasCache[key] = { loaded: true, img, proxyUrl }; resolve(); };
+    img.onerror = () => { pgCanvasCache[key] = { loaded: false, img: null, proxyUrl }; resolve(); };
+    img.src = proxyUrl;
+  }));
+
   await Promise.all(promises);
 }
 
@@ -1158,14 +1273,15 @@ function renderPgOverrides() {
     const urlInput = document.createElement('input');
     urlInput.type = 'text';
     urlInput.className = 'input-field';
-    urlInput.placeholder = 'Logo URL (optional)';
+    urlInput.placeholder = 'Paste ESPN logo URL…';
     urlInput.value = pgManualOverrides[team.toLowerCase().trim()] || '';
     urlInput.addEventListener('change', () => {
       const val = urlInput.value.trim();
-      if (val) { pgManualOverrides[team.toLowerCase().trim()] = val; }
-      else { delete pgManualOverrides[team.toLowerCase().trim()]; }
-      // Re-preload and re-render
-      delete pgLogoCache[team.toLowerCase().trim()];
+      const k = team.toLowerCase().trim();
+      if (val) pgManualOverrides[k] = val;
+      else delete pgManualOverrides[k];
+      delete pgPreviewCache[k];
+      delete pgCanvasCache[k];
       updatePgPreview();
     });
     row.appendChild(nameEl);
@@ -1186,58 +1302,46 @@ async function updatePgPreview() {
   pgPreviewContainer.style.display = 'block';
   pgDownloadBtn.disabled = false;
 
-  await preloadLogos();
+  await preloadPreviewLogos();
   renderPgOverrides();
 
-  const sport = pgSportSelect.value;
   const logoSize = parseInt(pgLogoSizeSelect.value);
   const showName = pgShowTeamNameCheckbox.checked;
   const headerColor = pgHeaderColorSelect.value;
-  const categories = pgData.headers.slice(1); // skip first (picker col)
+  const categories = pgData.headers.slice(1);
 
-  // Status
   const total = getAllTeams().length;
   const matched = total - pgMissingTeams.size;
   pgLogoStatus.style.display = 'block';
-  pgLogoStatus.innerHTML = `<span class="found">✓ ${matched} teams matched</span> &nbsp;|&nbsp; <span class="${pgMissingTeams.size > 0 ? 'missing' : 'found'}">${pgMissingTeams.size > 0 ? '⚠ ' + pgMissingTeams.size + ' not found (showing initials)' : '✓ All matched'}</span>`;
+  pgLogoStatus.innerHTML = `<span class="found">✓ ${matched}/${total} logos matched</span>${pgMissingTeams.size > 0 ? ` &nbsp;|&nbsp; <span class="missing">⚠ ${pgMissingTeams.size} not found — paste URLs above</span>` : ''}`;
 
-  // Build table HTML
   let html = `<table class="pick-grid-table">
     <thead><tr>
       <th class="picker-col" style="background:${headerColor};">Picker</th>
       ${categories.map(c => `<th style="background:${headerColor};">${c}</th>`).join('')}
-    </tr></thead>
-    <tbody>`;
+    </tr></thead><tbody>`;
 
   pgData.rows.forEach(row => {
     const pickerName = row[0] || '';
     html += `<tr><td class="picker-name">${pickerName}</td>`;
-
     for (let i = 1; i < pgData.headers.length; i++) {
       const teamName = (row[i] || '').trim();
       const key = teamName.toLowerCase();
-      const cached = pgLogoCache[key];
-      const logoUrl2 = pgManualOverrides[key] || (cached && cached.url) || null;
+      const cached = pgPreviewCache[key];
+      const url = pgManualOverrides[key] || (cached && cached.url) || null;
       const loaded = cached && cached.loaded;
 
       html += `<td>`;
       if (teamName) {
-        if (loaded && logoUrl2) {
-          html += `<div class="logo-cell">
-            <img src="${logoUrl2}" alt="${teamName}" style="width:${logoSize}px;height:${logoSize}px;object-fit:contain;">
-            ${showName ? `<span class="team-abbr">${getTeamInitials(teamName)}</span>` : ''}
-          </div>`;
-        } else if (logoUrl2) {
-          // URL exists but may still be loading — show initials with fallback
-          html += `<div class="logo-cell">
-            <div style="width:${logoSize}px;height:${logoSize}px;border-radius:50%;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-size:${Math.floor(logoSize*0.28)}px;font-weight:700;color:#475569;">${getTeamInitials(teamName)}</div>
-            ${showName ? `<span class="team-abbr">${getTeamInitials(teamName)}</span>` : ''}
+        if (loaded && url) {
+          html += `<div class="logo-cell" style="flex-direction:column;">
+            <img src="${url}" alt="${teamName}" style="width:${logoSize}px;height:${logoSize}px;object-fit:contain;" onerror="this.style.display='none'">
+            ${showName ? `<span class="team-abbr" style="margin-top:3px;">${teamName}</span>` : ''}
           </div>`;
         } else {
-          // No URL — show initials circle
-          html += `<div class="logo-cell">
+          html += `<div class="logo-cell" style="flex-direction:column;">
             <div style="width:${logoSize}px;height:${logoSize}px;border-radius:50%;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-size:${Math.floor(logoSize*0.28)}px;font-weight:700;color:#475569;">${getTeamInitials(teamName)}</div>
-            ${showName ? `<span class="team-abbr">${getTeamInitials(teamName)}</span>` : ''}
+            ${showName ? `<span class="team-abbr" style="margin-top:3px;">${teamName}</span>` : ''}
           </div>`;
         }
       }
@@ -1250,47 +1354,78 @@ async function updatePgPreview() {
   pgTableContainer.innerHTML = html;
 }
 
-// Canvas-based download for Pick Grid
+// ── Canvas download ──────────────────────────────────────────────
 async function generatePickGrid() {
   if (pgData.headers.length === 0) return;
 
-  await preloadLogos();
+  pgDownloadBtn.textContent = '⏳ Loading logos…';
+  pgDownloadBtn.disabled = true;
 
-  const sport = pgSportSelect.value;
+  await preloadCanvasLogos();
+
+  pgDownloadBtn.textContent = '📥 Download Pick Grid';
+  pgDownloadBtn.disabled = false;
+
   const logoSize = parseInt(pgLogoSizeSelect.value);
   const showName = pgShowTeamNameCheckbox.checked;
   const headerColor = pgHeaderColorSelect.value;
+  const bgColor = pgBgColorSelect.value;
   const categories = pgData.headers.slice(1);
   const title = pgTitleInput.value;
   const subtitle = pgSubtitleInput.value;
   const anLogoPos = pgLogoPositionSelect.value;
+  const targetSize = SOCIAL_SIZES[pgSelectedSize];
 
   const ctx = pickGridCanvas.getContext('2d');
 
-  // Layout constants
-  const PAD = 24;
+  // Layout
+  const PAD = 28;
   const CORNER = 14;
-  const HEADER_ROW_H = 44;
-  const PICKER_COL_W = 160;
-  const CELL_W = logoSize + (showName ? 24 : 16) + 20;
-  const CELL_H = logoSize + (showName ? 22 : 10) + 8;
-  const TITLE_H = title ? (subtitle ? 68 : 44) : 0;
+  const HEADER_ROW_H = 46;
+  const PICKER_COL_W = 170;
+  const CELL_PAD = showName ? 26 : 18;
+  const CELL_W = Math.max(logoSize + CELL_PAD + 16, 80);
+  const CELL_H = logoSize + (showName ? 26 : 12) + 10;
+  const TITLE_H = title ? (subtitle ? 72 : 48) : 0;
+  const AN_STRIP = anLogoPos !== 'none' ? 36 : 0;
 
-  const numCols = categories.length;
-  const numRows = pgData.rows.length;
+  const tableW = PICKER_COL_W + CELL_W * categories.length;
+  const tableH = HEADER_ROW_H + CELL_H * pgData.rows.length;
+  const contentW = tableW + PAD * 2;
+  const contentH = TITLE_H + tableH + PAD * 2 + AN_STRIP;
 
-  const tableW = PICKER_COL_W + CELL_W * numCols;
-  const tableH = HEADER_ROW_H + CELL_H * numRows;
-
-  const W = tableW + PAD * 2;
-  const H = TITLE_H + tableH + PAD * 2 + (anLogoPos !== 'none' ? 32 : 0);
+  // Determine final canvas dimensions
+  let W, H, scale = 1, offsetX = 0, offsetY = 0;
+  if (targetSize) {
+    W = targetSize.w;
+    H = targetSize.h;
+    // Scale content to fit, centered with bg fill
+    const scaleX = W / contentW;
+    const scaleY = H / contentH;
+    scale = Math.min(scaleX, scaleY, 1); // never upscale
+    offsetX = (W - contentW * scale) / 2;
+    offsetY = (H - contentH * scale) / 2;
+  } else {
+    W = contentW;
+    H = contentH;
+  }
 
   pickGridCanvas.width = W;
   pickGridCanvas.height = H;
 
-  // White background
+  // Background fill
+  ctx.fillStyle = bgColor;
+  ctx.fillRect(0, 0, W, H);
+
+  // White content card
+  ctx.save();
+  ctx.translate(offsetX, offsetY);
+  ctx.scale(scale, scale);
+
   ctx.fillStyle = '#ffffff';
-  ctx.beginPath(); ctx.roundRect(0, 0, W, H, CORNER); ctx.fill();
+  ctx.beginPath();
+  ctx.roundRect(0, 0, contentW, contentH, CORNER);
+  ctx.fill();
 
   const tableTop = PAD + TITLE_H;
   const tableLeft = PAD;
@@ -1298,121 +1433,120 @@ async function generatePickGrid() {
   // Title
   if (title) {
     ctx.fillStyle = '#1a1a2e';
-    ctx.font = 'bold 22px Inter, system-ui, sans-serif';
+    ctx.font = `bold 24px Inter, system-ui, sans-serif`;
     ctx.textAlign = 'center';
-    ctx.fillText(title, W / 2, PAD + 26);
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText(title, contentW / 2, PAD + 28);
     if (subtitle) {
       ctx.fillStyle = '#64748b';
-      ctx.font = '13px Inter, system-ui, sans-serif';
-      ctx.fillText(subtitle, W / 2, PAD + 48);
+      ctx.font = `14px Inter, system-ui, sans-serif`;
+      ctx.fillText(subtitle, contentW / 2, PAD + 52);
     }
   }
 
-  // Clip table
+  // Clip table area
   ctx.save();
   ctx.beginPath();
   ctx.roundRect(tableLeft, tableTop, tableW, tableH, 10);
   ctx.clip();
 
-  // Header row
+  // Header
   ctx.fillStyle = headerColor;
   ctx.fillRect(tableLeft, tableTop, tableW, HEADER_ROW_H);
-
-  // Header text
   ctx.fillStyle = '#ffffff';
-  ctx.font = 'bold 13px Inter, system-ui, sans-serif';
-  ctx.textAlign = 'center';
+  ctx.font = `bold 13px Inter, system-ui, sans-serif`;
   ctx.textBaseline = 'middle';
-
-  // Picker col header
   ctx.textAlign = 'left';
   ctx.fillText('Picker', tableLeft + 14, tableTop + HEADER_ROW_H / 2);
-
   categories.forEach((cat, i) => {
     const x = tableLeft + PICKER_COL_W + i * CELL_W + CELL_W / 2;
     ctx.textAlign = 'center';
-    ctx.fillText(cat.length > 12 ? cat.slice(0, 11) + '…' : cat, x, tableTop + HEADER_ROW_H / 2);
+    const label = cat.length > 14 ? cat.slice(0, 13) + '…' : cat;
+    ctx.fillText(label, x, tableTop + HEADER_ROW_H / 2);
   });
 
-  // Data rows
+  // Rows
   pgData.rows.forEach((row, rowIdx) => {
     const y = tableTop + HEADER_ROW_H + rowIdx * CELL_H;
-    const rowBg = rowIdx % 2 === 0 ? '#ebecf5' : '#f6f8fd';
-    ctx.fillStyle = rowBg;
+    ctx.fillStyle = rowIdx % 2 === 0 ? '#ebecf5' : '#f6f8fd';
     ctx.fillRect(tableLeft, y, tableW, CELL_H);
 
     // Picker name
     ctx.fillStyle = '#1e293b';
-    ctx.font = 'bold 13px Inter, system-ui, sans-serif';
+    ctx.font = `bold 13px Inter, system-ui, sans-serif`;
     ctx.textAlign = 'left';
     ctx.textBaseline = 'middle';
-    const pickerName = row[0] || '';
-    ctx.fillText(pickerName.length > 14 ? pickerName.slice(0, 13) + '…' : pickerName, tableLeft + 14, y + CELL_H / 2);
+    const pName = (row[0] || '');
+    ctx.fillText(pName.length > 16 ? pName.slice(0,15)+'…' : pName, tableLeft + 14, y + CELL_H / 2);
 
-    // Team logo cells
+    // Logo cells
     for (let i = 1; i < pgData.headers.length; i++) {
       const teamName = (row[i] || '').trim();
       const key = teamName.toLowerCase();
-      const cached = pgLogoCache[key];
+      const cached = pgCanvasCache[key];
       const cellX = tableLeft + PICKER_COL_W + (i - 1) * CELL_W;
       const cellCenterX = cellX + CELL_W / 2;
-      const logoY = y + (CELL_H - logoSize - (showName ? 16 : 0)) / 2;
+      const logoTopY = y + (CELL_H - logoSize - (showName ? 18 : 0)) / 2;
 
-      if (teamName) {
-        if (cached && cached.loaded && cached.img) {
-          // Draw logo centered
-          ctx.drawImage(cached.img, cellCenterX - logoSize / 2, logoY, logoSize, logoSize);
-        } else {
-          // Draw initials circle
-          const r = logoSize / 2;
-          ctx.fillStyle = '#e2e8f0';
-          ctx.beginPath();
-          ctx.arc(cellCenterX, logoY + r, r, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.fillStyle = '#475569';
-          ctx.font = `bold ${Math.floor(logoSize * 0.28)}px Inter, system-ui, sans-serif`;
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillText(getTeamInitials(teamName), cellCenterX, logoY + r);
-        }
+      if (!teamName) continue;
 
-        if (showName) {
-          ctx.fillStyle = '#64748b';
-          ctx.font = `10px Inter, system-ui, sans-serif`;
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'top';
-          ctx.fillText(getTeamInitials(teamName), cellCenterX, logoY + logoSize + 3);
-        }
+      if (cached && cached.loaded && cached.img) {
+        ctx.drawImage(cached.img, cellCenterX - logoSize / 2, logoTopY, logoSize, logoSize);
+      } else {
+        // Initials fallback
+        const r = logoSize / 2;
+        ctx.fillStyle = '#e2e8f0';
+        ctx.beginPath();
+        ctx.arc(cellCenterX, logoTopY + r, r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#64748b';
+        ctx.font = `bold ${Math.floor(logoSize * 0.3)}px Inter, system-ui, sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(getTeamInitials(teamName), cellCenterX, logoTopY + r);
+      }
+
+      if (showName) {
+        ctx.fillStyle = '#475569';
+        ctx.font = `10px Inter, system-ui, sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        // Truncate long team names
+        const label = teamName.length > 12 ? teamName.slice(0,11)+'…' : teamName;
+        ctx.fillText(label, cellCenterX, logoTopY + logoSize + 3);
       }
     }
   });
 
-  ctx.restore();
+  ctx.restore(); // end table clip
 
-  // Vertical divider between picker col and cells
-  ctx.strokeStyle = 'rgba(148,163,184,0.3)';
+  // Divider line between picker col and logo cols
+  ctx.strokeStyle = 'rgba(148,163,184,0.35)';
   ctx.lineWidth = 1;
   ctx.beginPath();
   ctx.moveTo(tableLeft + PICKER_COL_W, tableTop);
   ctx.lineTo(tableLeft + PICKER_COL_W, tableTop + tableH);
   ctx.stroke();
 
-  // AN logo watermark
+  // AN watermark
   if (anLogoPos !== 'none') {
     const logo = await loadLogo();
     if (logo) {
-      const lh = 24, lw = (logo.width / logo.height) * lh;
-      const lx = anLogoPos === 'bottom-right' ? W - lw - 10 : 10;
-      const ly = H - lh - 8;
+      const lh = 22;
+      const lw = (logo.width / logo.height) * lh;
+      const lx = anLogoPos === 'bottom-right' ? contentW - lw - 12 : 12;
+      const ly = contentH - lh - 10;
       ctx.save();
-      ctx.globalAlpha = 0.7;
+      ctx.globalAlpha = 0.65;
       ctx.drawImage(logo, lx, ly, lw, lh);
       ctx.restore();
     }
   }
 
+  ctx.restore(); // end scale/translate
+
   const link = document.createElement('a');
-  link.download = `pick-grid-${Date.now()}.png`;
+  link.download = `pick-grid-${pgSelectedSize}-${Date.now()}.png`;
   link.href = pickGridCanvas.toDataURL('image/png');
   link.click();
 }
@@ -1421,11 +1555,12 @@ async function generatePickGrid() {
 pgDataInput.addEventListener('input', () => { parsePgData(pgDataInput.value); updatePgPreview(); });
 pgTitleInput.addEventListener('input', updatePgPreview);
 pgSubtitleInput.addEventListener('input', updatePgPreview);
-pgSportSelect.addEventListener('change', () => { pgLogoCache = {}; updatePgPreview(); });
+pgSportSelect.addEventListener('change', () => { pgPreviewCache = {}; pgCanvasCache = {}; updatePgPreview(); });
 pgLogoSizeSelect.addEventListener('change', updatePgPreview);
 pgShowTeamNameCheckbox.addEventListener('change', updatePgPreview);
 pgHeaderColorSelect.addEventListener('change', updatePgPreview);
 pgLogoPositionSelect.addEventListener('change', updatePgPreview);
+pgBgColorSelect.addEventListener('change', updatePgPreview);
 pgDownloadBtn.addEventListener('click', generatePickGrid);
 </script>
 </body>
