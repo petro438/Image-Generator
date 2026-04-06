@@ -1,0 +1,1923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Action Network Image Tools</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      color: #e2e8f0;
+      padding: 32px;
+    }
+    .container { max-width: 1400px; margin: 0 auto; }
+    .header { text-align: center; margin-bottom: 24px; }
+    .header h1 {
+      font-size: 36px; font-weight: 700;
+      background: linear-gradient(135deg, #00c358 0%, #60a5fa 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      margin-bottom: 8px;
+    }
+    .header p { color: #94a3b8; font-size: 16px; }
+    .tab-nav { display: flex; justify-content: center; gap: 8px; margin-bottom: 32px; flex-wrap: wrap; }
+    .tab-btn {
+      padding: 12px 28px; border-radius: 8px; font-weight: 600; font-size: 14px;
+      cursor: pointer; transition: all 0.2s ease; border: 2px solid transparent;
+      background: rgba(30, 41, 59, 0.6); color: #94a3b8;
+    }
+    .tab-btn:hover { background: rgba(51, 65, 85, 0.6); color: #e2e8f0; }
+    .tab-btn.active { background: rgba(0, 195, 88, 0.15); border-color: #00c358; color: #00c358; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .main-grid { display: grid; grid-template-columns: 400px 1fr; gap: 24px; }
+    @media (max-width: 900px) { .main-grid { grid-template-columns: 1fr; } }
+    .controls { display: flex; flex-direction: column; gap: 20px; }
+    .card {
+      background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(10px);
+      border: 1px solid rgba(148, 163, 184, 0.1); border-radius: 16px; padding: 24px;
+    }
+    .card h3 { margin-bottom: 16px; font-weight: 600; font-size: 16px; }
+    .input-field {
+      background: rgba(30, 41, 59, 0.8); border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 8px; padding: 12px 16px; color: #e2e8f0; font-size: 14px;
+      width: 100%; transition: all 0.2s ease;
+    }
+    .input-field:focus { outline: none; border-color: #00c358; box-shadow: 0 0 0 3px rgba(0, 195, 88, 0.2); }
+    textarea.input-field { height: 120px; resize: vertical; font-family: 'Monaco', 'Consolas', monospace; font-size: 12px; }
+    .hint { font-size: 12px; color: #64748b; margin-top: 8px; }
+    .select-field {
+      background: rgba(30, 41, 59, 0.8); border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 8px; padding: 10px 14px; color: #e2e8f0; font-size: 14px;
+      cursor: pointer; width: 100%;
+    }
+    .label { display: block; margin-bottom: 12px; }
+    .label-text { font-size: 13px; color: #94a3b8; margin-bottom: 6px; display: block; }
+    .checkbox-label {
+      display: flex; align-items: center; gap: 8px; cursor: pointer;
+      padding: 8px 12px; border-radius: 6px; transition: background 0.2s; font-size: 13px;
+    }
+    .checkbox-label:hover { background: rgba(51, 65, 85, 0.5); }
+    .checkbox-label input { accent-color: #00c358; }
+    .color-swatches { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    .color-swatch {
+      height: 28px; border-radius: 6px; border: 2px solid transparent; cursor: pointer;
+      transition: all 0.2s; padding: 2px 12px; font-size: 11px; display: flex;
+      align-items: center; color: #1e293b; font-weight: 500;
+    }
+    .color-swatch.selected { border-color: #fff; transform: scale(1.05); }
+    .column-config { max-height: 200px; overflow-y: auto; border: 1px solid rgba(148, 163, 184, 0.1); border-radius: 8px; padding: 8px; }
+    .column-row { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 4px; font-size: 13px; }
+    .column-row:hover { background: rgba(51, 65, 85, 0.3); }
+    .column-row label { flex: 1; display: flex; align-items: center; gap: 8px; cursor: pointer; }
+    .lower-better-btn {
+      font-size: 10px; padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(148, 163, 184, 0.3);
+      background: rgba(30, 41, 59, 0.8); color: #94a3b8; cursor: pointer; transition: all 0.2s; white-space: nowrap;
+    }
+    .lower-better-btn.active { background: #00c358; color: #fff; border-color: #00c358; }
+    .lower-better-btn:hover { border-color: #00c358; }
+    .btn { padding: 12px 24px; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.2s ease; border: none; }
+    .btn-primary { background: linear-gradient(135deg, #00c358 0%, #00a34a 100%); color: white; width: 100%; padding: 16px; font-size: 16px; }
+    .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0, 195, 88, 0.4); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .preview-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .preview-count { font-size: 13px; color: #64748b; }
+    .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 40px; color: #64748b; text-align: center; }
+    .empty-state .icon { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
+    .table-wrapper { overflow-x: auto; }
+    .preview-title { text-align: center; margin-bottom: 16px; }
+    .preview-title h2 { font-size: 20px; font-weight: 700; color: #f1f5f9; }
+    .preview-title p { font-size: 14px; color: #94a3b8; }
+    .preview-table { width: 100%; border-collapse: collapse; font-size: 13px; border-radius: 12px; overflow: hidden; }
+    .preview-table th { background: #00c358; padding: 12px 8px; text-align: center; font-weight: 600; color: white; white-space: nowrap; }
+    .preview-table td { padding: 10px 8px; text-align: center; }
+    .preview-table tr:nth-child(odd) td { background: #ebecf5; }
+    .preview-table tr:nth-child(even) td { background: #f6f8fd; }
+    .preview-table tr td { color: #1e293b; }
+    .sort-btn { background: none; border: none; color: rgba(255,255,255,0.7); cursor: pointer; padding: 2px 6px; margin-left: 4px; font-size: 12px; }
+    .sort-btn:hover { color: white; }
+    .footer { text-align: center; margin-top: 40px; color: #475569; font-size: 13px; }
+    #canvas, #wrapperCanvas, #pickGridCanvas, #scatterCanvas { display: none; }
+    .upload-zone {
+      border: 2px dashed rgba(148, 163, 184, 0.3); border-radius: 12px; padding: 40px;
+      text-align: center; cursor: pointer; transition: all 0.2s ease; background: rgba(30, 41, 59, 0.4);
+    }
+    .upload-zone:hover { border-color: #00c358; background: rgba(0, 195, 88, 0.05); }
+    .upload-zone.dragover { border-color: #00c358; background: rgba(0, 195, 88, 0.1); }
+    .upload-zone .icon { font-size: 48px; margin-bottom: 12px; opacity: 0.6; }
+    .upload-zone p { color: #94a3b8; font-size: 14px; }
+    .upload-zone input { display: none; }
+
+    /* ─── Pick Grid Styles ─── */
+    .pick-grid-preview { overflow-x: auto; padding: 8px; }
+    .pick-grid-table { border-collapse: collapse; font-size: 13px; }
+    .pick-grid-table th { background: #00c358; color: white; padding: 10px 14px; font-weight: 600; font-size: 12px; text-align: center; white-space: nowrap; }
+    .pick-grid-table th.picker-col { text-align: left; min-width: 120px; }
+    .pick-grid-table td { padding: 6px 8px; text-align: center; vertical-align: middle; }
+    .pick-grid-table td.picker-name { text-align: left; font-weight: 600; color: #1e293b; padding-left: 14px; white-space: nowrap; }
+    .pick-grid-table tr:nth-child(odd) td { background: #ebecf5; }
+    .pick-grid-table tr:nth-child(even) td { background: #f6f8fd; }
+    .logo-cell { display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .logo-cell img { width: 32px; height: 32px; object-fit: contain; }
+    .logo-cell .team-abbr { font-size: 11px; color: #64748b; font-weight: 500; }
+    .logo-status { margin-top: 12px; padding: 10px 14px; border-radius: 8px; font-size: 12px; background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(148, 163, 184, 0.1); }
+    .logo-status .found { color: #00c358; }
+    .logo-status .missing { color: #f87171; }
+    .team-override-list { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+    .team-override-row { display: flex; gap: 8px; align-items: center; }
+    .team-override-row .team-name { flex: 1; font-size: 12px; color: #94a3b8; padding: 6px 10px; background: rgba(30,41,59,0.6); border-radius: 4px; }
+    .team-override-row input { flex: 2; font-size: 11px; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+    .badge-green { background: rgba(0,195,88,0.15); color: #00c358; }
+    .badge-red { background: rgba(248,113,113,0.15); color: #f87171; }
+    .size-btn { background: rgba(30,41,59,0.8); border: 2px solid rgba(148,163,184,0.2); border-radius: 10px; padding: 10px 8px; cursor: pointer; transition: all 0.2s; text-align: center; color: #94a3b8; }
+    .size-btn:hover { border-color: rgba(0,195,88,0.4); color: #e2e8f0; background: rgba(51,65,85,0.6); }
+    .size-btn.active { border-color: #00c358; background: rgba(0,195,88,0.1); color: #00c358; }
+    .size-icon { font-size: 18px; margin-bottom: 3px; line-height: 1; }
+    .size-label { font-size: 12px; font-weight: 600; }
+    .size-sub { font-size: 10px; opacity: 0.7; margin-top: 2px; }
+
+    /* ─── Scatter Plot Styles ─── */
+    .scatter-canvas-wrap {
+      position: relative;
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: crosshair;
+      user-select: none;
+    }
+    #scatterPreviewCanvas {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .scatter-tooltip {
+      position: fixed;
+      background: #1e293b;
+      border: 1px solid rgba(0,195,88,0.4);
+      color: #e2e8f0;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      pointer-events: none;
+      z-index: 9999;
+      display: none;
+      max-width: 220px;
+      line-height: 1.6;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    }
+    .scatter-legend {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+      padding: 10px 14px;
+      background: rgba(30,41,59,0.4);
+      border-radius: 8px;
+      font-size: 12px;
+    }
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .year-filter-grid {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+    .year-chip {
+      padding: 5px 12px;
+      border-radius: 20px;
+      border: 1px solid rgba(148,163,184,0.25);
+      background: rgba(30,41,59,0.8);
+      color: #94a3b8;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 500;
+      transition: all 0.15s;
+    }
+    .year-chip:hover { border-color: rgba(0,195,88,0.4); color: #e2e8f0; }
+    .year-chip.active { border-color: #00c358; background: rgba(0,195,88,0.12); color: #00c358; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .stat-strip {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+      padding: 10px 14px;
+      background: rgba(30,41,59,0.4);
+      border-radius: 8px;
+      font-size: 12px;
+      color: #94a3b8;
+    }
+    .stat-item strong { color: #00c358; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>Action Network Image Tools</h1>
+    <p>Create polished, branded images for your articles</p>
+  </div>
+
+  <div class="tab-nav">
+    <button class="tab-btn active" data-tab="table">📊 Table Generator</button>
+    <button class="tab-btn" data-tab="wrapper">🖼️ Screenshot Wrapper</button>
+    <button class="tab-btn" data-tab="pickgrid">🏆 Pick Grid</button>
+    <button class="tab-btn" data-tab="scatter">📈 Scatter Plot</button>
+  </div>
+
+  <!-- ══════════════════════════════════════════ TABLE TAB ══════════════════════════════════════════ -->
+  <div id="table-tab" class="tab-content active">
+    <div class="main-grid">
+      <div class="controls">
+        <div class="card">
+          <h3>📋 Paste Data</h3>
+          <textarea id="dataInput" class="input-field" placeholder="Paste cells from Excel or Google Sheets here..."></textarea>
+          <p class="hint">Copy cells directly from your spreadsheet (Ctrl+C) and paste here</p>
+        </div>
+        <div class="card">
+          <h3>✏️ Title & Subtitle</h3>
+          <label class="checkbox-label" style="margin-bottom: 12px; padding: 0;">
+            <input type="checkbox" id="showTitle" checked> Show title on image
+          </label>
+          <input type="text" id="titleInput" class="input-field" placeholder="Table Title" style="margin-bottom: 12px;">
+          <input type="text" id="subtitleInput" class="input-field" placeholder="Subtitle (optional)">
+        </div>
+        <div class="card">
+          <h3>🎨 Conditional Formatting</h3>
+          <label class="label">
+            <span class="label-text">Apply heatmap:</span>
+            <select id="heatmapMode" class="select-field">
+              <option value="row">Across each row</option>
+              <option value="column" selected>Across each column</option>
+              <option value="all">Across entire dataset</option>
+              <option value="none">No heatmap</option>
+            </select>
+          </label>
+          <div>
+            <span class="label-text">Color scheme:</span>
+            <div class="color-swatches" id="colorSwatches"></div>
+          </div>
+          <div id="columnCheckboxContainer" style="display: none;">
+            <span class="label-text">Columns to format (click "Lower is better" to flip):</span>
+            <div class="column-config" id="columnCheckboxes"></div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>⚙️ Display Options</h3>
+          <label class="label">
+            <span class="label-text">Max rows to show:</span>
+            <input type="number" id="maxRows" class="input-field" value="20" min="1" max="50" style="width: 100px;">
+          </label>
+          <label class="checkbox-label" style="padding: 8px 0;">
+            <input type="checkbox" id="showRanks"> Show rank numbers (#)
+          </label>
+        </div>
+        <button id="downloadBtn" class="btn btn-primary" disabled>📥 Download Image</button>
+      </div>
+      <div class="card">
+        <div class="preview-header">
+          <h3>👁️ Preview</h3>
+          <span id="rowCount" class="preview-count"></span>
+        </div>
+        <div id="emptyState" class="empty-state">
+          <div class="icon">📊</div>
+          <p style="font-size: 16px; margin-bottom: 8px;">No data yet</p>
+          <p style="font-size: 13px;">Paste data from Excel or Google Sheets to get started</p>
+        </div>
+        <div id="previewContainer" class="table-wrapper" style="display: none;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════ WRAPPER TAB ══════════════════════════════════════════ -->
+  <div id="wrapper-tab" class="tab-content">
+    <div class="main-grid">
+      <div class="controls">
+        <div class="card">
+          <h3>📤 Upload Screenshot</h3>
+          <div class="upload-zone" id="uploadZone">
+            <div class="icon">🖼️</div>
+            <p>Click or drag & drop an image here</p>
+            <input type="file" id="screenshotInput" accept="image/*">
+          </div>
+          <p class="hint">Supports PNG, JPG, and other image formats</p>
+        </div>
+        <div class="card" id="cropCard" style="display: none;">
+          <h3>✂️ Crop Image</h3>
+          <p class="hint" style="margin-bottom: 12px;">Drag on the image to select the area you want to keep</p>
+          <div id="cropContainer" style="position: relative; display: inline-block; max-width: 100%; touch-action: none; user-select: none;">
+            <img id="cropImage" style="max-width: 100%; max-height: 400px; display: block; pointer-events: none; user-select: none; -webkit-user-drag: none;">
+            <div id="cropOverlay" style="position: absolute; border: 3px dashed #00c358; background: rgba(0, 195, 88, 0.15); pointer-events: none; display: none; box-shadow: 0 0 0 9999px rgba(0,0,0,0.4);"></div>
+          </div>
+          <div style="margin-top: 12px; display: flex; gap: 8px;">
+            <button id="applyCropBtn" class="btn btn-primary" style="flex: 1; padding: 10px;" disabled>✓ Apply Crop</button>
+            <button id="resetCropBtn" class="btn" style="flex: 1; padding: 10px; background: rgba(51,65,85,0.8); color: #e2e8f0; border: 1px solid rgba(148,163,184,0.2);">↺ Reset</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>🎨 Wrapper Options</h3>
+          <label class="label">
+            <span class="label-text">Max output width:</span>
+            <select id="maxOutputWidth" class="select-field">
+              <option value="0">Original size</option>
+              <option value="800" selected>800px (recommended)</option>
+              <option value="600">600px (compact)</option>
+              <option value="400">400px (small)</option>
+            </select>
+          </label>
+          <label class="label">
+            <span class="label-text">Border thickness:</span>
+            <select id="borderThickness" class="select-field">
+              <option value="3" selected>Thin (3px)</option>
+              <option value="5">Medium (5px)</option>
+              <option value="8">Thick (8px)</option>
+            </select>
+          </label>
+          <label class="label">
+            <span class="label-text">Corner radius:</span>
+            <select id="cornerRadius" class="select-field">
+              <option value="8">Small (8px)</option>
+              <option value="12" selected>Medium (12px)</option>
+              <option value="20">Large (20px)</option>
+            </select>
+          </label>
+          <label class="label">
+            <span class="label-text">Padding around image:</span>
+            <select id="imagePadding" class="select-field">
+              <option value="8" selected>Small (8px)</option>
+              <option value="16">Medium (16px)</option>
+              <option value="24">Large (24px)</option>
+            </select>
+          </label>
+          <label class="checkbox-label" style="padding: 8px 0;">
+            <input type="checkbox" id="showLogo" checked> Show Action Network logo
+          </label>
+          <label class="label" id="logoPositionLabel">
+            <span class="label-text">Logo position:</span>
+            <select id="logoPosition" class="select-field">
+              <option value="bottom-left" selected>Bottom Left</option>
+              <option value="bottom-right">Bottom Right</option>
+              <option value="top-left">Top Left</option>
+              <option value="top-right">Top Right</option>
+            </select>
+          </label>
+        </div>
+        <button id="wrapperDownloadBtn" class="btn btn-primary" disabled>📥 Download Wrapped Image</button>
+      </div>
+      <div class="card">
+        <div class="preview-header"><h3>👁️ Preview</h3></div>
+        <div id="wrapperEmptyState" class="empty-state">
+          <div class="icon">🖼️</div>
+          <p style="font-size: 16px; margin-bottom: 8px;">No screenshot yet</p>
+          <p style="font-size: 13px;">Upload an image to see the preview</p>
+        </div>
+        <div id="wrapperPreviewContainer" class="screenshot-preview" style="display: none;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════ PICK GRID TAB ══════════════════════════════════════════ -->
+  <div id="pickgrid-tab" class="tab-content">
+    <div class="main-grid">
+      <div class="controls">
+        <div class="card">
+          <h3>📋 Paste Pick Data</h3>
+          <textarea id="pgDataInput" class="input-field" style="height: 200px;"
+            placeholder="Paste from spreadsheet...&#10;&#10;Row 1 = headers (leave A1 blank, then category names)&#10;Col 1 = picker names&#10;Cells = team names&#10;&#10;No row limit — paste as many pickers as you want."></textarea>
+          <p class="hint">Example: A1 blank, B1="Champion", C1="Best QB" → A2="Steve", B2="Alabama", C2="Ohio State"</p>
+        </div>
+        <div class="card">
+          <h3>✏️ Title</h3>
+          <input type="text" id="pgTitle" class="input-field" placeholder="2025 Staff Picks" style="margin-bottom: 10px;">
+          <input type="text" id="pgSubtitle" class="input-field" placeholder="Subtitle (optional)">
+        </div>
+        <div class="card">
+          <h3>🏷️ Logo Settings</h3>
+          <label class="label">
+            <span class="label-text">Sport (for ESPN logo lookup):</span>
+            <select id="pgSport" class="select-field">
+              <option value="nfl">NFL</option>
+              <option value="ncaa" selected>College Football / Basketball</option>
+              <option value="mlb">MLB</option>
+              <option value="nba">NBA</option>
+              <option value="nhl">NHL</option>
+              <option value="mls">MLS</option>
+            </select>
+          </label>
+          <label class="label">
+            <span class="label-text">Logo size in grid:</span>
+            <select id="pgLogoSize" class="select-field">
+              <option value="32">Small (32px)</option>
+              <option value="44" selected>Medium (44px)</option>
+              <option value="56">Large (56px)</option>
+            </select>
+          </label>
+          <label class="checkbox-label" style="padding: 8px 0; margin-bottom: 8px;">
+            <input type="checkbox" id="pgShowTeamName"> Show team name below logo
+          </label>
+        </div>
+        <div class="card" id="pgOverrideCard" style="display: none;">
+          <h3>⚠️ Manual Logo URLs</h3>
+          <p class="hint" style="margin-bottom: 12px;">These teams weren't auto-matched. Paste a direct ESPN or other image URL, or leave blank to show initials.</p>
+          <div id="pgOverrideList" class="team-override-list"></div>
+        </div>
+        <div class="card">
+          <h3>🎨 Style</h3>
+          <label class="label">
+            <span class="label-text">Header color:</span>
+            <select id="pgHeaderColor" class="select-field">
+              <option value="#00c358">AN Green</option>
+              <option value="#1e3a5f">Navy</option>
+              <option value="#1e293b">Dark Slate</option>
+              <option value="#7c3aed">Purple</option>
+              <option value="#b91c1c">Red</option>
+            </select>
+          </label>
+          <label class="label">
+            <span class="label-text">AN logo on image:</span>
+            <select id="pgLogoPosition" class="select-field">
+              <option value="none">None</option>
+              <option value="bottom-right" selected>Bottom Right</option>
+              <option value="bottom-left">Bottom Left</option>
+            </select>
+          </label>
+        </div>
+        <div class="card">
+          <h3>📐 Output Size</h3>
+          <p class="hint" style="margin-bottom: 12px;">Image will auto-size to fit content, then scaled/padded to fill the chosen canvas.</p>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;" id="pgSizeGrid">
+            <button class="size-btn active" data-size="auto"><div class="size-icon">⚡</div><div class="size-label">Auto</div><div class="size-sub">Fit to content</div></button>
+            <button class="size-btn" data-size="twitter"><div class="size-icon">𝕏</div><div class="size-label">Twitter/X</div><div class="size-sub">1200 × 675</div></button>
+            <button class="size-btn" data-size="instagram-square"><div class="size-icon">◻</div><div class="size-label">Instagram</div><div class="size-sub">1080 × 1080</div></button>
+            <button class="size-btn" data-size="instagram-story"><div class="size-icon">▯</div><div class="size-label">Story/Reel</div><div class="size-sub">1080 × 1920</div></button>
+            <button class="size-btn" data-size="facebook"><div class="size-icon">𝒇</div><div class="size-label">Facebook</div><div class="size-sub">1200 × 630</div></button>
+            <button class="size-btn" data-size="article"><div class="size-icon">📰</div><div class="size-label">Article</div><div class="size-sub">1200 × 800</div></button>
+          </div>
+          <label class="label" style="margin-top: 14px; margin-bottom: 0;">
+            <span class="label-text">Background fill color (for letterboxing):</span>
+            <select id="pgBgColor" class="select-field">
+              <option value="#ffffff">White</option>
+              <option value="#f1f5f9">Light Gray</option>
+              <option value="#0f172a">Dark Navy</option>
+              <option value="#1e293b">Dark Slate</option>
+              <option value="#00c358">AN Green</option>
+            </select>
+          </label>
+        </div>
+        <button id="pgDownloadBtn" class="btn btn-primary" disabled>📥 Download Pick Grid</button>
+      </div>
+      <div class="card">
+        <div class="preview-header">
+          <h3>👁️ Preview</h3>
+          <span id="pgStatusBadge"></span>
+        </div>
+        <div id="pgEmptyState" class="empty-state">
+          <div class="icon">🏆</div>
+          <p style="font-size: 16px; margin-bottom: 8px;">No picks yet</p>
+          <p style="font-size: 13px;">Paste pick data to get started</p>
+        </div>
+        <div id="pgPreviewContainer" style="display: none;">
+          <div id="pgLogoStatus" class="logo-status" style="margin-bottom: 14px; display: none;"></div>
+          <div class="pick-grid-preview">
+            <div id="pgTableContainer"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════ SCATTER PLOT TAB ══════════════════════════════════════════ -->
+  <div id="scatter-tab" class="tab-content">
+    <div class="main-grid">
+      <!-- Controls -->
+      <div class="controls">
+
+        <div class="card">
+          <h3>📂 Data Source</h3>
+          <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+            <button id="scUseBuiltin" class="btn" style="flex:1; padding:10px 8px; font-size:13px; background:rgba(0,195,88,0.15); border:2px solid #00c358; color:#00c358; border-radius:8px;">Use Masters Data</button>
+            <button id="scUsePaste" class="btn" style="flex:1; padding:10px 8px; font-size:13px; background:rgba(30,41,59,0.8); border:2px solid rgba(148,163,184,0.2); color:#94a3b8; border-radius:8px;">Paste CSV</button>
+          </div>
+          <div id="scPasteArea" style="display:none;">
+            <textarea id="scCsvInput" class="input-field" style="height:120px;" placeholder="Paste CSV data here (first row = headers)..."></textarea>
+            <p class="hint">First row must be column headers. Separate with commas or tabs.</p>
+          </div>
+          <div id="scDataInfo" style="font-size:12px; color:#64748b; margin-top:8px;"></div>
+        </div>
+
+        <div class="card">
+          <h3>📐 Axes</h3>
+          <div class="two-col">
+            <label class="label" style="margin-bottom:0;">
+              <span class="label-text">X Axis</span>
+              <select id="scXAxis" class="select-field"></select>
+            </label>
+            <label class="label" style="margin-bottom:0;">
+              <span class="label-text">Y Axis</span>
+              <select id="scYAxis" class="select-field"></select>
+            </label>
+          </div>
+          <label class="label" style="margin-top:12px; margin-bottom:0;">
+            <span class="label-text">Color points by</span>
+            <select id="scColorBy" class="select-field"></select>
+          </label>
+          <label class="label" style="margin-top:12px; margin-bottom:0;">
+            <span class="label-text">Label points by</span>
+            <select id="scLabelBy" class="select-field"></select>
+          </label>
+          <label class="checkbox-label" style="margin-top:10px; padding-left:0;">
+            <input type="checkbox" id="scInvertY"> Invert Y axis (lower = better)
+          </label>
+          <label class="checkbox-label" style="padding-left:0;">
+            <input type="checkbox" id="scInvertX"> Invert X axis (lower = better)
+          </label>
+          <label class="checkbox-label" style="padding-left:0;">
+            <input type="checkbox" id="scDiagLine" checked> Show diagonal reference line
+          </label>
+        </div>
+
+        <div class="card">
+          <h3>📅 Filter by Year</h3>
+          <div class="year-filter-grid" id="scYearFilters"></div>
+        </div>
+
+        <div class="card">
+          <h3>✏️ Labels</h3>
+          <input type="text" id="scTitle" class="input-field" placeholder="Chart title" style="margin-bottom:10px;">
+          <input type="text" id="scSubtitle" class="input-field" placeholder="Subtitle (optional)" style="margin-bottom:10px;">
+          <div class="two-col">
+            <label class="label" style="margin-bottom:0;">
+              <span class="label-text">X label override</span>
+              <input type="text" id="scXLabel" class="input-field" placeholder="Auto">
+            </label>
+            <label class="label" style="margin-bottom:0;">
+              <span class="label-text">Y label override</span>
+              <input type="text" id="scYLabel" class="input-field" placeholder="Auto">
+            </label>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>🎨 Style</h3>
+          <label class="label">
+            <span class="label-text">Point size</span>
+            <select id="scPointSize" class="select-field">
+              <option value="5">Small (5px)</option>
+              <option value="7" selected>Medium (7px)</option>
+              <option value="10">Large (10px)</option>
+            </select>
+          </label>
+          <label class="label">
+            <span class="label-text">Show AN logo</span>
+            <select id="scLogoPos" class="select-field">
+              <option value="none">None</option>
+              <option value="bottom-right" selected>Bottom Right</option>
+              <option value="bottom-left">Bottom Left</option>
+            </select>
+          </label>
+          <label class="checkbox-label" style="padding-left:0;">
+            <input type="checkbox" id="scShowLabels"> Show player name labels
+          </label>
+        </div>
+
+        <button id="scDownloadBtn" class="btn btn-primary" disabled>📥 Download Chart</button>
+      </div>
+
+      <!-- Preview -->
+      <div class="card" style="display:flex; flex-direction:column;">
+        <div class="preview-header">
+          <h3>👁️ Preview</h3>
+          <span id="scPointCount" class="preview-count"></span>
+        </div>
+        <div id="scEmptyState" class="empty-state">
+          <div class="icon">📈</div>
+          <p style="font-size: 16px; margin-bottom: 8px;">Select axes to begin</p>
+          <p style="font-size: 13px;">Choose X and Y columns from the controls</p>
+        </div>
+        <div id="scPreviewWrap" style="display:none; flex-direction:column; gap:12px;">
+          <div class="scatter-canvas-wrap">
+            <canvas id="scatterPreviewCanvas"></canvas>
+          </div>
+          <div class="scatter-legend" id="scLegend"></div>
+          <div class="stat-strip" id="scStats"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <canvas id="canvas"></canvas>
+  <canvas id="wrapperCanvas"></canvas>
+  <canvas id="pickGridCanvas"></canvas>
+  <canvas id="scatterCanvas"></canvas>
+  <div class="scatter-tooltip" id="scTooltip"></div>
+
+  <div class="footer">Action Network Image Tools • Create polished visuals for your articles</div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════════════
+// BUILT-IN MASTERS DATA
+// ════════════════════════════════════════════════════════════════
+const MASTERS_DATA = [{"year":"2020","player_name":"Morikawa, Collin","finish":"T44","finish_pos":"44.5","finish_group":"Made Cut","closing_odds":"32","odds_rank":"12","model_rank":"14","market_vs_model":"-2","field_size":"92","odds_pct":"0.121","model_pct":"0.143"},{"year":"2020","player_name":"Wolff, Matthew","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"47","odds_rank":"18","model_rank":"25","market_vs_model":"-7","field_size":"92","odds_pct":"0.187","model_pct":"0.264"},{"year":"2020","player_name":"Scheffler, Scottie","finish":"T19","finish_pos":"19.5","finish_group":"Made Cut","closing_odds":"66","odds_rank":"25","model_rank":"12","market_vs_model":"13","field_size":"92","odds_pct":"0.264","model_pct":"0.121"},{"year":"2020","player_name":"Champ, Cameron","finish":"T19","finish_pos":"19.5","finish_group":"Made Cut","closing_odds":"92","odds_rank":"28","model_rank":"38","market_vs_model":"-10","field_size":"92","odds_pct":"0.297","model_pct":"0.407"},{"year":"2020","player_name":"Kokrak, Jason","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"95","odds_rank":"31","model_rank":"19","market_vs_model":"12","field_size":"92","odds_pct":"0.330","model_pct":"0.198"},{"year":"2020","player_name":"Im, Sungjae","finish":"T2","finish_pos":"2.5","finish_group":"Top 10","closing_odds":"104","odds_rank":"32","model_rank":"17","market_vs_model":"15","field_size":"92","odds_pct":"0.341","model_pct":"0.176"},{"year":"2020","player_name":"Ancer, Abraham","finish":"T13","finish_pos":"13.5","finish_group":"Made Cut","closing_odds":"111","odds_rank":"33","model_rank":"23","market_vs_model":"10","field_size":"92","odds_pct":"0.352","model_pct":"0.242"},{"year":"2020","player_name":"Griffin, Lanto","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"145","odds_rank":"40","model_rank":"43","market_vs_model":"-3","field_size":"92","odds_pct":"0.429","model_pct":"0.462"},{"year":"2020","player_name":"van Rooyen, Erik","finish":"WD","finish_pos":"NULL","finish_group":"MC","closing_odds":"173","odds_rank":"44","model_rank":"29","market_vs_model":"15","field_size":"92","odds_pct":"0.473","model_pct":"0.308"},{"year":"2020","player_name":"Munoz, Sebastian","finish":"T19","finish_pos":"19.5","finish_group":"Made Cut","closing_odds":"188","odds_rank":"48","model_rank":"30","market_vs_model":"18","field_size":"92","odds_pct":"0.516","model_pct":"0.319"},{"year":"2020","player_name":"Homa, Max","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"247","odds_rank":"57","model_rank":"55","market_vs_model":"2","field_size":"92","odds_pct":"0.615","model_pct":"0.593"},{"year":"2020","player_name":"Bezuidenhout, Christiaan","finish":"T38","finish_pos":"38.5","finish_group":"Made Cut","closing_odds":"276","odds_rank":"58","model_rank":"55","market_vs_model":"3","field_size":"92","odds_pct":"0.626","model_pct":"0.593"},{"year":"2020","player_name":"Perez, Victor","finish":"T46","finish_pos":"46.5","finish_group":"Made Cut","closing_odds":"306","odds_rank":"61","model_rank":"62","market_vs_model":"-1","field_size":"92","odds_pct":"0.659","model_pct":"0.670"},{"year":"2020","player_name":"Poston, J.T.","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"344","odds_rank":"63","model_rank":"48","market_vs_model":"15","field_size":"92","odds_pct":"0.681","model_pct":"0.516"},{"year":"2020","player_name":"Duncan, Tyler","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"550","odds_rank":"70","model_rank":"52","market_vs_model":"18","field_size":"92","odds_pct":"0.758","model_pct":"0.560"},{"year":"2020","player_name":"Taylor, Nick","finish":"T29","finish_pos":"29.5","finish_group":"Made Cut","closing_odds":"611","odds_rank":"71","model_rank":"63","market_vs_model":"8","field_size":"92","odds_pct":"0.769","model_pct":"0.681"},{"year":"2020","player_name":"Janewattananond, Jazz","finish":"T51","finish_pos":"51.5","finish_group":"Made Cut","closing_odds":"687","odds_rank":"73","model_rank":"72","market_vs_model":"1","field_size":"92","odds_pct":"0.791","model_pct":"0.780"},{"year":"2020","player_name":"Pan, C.T.","finish":"T7","finish_pos":"7.5","finish_group":"Top 10","closing_odds":"687","odds_rank":"73","model_rank":"76","market_vs_model":"-3","field_size":"92","odds_pct":"0.791","model_pct":"0.824"},{"year":"2020","player_name":"Lashley, Nate","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"687","odds_rank":"73","model_rank":"70","market_vs_model":"3","field_size":"92","odds_pct":"0.791","model_pct":"0.758"},{"year":"2020","player_name":"Kang, Sung","finish":"T29","finish_pos":"29.5","finish_group":"Made Cut","closing_odds":"687","odds_rank":"73","model_rank":"81","market_vs_model":"-8","field_size":"92","odds_pct":"0.791","model_pct":"0.879"},{"year":"2020","player_name":"Putnam, Andrew","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"687","odds_rank":"73","model_rank":"78","market_vs_model":"-5","field_size":"92","odds_pct":"0.791","model_pct":"0.846"},{"year":"2020","player_name":"Ogletree, Andy","finish":"T34","finish_pos":"34.5","finish_group":"Made Cut","closing_odds":"1372","odds_rank":"82","model_rank":"82","market_vs_model":"0","field_size":"92","odds_pct":"0.890","model_pct":"0.890"},{"year":"2020","player_name":"Augenstein, John","finish":"T55","finish_pos":"55.5","finish_group":"Made Cut","closing_odds":"1372","odds_rank":"82","model_rank":"79","market_vs_model":"3","field_size":"92","odds_pct":"0.890","model_pct":"0.857"},{"year":"2020","player_name":"Gallegos, Abel","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"1372","odds_rank":"82","model_rank":"86","market_vs_model":"-4","field_size":"92","odds_pct":"0.890","model_pct":"0.934"},{"year":"2020","player_name":"Michel, Lukas","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"1372","odds_rank":"82","model_rank":"86","market_vs_model":"-4","field_size":"92","odds_pct":"0.890","model_pct":"0.934"},{"year":"2020","player_name":"Sugrue, James","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"1372","odds_rank":"82","model_rank":"86","market_vs_model":"-4","field_size":"92","odds_pct":"0.890","model_pct":"0.934"},{"year":"2021","player_name":"Zalatoris, Will","finish":"2","finish_pos":"2","finish_group":"Top 10","closing_odds":"62","odds_rank":"26","model_rank":"22","market_vs_model":"4","field_size":"88","odds_pct":"0.287","model_pct":"0.241"},{"year":"2021","player_name":"Ortiz, Carlos","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"142","odds_rank":"42","model_rank":"36","market_vs_model":"6","field_size":"88","odds_pct":"0.471","model_pct":"0.402"},{"year":"2021","player_name":"MacIntyre, Robert","finish":"T12","finish_pos":"12.5","finish_group":"Made Cut","closing_odds":"230","odds_rank":"58","model_rank":"62","market_vs_model":"-4","field_size":"88","odds_pct":"0.655","model_pct":"0.701"},{"year":"2021","player_name":"Thompson, Michael","finish":"T34","finish_pos":"34.5","finish_group":"Made Cut","closing_odds":"550","odds_rank":"70","model_rank":"59","market_vs_model":"11","field_size":"88","odds_pct":"0.793","model_pct":"0.667"},{"year":"2021","player_name":"Gay, Brian","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"916","odds_rank":"74","model_rank":"77","market_vs_model":"-3","field_size":"88","odds_pct":"0.839","model_pct":"0.874"},{"year":"2021","player_name":"Strafaci, Tyler","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"1373","odds_rank":"79","model_rank":"81","market_vs_model":"-2","field_size":"88","odds_pct":"0.897","model_pct":"0.920"},{"year":"2021","player_name":"Long, Joe","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"1830","odds_rank":"81","model_rank":"83","market_vs_model":"-2","field_size":"88","odds_pct":"0.920","model_pct":"0.943"},{"year":"2021","player_name":"Osborne, Charles","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"2001","odds_rank":"88","model_rank":"83","market_vs_model":"5","field_size":"88","odds_pct":"1.000","model_pct":"0.943"},{"year":"2022","player_name":"Burns, Sam","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"47","odds_rank":"15","model_rank":"17","market_vs_model":"-2","field_size":"90","odds_pct":"0.157","model_pct":"0.180"},{"year":"2022","player_name":"Young, Cameron","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"112","odds_rank":"40","model_rank":"39","market_vs_model":"1","field_size":"90","odds_pct":"0.438","model_pct":"0.427"},{"year":"2022","player_name":"Gooch, Talor","finish":"T14","finish_pos":"14.5","finish_group":"Made Cut","closing_odds":"117","odds_rank":"41","model_rank":"31","market_vs_model":"10","field_size":"90","odds_pct":"0.449","model_pct":"0.337"},{"year":"2022","player_name":"Power, Seamus","finish":"T27","finish_pos":"27.5","finish_group":"Made Cut","closing_odds":"117","odds_rank":"42","model_rank":"25","market_vs_model":"17","field_size":"90","odds_pct":"0.461","model_pct":"0.270"},{"year":"2022","player_name":"Varner III, Harold","finish":"T23","finish_pos":"23.5","finish_group":"Made Cut","closing_odds":"122","odds_rank":"43","model_rank":"38","market_vs_model":"5","field_size":"90","odds_pct":"0.472","model_pct":"0.416"},{"year":"2022","player_name":"List, Luke","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"130","odds_rank":"45","model_rank":"42","market_vs_model":"3","field_size":"90","odds_pct":"0.494","model_pct":"0.461"},{"year":"2022","player_name":"Hoge, Tom","finish":"T39","finish_pos":"39.5","finish_group":"Made Cut","closing_odds":"168","odds_rank":"51","model_rank":"36","market_vs_model":"15","field_size":"90","odds_pct":"0.562","model_pct":"0.393"},{"year":"2022","player_name":"Straka, Sepp","finish":"T30","finish_pos":"30.5","finish_group":"Made Cut","closing_odds":"190","odds_rank":"54","model_rank":"48","market_vs_model":"6","field_size":"90","odds_pct":"0.596","model_pct":"0.528"},{"year":"2022","player_name":"Herbert, Lucas","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"213","odds_rank":"56","model_rank":"60","market_vs_model":"-4","field_size":"90","odds_pct":"0.618","model_pct":"0.663"},{"year":"2022","player_name":"Spaun, J.J.","finish":"T23","finish_pos":"23.5","finish_group":"Made Cut","closing_odds":"221","odds_rank":"58","model_rank":"55","market_vs_model":"3","field_size":"90","odds_pct":"0.640","model_pct":"0.607"},{"year":"2022","player_name":"Davis, Cameron","finish":"46","finish_pos":"46","finish_group":"Made Cut","closing_odds":"259","odds_rank":"63","model_rank":"61","market_vs_model":"2","field_size":"90","odds_pct":"0.697","model_pct":"0.674"},{"year":"2022","player_name":"Lee, Min Woo","finish":"T14","finish_pos":"14.5","finish_group":"Made Cut","closing_odds":"350","odds_rank":"70","model_rank":"64","market_vs_model":"6","field_size":"90","odds_pct":"0.775","model_pct":"0.708"},{"year":"2022","player_name":"Lee, Kyoung-Hoon","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"354","odds_rank":"72","model_rank":"58","market_vs_model":"14","field_size":"90","odds_pct":"0.798","model_pct":"0.640"},{"year":"2022","player_name":"Higgo, Garrick","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"387","odds_rank":"76","model_rank":"74","market_vs_model":"2","field_size":"90","odds_pct":"0.843","model_pct":"0.820"},{"year":"2022","player_name":"Higgs, Harry","finish":"T14","finish_pos":"14.5","finish_group":"Made Cut","closing_odds":"390","odds_rank":"77","model_rank":"73","market_vs_model":"4","field_size":"90","odds_pct":"0.854","model_pct":"0.809"},{"year":"2022","player_name":"Nakajima, Keita","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"480","odds_rank":"79","model_rank":"78","market_vs_model":"1","field_size":"90","odds_pct":"0.876","model_pct":"0.865"},{"year":"2022","player_name":"Migliozzi, Guido","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"601","odds_rank":"80","model_rank":"81","market_vs_model":"-1","field_size":"90","odds_pct":"0.888","model_pct":"0.899"},{"year":"2022","player_name":"Greaser, Austin","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"613","odds_rank":"81","model_rank":"83","market_vs_model":"-2","field_size":"90","odds_pct":"0.899","model_pct":"0.921"},{"year":"2022","player_name":"Piot, James","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"629","odds_rank":"82","model_rank":"84","market_vs_model":"-2","field_size":"90","odds_pct":"0.910","model_pct":"0.933"},{"year":"2022","player_name":"Jarvis, Aaron","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"751","odds_rank":"85","model_rank":"86","market_vs_model":"-1","field_size":"90","odds_pct":"0.944","model_pct":"0.955"},{"year":"2022","player_name":"Shepherd, Laird","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"751","odds_rank":"85","model_rank":"86","market_vs_model":"-1","field_size":"90","odds_pct":"0.944","model_pct":"0.955"},{"year":"2023","player_name":"Pereira, Mito","finish":"T43","finish_pos":"43.5","finish_group":"Made Cut","closing_odds":"97","odds_rank":"29","model_rank":"22","market_vs_model":"7","field_size":"86","odds_pct":"0.329","model_pct":"0.247"},{"year":"2023","player_name":"Kim, Tom","finish":"T16","finish_pos":"16.5","finish_group":"Made Cut","closing_odds":"153","odds_rank":"36","model_rank":"26","market_vs_model":"10","field_size":"86","odds_pct":"0.412","model_pct":"0.294"},{"year":"2023","player_name":"Theegala, Sahith","finish":"9","finish_pos":"9","finish_group":"Top 10","closing_odds":"157","odds_rank":"38","model_rank":"32","market_vs_model":"6","field_size":"86","odds_pct":"0.435","model_pct":"0.365"},{"year":"2023","player_name":"Kitayama, Kurt","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"179","odds_rank":"41","model_rank":"35","market_vs_model":"6","field_size":"86","odds_pct":"0.471","model_pct":"0.400"},{"year":"2023","player_name":"Moore, Taylor","finish":"T39","finish_pos":"39.5","finish_group":"Made Cut","closing_odds":"220","odds_rank":"46","model_rank":"31","market_vs_model":"15","field_size":"86","odds_pct":"0.529","model_pct":"0.353"},{"year":"2023","player_name":"Sargent, Gordon","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"301","odds_rank":"55","model_rank":"49","market_vs_model":"6","field_size":"86","odds_pct":"0.635","model_pct":"0.565"},{"year":"2023","player_name":"Fox, Ryan","finish":"T26","finish_pos":"26.5","finish_group":"Made Cut","closing_odds":"311","odds_rank":"56","model_rank":"50","market_vs_model":"6","field_size":"86","odds_pct":"0.647","model_pct":"0.576"},{"year":"2023","player_name":"Svensson, Adam","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"434","odds_rank":"66","model_rank":"56","market_vs_model":"10","field_size":"86","odds_pct":"0.765","model_pct":"0.647"},{"year":"2023","player_name":"Meronk, Adrian","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"439","odds_rank":"67","model_rank":"53","market_vs_model":"14","field_size":"86","odds_pct":"0.776","model_pct":"0.612"},{"year":"2023","player_name":"Higa, Kazuki","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"601","odds_rank":"72","model_rank":"72","market_vs_model":"0","field_size":"86","odds_pct":"0.835","model_pct":"0.835"},{"year":"2023","player_name":"Bennett, Sam","finish":"T16","finish_pos":"16.5","finish_group":"Made Cut","closing_odds":"1001","odds_rank":"74","model_rank":"75","market_vs_model":"-1","field_size":"86","odds_pct":"0.859","model_pct":"0.871"},{"year":"2023","player_name":"Potgieter, Aldrich","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"2001","odds_rank":"77","model_rank":"76","market_vs_model":"1","field_size":"86","odds_pct":"0.894","model_pct":"0.882"},{"year":"2023","player_name":"Crowe, Harrison","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"2501","odds_rank":"78","model_rank":"82","market_vs_model":"-4","field_size":"86","odds_pct":"0.906","model_pct":"0.953"},{"year":"2023","player_name":"Fernandez de oliveira, Mateo","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"2501","odds_rank":"78","model_rank":"81","market_vs_model":"-3","field_size":"86","odds_pct":"0.906","model_pct":"0.941"},{"year":"2023","player_name":"Carr, Ben","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"2501","odds_rank":"78","model_rank":"79","market_vs_model":"-1","field_size":"86","odds_pct":"0.906","model_pct":"0.918"},{"year":"2023","player_name":"Mcclean, Matthew","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"5001","odds_rank":"83","model_rank":"82","market_vs_model":"1","field_size":"86","odds_pct":"0.965","model_pct":"0.953"},{"year":"2024","player_name":"Aberg, Ludvig","finish":"2","finish_pos":"2","finish_group":"Top 10","closing_odds":"28","odds_rank":"8","model_rank":"5","market_vs_model":"3","field_size":"89","odds_pct":"0.080","model_pct":"0.045"},{"year":"2024","player_name":"Clark, Wyndham","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"39","odds_rank":"11","model_rank":"16","market_vs_model":"-5","field_size":"89","odds_pct":"0.114","model_pct":"0.170"},{"year":"2024","player_name":"Bhatia, Akshay","finish":"T35","finish_pos":"35.5","finish_group":"Made Cut","closing_odds":"92","odds_rank":"32","model_rank":"27","market_vs_model":"5","field_size":"89","odds_pct":"0.352","model_pct":"0.295"},{"year":"2024","player_name":"McCarthy, Denny","finish":"T45","finish_pos":"45.5","finish_group":"Made Cut","closing_odds":"111","odds_rank":"36","model_rank":"21","market_vs_model":"15","field_size":"89","odds_pct":"0.398","model_pct":"0.227"},{"year":"2024","player_name":"Jaeger, Stephan","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"169","odds_rank":"45","model_rank":"40","market_vs_model":"5","field_size":"89","odds_pct":"0.500","model_pct":"0.443"},{"year":"2024","player_name":"Dunlap, Nick","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"202","odds_rank":"49","model_rank":"72","market_vs_model":"-23","field_size":"89","odds_pct":"0.545","model_pct":"0.807"},{"year":"2024","player_name":"Pavon, Matthieu","finish":"T12","finish_pos":"12.5","finish_group":"Made Cut","closing_odds":"208","odds_rank":"50","model_rank":"56","market_vs_model":"-6","field_size":"89","odds_pct":"0.557","model_pct":"0.625"},{"year":"2024","player_name":"Cole, Eric","finish":"52","finish_pos":"52","finish_group":"Made Cut","closing_odds":"245","odds_rank":"55","model_rank":"52","market_vs_model":"3","field_size":"89","odds_pct":"0.614","model_pct":"0.580"},{"year":"2024","player_name":"Hojgaard, Nicolai","finish":"T16","finish_pos":"16.5","finish_group":"Made Cut","closing_odds":"278","odds_rank":"60","model_rank":"53","market_vs_model":"7","field_size":"89","odds_pct":"0.670","model_pct":"0.591"},{"year":"2024","player_name":"Eckroat, Austin","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"290","odds_rank":"62","model_rank":"41","market_vs_model":"21","field_size":"89","odds_pct":"0.693","model_pct":"0.455"},{"year":"2024","player_name":"Schenk, Adam","finish":"T12","finish_pos":"12.5","finish_group":"Made Cut","closing_odds":"295","odds_rank":"64","model_rank":"46","market_vs_model":"18","field_size":"89","odds_pct":"0.716","model_pct":"0.511"},{"year":"2024","player_name":"Knapp, Jake","finish":"T55","finish_pos":"55.5","finish_group":"Made Cut","closing_odds":"309","odds_rank":"65","model_rank":"68","market_vs_model":"-3","field_size":"89","odds_pct":"0.727","model_pct":"0.761"},{"year":"2024","player_name":"Malnati, Peter","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"401","odds_rank":"72","model_rank":"71","market_vs_model":"1","field_size":"89","odds_pct":"0.807","model_pct":"0.795"},{"year":"2024","player_name":"Hisatsune, Ryo","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"401","odds_rank":"72","model_rank":"63","market_vs_model":"9","field_size":"89","odds_pct":"0.807","model_pct":"0.705"},{"year":"2024","player_name":"Hodges, Lee","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"403","odds_rank":"74","model_rank":"61","market_vs_model":"13","field_size":"89","odds_pct":"0.830","model_pct":"0.682"},{"year":"2024","player_name":"Murray, Grayson","finish":"51","finish_pos":"51","finish_group":"Made Cut","closing_odds":"1001","odds_rank":"79","model_rank":"74","market_vs_model":"5","field_size":"89","odds_pct":"0.886","model_pct":"0.830"},{"year":"2024","player_name":"Lamprecht, Christo","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"2001","odds_rank":"80","model_rank":"79","market_vs_model":"1","field_size":"89","odds_pct":"0.898","model_pct":"0.886"},{"year":"2024","player_name":"Shipley, Neal","finish":"T53","finish_pos":"53.5","finish_group":"Made Cut","closing_odds":"5001","odds_rank":"83","model_rank":"84","market_vs_model":"-1","field_size":"89","odds_pct":"0.932","model_pct":"0.943"},{"year":"2024","player_name":"Stubbs, Jasper","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"5001","odds_rank":"83","model_rank":"86","market_vs_model":"-3","field_size":"89","odds_pct":"0.932","model_pct":"0.966"},{"year":"2024","player_name":"De la Fuente, Santiago","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"5001","odds_rank":"83","model_rank":"78","market_vs_model":"5","field_size":"89","odds_pct":"0.932","model_pct":"0.875"},{"year":"2025","player_name":"Pendrith, Taylor","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"120","odds_rank":"35","model_rank":"27","market_vs_model":"8","field_size":"95","odds_pct":"0.362","model_pct":"0.277"},{"year":"2025","player_name":"Rai, Aaron","finish":"T27","finish_pos":"27.5","finish_group":"Made Cut","closing_odds":"142","odds_rank":"38","model_rank":"22","market_vs_model":"16","field_size":"95","odds_pct":"0.394","model_pct":"0.223"},{"year":"2025","player_name":"McNealy, Maverick","finish":"T32","finish_pos":"32.5","finish_group":"Made Cut","closing_odds":"153","odds_rank":"40","model_rank":"38","market_vs_model":"2","field_size":"95","odds_pct":"0.415","model_pct":"0.394"},{"year":"2025","player_name":"Thompson, Davis","finish":"T46","finish_pos":"46.5","finish_group":"Made Cut","closing_odds":"155","odds_rank":"41","model_rank":"28","market_vs_model":"13","field_size":"95","odds_pct":"0.426","model_pct":"0.287"},{"year":"2025","player_name":"Highsmith, Joe","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"249","odds_rank":"58","model_rank":"46","market_vs_model":"12","field_size":"95","odds_pct":"0.606","model_pct":"0.479"},{"year":"2025","player_name":"Detry, Thomas","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"253","odds_rank":"59","model_rank":"48","market_vs_model":"11","field_size":"95","odds_pct":"0.617","model_pct":"0.500"},{"year":"2025","player_name":"Canter, Laurie","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"271","odds_rank":"60","model_rank":"44","market_vs_model":"16","field_size":"95","odds_pct":"0.628","model_pct":"0.457"},{"year":"2025","player_name":"Yu, Kevin","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"273","odds_rank":"62","model_rank":"50","market_vs_model":"12","field_size":"95","odds_pct":"0.649","model_pct":"0.521"},{"year":"2025","player_name":"Hojgaard, Rasmus","finish":"T32","finish_pos":"32.5","finish_group":"Made Cut","closing_odds":"286","odds_rank":"66","model_rank":"66","market_vs_model":"0","field_size":"95","odds_pct":"0.691","model_pct":"0.691"},{"year":"2025","player_name":"Echavarria, Nico","finish":"51","finish_pos":"51","finish_group":"Made Cut","closing_odds":"381","odds_rank":"68","model_rank":"71","market_vs_model":"-3","field_size":"95","odds_pct":"0.713","model_pct":"0.745"},{"year":"2025","player_name":"Greyserman, Max","finish":"T32","finish_pos":"32.5","finish_group":"Made Cut","closing_odds":"428","odds_rank":"71","model_rank":"67","market_vs_model":"4","field_size":"95","odds_pct":"0.745","model_pct":"0.702"},{"year":"2025","player_name":"McCarty, Matt","finish":"T14","finish_pos":"14.5","finish_group":"Made Cut","closing_odds":"501","odds_rank":"74","model_rank":"69","market_vs_model":"5","field_size":"95","odds_pct":"0.777","model_pct":"0.723"},{"year":"2025","player_name":"Riley, Davis","finish":"T21","finish_pos":"21.5","finish_group":"Made Cut","closing_odds":"501","odds_rank":"74","model_rank":"78","market_vs_model":"-4","field_size":"95","odds_pct":"0.777","model_pct":"0.819"},{"year":"2025","player_name":"Campbell, Brian","finish":"T32","finish_pos":"32.5","finish_group":"Made Cut","closing_odds":"701","odds_rank":"80","model_rank":"75","market_vs_model":"5","field_size":"95","odds_pct":"0.840","model_pct":"0.787"},{"year":"2025","player_name":"Lawrence, Thriston","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"701","odds_rank":"80","model_rank":"81","market_vs_model":"-1","field_size":"95","odds_pct":"0.840","model_pct":"0.851"},{"year":"2025","player_name":"Ballester Barrio, Jose Luis","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"701","odds_rank":"80","model_rank":"86","market_vs_model":"-6","field_size":"95","odds_pct":"0.840","model_pct":"0.904"},{"year":"2025","player_name":"Beck, Evan","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"1001","odds_rank":"86","model_rank":"85","market_vs_model":"1","field_size":"95","odds_pct":"0.904","model_pct":"0.894"},{"year":"2025","player_name":"Hastings, Justin","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"1001","odds_rank":"86","model_rank":"88","market_vs_model":"-2","field_size":"95","odds_pct":"0.904","model_pct":"0.926"},{"year":"2025","player_name":"Campos, Rafael","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"2001","odds_rank":"89","model_rank":"89","market_vs_model":"0","field_size":"95","odds_pct":"0.936","model_pct":"0.936"},{"year":"2025","player_name":"Tai, Hiroshi","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"5001","odds_rank":"91","model_rank":"92","market_vs_model":"-1","field_size":"95","odds_pct":"0.957","model_pct":"0.968"},{"year":"2025","player_name":"Kent, Noah","finish":"CUT","finish_pos":"NULL","finish_group":"MC","closing_odds":"5001","odds_rank":"91","model_rank":"91","market_vs_model":"0","field_size":"95","odds_pct":"0.957","model_pct":"0.957"}];
+
+// ════════════════════════════════════════════════════════════════
+// TABLE GENERATOR
+// ════════════════════════════════════════════════════════════════
+let tableData = { headers: [], rows: [] };
+let heatmapColumns = new Set();
+let lowerIsBetterColumns = new Set();
+let sortColumn = null;
+let sortDirection = 'asc';
+
+const colorSchemes = {
+  'green-red': ['#f8696b','#f98370','#fa9d75','#fbb77a','#fcd17f','#ffeb84','#d8e082','#b1d580','#8aca7e','#63be7b'],
+  'green-grey': ['#d0d0d0','#b8d4bc','#a0d8a8','#88dc94','#70e080','#63be7b','#57b574','#4bac6d','#3fa366','#339a5f']
+};
+let selectedColorScheme = 'green-red';
+const rowColors = { odd: '#ebecf5', even: '#f6f8fd' };
+const headerBgColor = '#00c358';
+
+const dataInput = document.getElementById('dataInput');
+const titleInput = document.getElementById('titleInput');
+const subtitleInput = document.getElementById('subtitleInput');
+const showTitleCheckbox = document.getElementById('showTitle');
+const heatmapMode = document.getElementById('heatmapMode');
+const maxRowsInput = document.getElementById('maxRows');
+const showRanksCheckbox = document.getElementById('showRanks');
+const downloadBtn = document.getElementById('downloadBtn');
+const emptyState = document.getElementById('emptyState');
+const previewContainer = document.getElementById('previewContainer');
+const rowCountSpan = document.getElementById('rowCount');
+const columnCheckboxContainer = document.getElementById('columnCheckboxContainer');
+const columnCheckboxes = document.getElementById('columnCheckboxes');
+const colorSwatches = document.getElementById('colorSwatches');
+const canvas = document.getElementById('canvas');
+
+function initColorSwatches() {
+  const schemeLabels = { 'green-red': 'Green → Red', 'green-grey': 'Green → Grey' };
+  Object.entries(colorSchemes).forEach(([key, colors]) => {
+    const swatch = document.createElement('div');
+    swatch.className = `color-swatch ${key === selectedColorScheme ? 'selected' : ''}`;
+    swatch.style.background = `linear-gradient(90deg, ${colors[9]} 0%, ${colors[5]} 50%, ${colors[0]} 100%)`;
+    swatch.textContent = schemeLabels[key];
+    swatch.onclick = () => {
+      document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+      swatch.classList.add('selected');
+      selectedColorScheme = key;
+      renderPreview();
+    };
+    colorSwatches.appendChild(swatch);
+  });
+}
+
+function parseData(text) {
+  if (!text.trim()) { tableData = { headers: [], rows: [] }; return; }
+  const lines = text.trim().split('\n');
+  if (lines.length === 0) return;
+  const headers = lines[0].split('\t').map(h => h.trim());
+  const rows = lines.slice(1).map(line => line.split('\t').map(cell => cell.trim()));
+  tableData = { headers, rows };
+  const numericCols = new Set();
+  headers.forEach((_, colIdx) => {
+    const isNumeric = rows.every(row => { const val = row[colIdx]; return val === '' || !isNaN(parseFloat(val.replace(/[$,%]/g, ''))); });
+    if (isNumeric && colIdx > 0) numericCols.add(colIdx);
+  });
+  heatmapColumns = numericCols;
+  lowerIsBetterColumns = new Set();
+  updateColumnCheckboxes();
+}
+
+function updateColumnCheckboxes() {
+  columnCheckboxes.innerHTML = '';
+  if (tableData.headers.length === 0) { columnCheckboxContainer.style.display = 'none'; return; }
+  columnCheckboxContainer.style.display = 'block';
+  tableData.headers.forEach((header, idx) => {
+    const row = document.createElement('div');
+    row.className = 'column-row';
+    const label = document.createElement('label');
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.checked = heatmapColumns.has(idx);
+    checkbox.onchange = () => { if (checkbox.checked) heatmapColumns.add(idx); else heatmapColumns.delete(idx); renderPreview(); };
+    label.appendChild(checkbox);
+    label.appendChild(document.createTextNode(header));
+    const lowerBtn = document.createElement('button');
+    lowerBtn.className = `lower-better-btn ${lowerIsBetterColumns.has(idx) ? 'active' : ''}`;
+    lowerBtn.textContent = 'Lower is better';
+    lowerBtn.onclick = (e) => {
+      e.preventDefault();
+      if (lowerIsBetterColumns.has(idx)) { lowerIsBetterColumns.delete(idx); lowerBtn.classList.remove('active'); }
+      else { lowerIsBetterColumns.add(idx); lowerBtn.classList.add('active'); }
+      renderPreview();
+    };
+    row.appendChild(label);
+    row.appendChild(lowerBtn);
+    columnCheckboxes.appendChild(row);
+  });
+}
+
+function getNumericValue(val) {
+  if (!val) return null;
+  const cleaned = val.replace(/[$,%]/g, '');
+  const num = parseFloat(cleaned);
+  return isNaN(num) ? null : num;
+}
+
+function getSortedRows() {
+  let rows = [...tableData.rows];
+  const maxRows = parseInt(maxRowsInput.value) || 20;
+  if (sortColumn !== null) {
+    rows.sort((a, b) => {
+      const aVal = getNumericValue(a[sortColumn]);
+      const bVal = getNumericValue(b[sortColumn]);
+      if (aVal === null && bVal === null) return 0;
+      if (aVal === null) return 1;
+      if (bVal === null) return -1;
+      return sortDirection === 'asc' ? aVal - bVal : bVal - aVal;
+    });
+  }
+  return rows.slice(0, maxRows);
+}
+
+function getValuesForPercentile(colIdx, rows, mode) {
+  let values = [];
+  if (mode === 'column') values = rows.map(row => getNumericValue(row[colIdx])).filter(v => v !== null);
+  else if (mode === 'all') { rows.forEach(row => { heatmapColumns.forEach(idx => { const v = getNumericValue(row[idx]); if (v !== null) values.push(v); }); }); }
+  else if (mode === 'row') return null;
+  return values.sort((a, b) => a - b);
+}
+
+function getRowValues(row) {
+  const values = [];
+  heatmapColumns.forEach(idx => { const v = getNumericValue(row[idx]); if (v !== null) values.push(v); });
+  return values.sort((a, b) => a - b);
+}
+
+function getPercentileBucket(value, sortedValues, lowerIsBetter) {
+  if (sortedValues.length === 0) return null;
+  if (sortedValues.length === 1) return 9;
+  let position = 0;
+  for (let i = 0; i < sortedValues.length; i++) { if (sortedValues[i] <= value) position = i; }
+  const percentile = (position / (sortedValues.length - 1)) * 100;
+  let bucket = Math.min(9, Math.floor(percentile / 10));
+  if (lowerIsBetter) bucket = 9 - bucket;
+  return bucket;
+}
+
+function getHeatmapColor(value, sortedValues, colIdx) {
+  if (!heatmapColumns.has(colIdx) || heatmapMode.value === 'none') return null;
+  const num = getNumericValue(value);
+  if (num === null || sortedValues.length === 0) return null;
+  const lowerIsBetter = lowerIsBetterColumns.has(colIdx);
+  const bucket = getPercentileBucket(num, sortedValues, lowerIsBetter);
+  if (bucket === null) return null;
+  return colorSchemes[selectedColorScheme][bucket];
+}
+
+function renderPreview() {
+  if (tableData.headers.length === 0) {
+    emptyState.style.display = 'flex'; previewContainer.style.display = 'none';
+    rowCountSpan.textContent = ''; downloadBtn.disabled = true; return;
+  }
+  emptyState.style.display = 'none'; previewContainer.style.display = 'block'; downloadBtn.disabled = false;
+  const sortedRows = getSortedRows();
+  const showRanks = showRanksCheckbox.checked;
+  const showTitle = showTitleCheckbox.checked;
+  const title = titleInput.value;
+  const subtitle = subtitleInput.value;
+  rowCountSpan.textContent = `Showing ${sortedRows.length} of ${tableData.rows.length} rows`;
+  const mode = heatmapMode.value;
+  const colValues = {};
+  if (mode === 'column' || mode === 'all') { heatmapColumns.forEach(colIdx => { colValues[colIdx] = getValuesForPercentile(colIdx, sortedRows, mode); }); }
+  let html = '';
+  if (showTitle && title) { html += `<div class="preview-title"><h2>${title}</h2>${subtitle ? `<p>${subtitle}</p>` : ''}</div>`; }
+  html += '<table class="preview-table"><thead><tr>';
+  if (showRanks) html += `<th style="width: 40px;">#</th>`;
+  tableData.headers.forEach((header, idx) => {
+    const sortIndicator = sortColumn === idx ? (sortDirection === 'asc' ? '▲' : '▼') : '⇅';
+    html += `<th>${header}<button class="sort-btn" onclick="handleSort(${idx})">${sortIndicator}</button></th>`;
+  });
+  html += '</tr></thead><tbody>';
+  sortedRows.forEach((row, rowIdx) => {
+    const rowValues = mode === 'row' ? getRowValues(row) : null;
+    html += '<tr>';
+    if (showRanks) { const bgColor = rowIdx % 2 === 0 ? rowColors.odd : rowColors.even; html += `<td style="font-weight: 600; color: #64748b; background: ${bgColor};">${rowIdx + 1}</td>`; }
+    row.forEach((cell, colIdx) => {
+      let bgColor = rowIdx % 2 === 0 ? rowColors.odd : rowColors.even;
+      if (heatmapColumns.has(colIdx) && mode !== 'none') {
+        const sortedVals = mode === 'row' ? rowValues : colValues[colIdx];
+        const heatColor = getHeatmapColor(cell, sortedVals || [], colIdx);
+        if (heatColor) bgColor = heatColor;
+      }
+      html += `<td style="background: ${bgColor}; color: #1e293b;">${cell}</td>`;
+    });
+    html += '</tr>';
+  });
+  html += '</tbody></table>';
+  previewContainer.innerHTML = html;
+}
+
+window.handleSort = function(colIdx) {
+  if (sortColumn === colIdx) sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+  else { sortColumn = colIdx; sortDirection = 'asc'; }
+  renderPreview();
+};
+
+function generateImage() {
+  const ctx = canvas.getContext('2d');
+  const rows = getSortedRows();
+  const showRanks = showRanksCheckbox.checked;
+  const showTitle = showTitleCheckbox.checked;
+  const headers = showRanks ? ['#', ...tableData.headers] : tableData.headers;
+  const dataRows = showRanks ? rows.map((row, idx) => [(idx + 1).toString(), ...row]) : rows;
+  const title = titleInput.value;
+  const subtitle = subtitleInput.value;
+  const padding = 24, cornerRadius = 16;
+  const titleHeight = (showTitle && title) ? (subtitle ? 65 : 45) : 0;
+  const rowHeight = 36, headerRowHeight = 42;
+  const colWidths = headers.map((header, idx) => {
+    let maxLen = header.length;
+    dataRows.forEach(row => { if (row[idx] && row[idx].length > maxLen) maxLen = row[idx].length; });
+    return Math.max(50, maxLen * 8.5 + 20);
+  });
+  const tableWidth = colWidths.reduce((a, b) => a + b, 0);
+  const tableContentHeight = headerRowHeight + rowHeight * dataRows.length;
+  const width = tableWidth + padding * 2;
+  const height = titleHeight + tableContentHeight + padding * 2;
+  canvas.width = width; canvas.height = height;
+  const ctx2 = canvas.getContext('2d');
+  ctx2.clearRect(0, 0, width, height);
+  ctx2.fillStyle = '#ffffff';
+  ctx2.beginPath(); ctx2.roundRect(0, 0, width, height, cornerRadius); ctx2.fill();
+  const tableTop = padding + titleHeight, tableLeft = padding;
+  if (showTitle && title) {
+    ctx2.fillStyle = '#1a1a2e'; ctx2.font = 'bold 22px Inter, system-ui, sans-serif'; ctx2.textAlign = 'center';
+    ctx2.fillText(title, width / 2, padding + 26);
+    if (subtitle) { ctx2.fillStyle = '#64748b'; ctx2.font = '13px Inter, system-ui, sans-serif'; ctx2.fillText(subtitle, width / 2, padding + 48); }
+  }
+  ctx2.save(); ctx2.beginPath(); ctx2.roundRect(tableLeft, tableTop, tableWidth, tableContentHeight, 10); ctx2.clip();
+  ctx2.fillStyle = headerBgColor; ctx2.fillRect(tableLeft, tableTop, tableWidth, headerRowHeight);
+  ctx2.fillStyle = '#ffffff'; ctx2.font = 'bold 12px Inter, system-ui, sans-serif'; ctx2.textAlign = 'center';
+  let xPos = tableLeft;
+  headers.forEach((header, idx) => { ctx2.fillText(header, xPos + colWidths[idx] / 2, tableTop + 26); xPos += colWidths[idx]; });
+  const mode = heatmapMode.value, colValues = {};
+  if (mode === 'column' || mode === 'all') { heatmapColumns.forEach(colIdx => { colValues[colIdx] = getValuesForPercentile(colIdx, rows, mode); }); }
+  dataRows.forEach((row, rowIdx) => {
+    const y = tableTop + headerRowHeight + rowHeight * rowIdx;
+    ctx2.fillStyle = rowIdx % 2 === 0 ? rowColors.odd : rowColors.even;
+    ctx2.fillRect(tableLeft, y, tableWidth, rowHeight);
+    const rowValues = mode === 'row' ? getRowValues(rows[rowIdx]) : null;
+    let cellX = tableLeft;
+    row.forEach((cell, colIdx) => {
+      const originalColIdx = showRanks ? colIdx - 1 : colIdx;
+      const shouldHeatmap = showRanks ? colIdx > 0 && heatmapColumns.has(originalColIdx) : heatmapColumns.has(colIdx);
+      if (shouldHeatmap && mode !== 'none') {
+        const sortedVals = mode === 'row' ? rowValues : colValues[originalColIdx];
+        const heatColor = getHeatmapColor(cell, sortedVals || [], originalColIdx);
+        if (heatColor) { ctx2.fillStyle = heatColor; ctx2.fillRect(cellX + 1, y + 1, colWidths[colIdx] - 2, rowHeight - 2); }
+      }
+      ctx2.fillStyle = '#1e293b'; ctx2.font = '11px Inter, system-ui, sans-serif'; ctx2.textAlign = 'center';
+      ctx2.fillText(cell, cellX + colWidths[colIdx] / 2, y + rowHeight / 2 + 4);
+      cellX += colWidths[colIdx];
+    });
+  });
+  ctx2.restore();
+  const link = document.createElement('a');
+  link.download = `table-${Date.now()}.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
+
+dataInput.addEventListener('input', (e) => { parseData(e.target.value); renderPreview(); });
+titleInput.addEventListener('input', renderPreview);
+subtitleInput.addEventListener('input', renderPreview);
+showTitleCheckbox.addEventListener('change', renderPreview);
+heatmapMode.addEventListener('change', renderPreview);
+maxRowsInput.addEventListener('input', renderPreview);
+showRanksCheckbox.addEventListener('change', renderPreview);
+downloadBtn.addEventListener('click', generateImage);
+initColorSwatches();
+renderPreview();
+
+// ════════════════════════════════════════════════════════════════
+// TAB SWITCHING
+// ════════════════════════════════════════════════════════════════
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tabId = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.getElementById(`${tabId}-tab`).classList.add('active');
+    if (tabId === 'scatter') scRender();
+  });
+});
+
+// ════════════════════════════════════════════════════════════════
+// SCREENSHOT WRAPPER
+// ════════════════════════════════════════════════════════════════
+const uploadZone = document.getElementById('uploadZone');
+const screenshotInput = document.getElementById('screenshotInput');
+const wrapperDownloadBtn = document.getElementById('wrapperDownloadBtn');
+const wrapperEmptyState = document.getElementById('wrapperEmptyState');
+const wrapperPreviewContainer = document.getElementById('wrapperPreviewContainer');
+const borderThicknessSelect = document.getElementById('borderThickness');
+const cornerRadiusSelect = document.getElementById('cornerRadius');
+const imagePaddingSelect = document.getElementById('imagePadding');
+const showLogoCheckbox = document.getElementById('showLogo');
+const logoPositionSelect = document.getElementById('logoPosition');
+const logoPositionLabel = document.getElementById('logoPositionLabel');
+const maxOutputWidthSelect = document.getElementById('maxOutputWidth');
+const wrapperCanvas = document.getElementById('wrapperCanvas');
+const cropCard = document.getElementById('cropCard');
+const cropContainer = document.getElementById('cropContainer');
+const cropImage = document.getElementById('cropImage');
+const cropOverlay = document.getElementById('cropOverlay');
+const applyCropBtn = document.getElementById('applyCropBtn');
+const resetCropBtn = document.getElementById('resetCropBtn');
+
+let uploadedImage = null, originalImage = null, logoImage = null;
+let cropStart = null, cropEnd = null, isCropping = false;
+const logoUrl = 'https://assets.actionnetwork.com/890922_855290_logo2.png';
+
+function loadLogo() {
+  return new Promise((resolve) => {
+    if (logoImage) { resolve(logoImage); return; }
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => { logoImage = img; resolve(img); };
+    img.onerror = () => resolve(null);
+    img.src = logoUrl;
+  });
+}
+loadLogo();
+
+uploadZone.addEventListener('click', () => screenshotInput.click());
+uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+uploadZone.addEventListener('drop', (e) => {
+  e.preventDefault(); uploadZone.classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) handleImageUpload(file);
+});
+screenshotInput.addEventListener('change', (e) => { if (e.target.files[0]) handleImageUpload(e.target.files[0]); });
+
+function handleImageUpload(file) {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const img = new Image();
+    img.onload = () => { originalImage = img; uploadedImage = img; cropCard.style.display = 'block'; cropImage.src = img.src; resetCropSelection(); renderWrapperPreview(); wrapperDownloadBtn.disabled = false; };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function resetCropSelection() { cropStart = null; cropEnd = null; cropOverlay.style.display = 'none'; applyCropBtn.disabled = true; }
+
+function getCropCoords(e) {
+  const rect = cropContainer.getBoundingClientRect();
+  let clientX, clientY;
+  if (e.touches && e.touches.length > 0) { clientX = e.touches[0].clientX; clientY = e.touches[0].clientY; }
+  else if (e.changedTouches && e.changedTouches.length > 0) { clientX = e.changedTouches[0].clientX; clientY = e.changedTouches[0].clientY; }
+  else { clientX = e.clientX; clientY = e.clientY; }
+  return { x: Math.max(0, Math.min(clientX - rect.left, rect.width)), y: Math.max(0, Math.min(clientY - rect.top, rect.height)) };
+}
+
+function startCrop(e) { e.preventDefault(); isCropping = true; cropStart = getCropCoords(e); cropEnd = cropStart; updateCropOverlay(); cropOverlay.style.display = 'block'; }
+function moveCrop(e) { if (!isCropping) return; e.preventDefault(); cropEnd = getCropCoords(e); updateCropOverlay(); }
+function endCrop(e) {
+  if (!isCropping) return; isCropping = false;
+  if (cropStart && cropEnd) { const w = Math.abs(cropEnd.x - cropStart.x), h = Math.abs(cropEnd.y - cropStart.y); if (w > 10 && h > 10) applyCropBtn.disabled = false; else resetCropSelection(); }
+}
+cropContainer.addEventListener('mousedown', startCrop);
+document.addEventListener('mousemove', moveCrop);
+document.addEventListener('mouseup', endCrop);
+cropContainer.addEventListener('touchstart', startCrop, { passive: false });
+document.addEventListener('touchmove', moveCrop, { passive: false });
+document.addEventListener('touchend', endCrop);
+
+function updateCropOverlay() {
+  if (!cropStart || !cropEnd) return;
+  const left = Math.min(cropStart.x, cropEnd.x), top = Math.min(cropStart.y, cropEnd.y);
+  const width = Math.abs(cropEnd.x - cropStart.x), height = Math.abs(cropEnd.y - cropStart.y);
+  Object.assign(cropOverlay.style, { left: left+'px', top: top+'px', width: width+'px', height: height+'px' });
+}
+
+applyCropBtn.addEventListener('click', () => {
+  if (!cropStart || !cropEnd || !originalImage) return;
+  const scaleX = originalImage.width / cropImage.clientWidth, scaleY = originalImage.height / cropImage.clientHeight;
+  const left = Math.min(cropStart.x, cropEnd.x) * scaleX, top = Math.min(cropStart.y, cropEnd.y) * scaleY;
+  const width = Math.abs(cropEnd.x - cropStart.x) * scaleX, height = Math.abs(cropEnd.y - cropStart.y) * scaleY;
+  const tempCanvas = document.createElement('canvas');
+  tempCanvas.width = width; tempCanvas.height = height;
+  tempCanvas.getContext('2d').drawImage(originalImage, left, top, width, height, 0, 0, width, height);
+  const croppedImg = new Image();
+  croppedImg.onload = () => { uploadedImage = croppedImg; cropImage.src = croppedImg.src; resetCropSelection(); renderWrapperPreview(); };
+  croppedImg.src = tempCanvas.toDataURL('image/png');
+});
+
+resetCropBtn.addEventListener('click', () => { if (originalImage) { uploadedImage = originalImage; cropImage.src = originalImage.src; resetCropSelection(); renderWrapperPreview(); } });
+
+function renderWrapperPreview() {
+  if (!uploadedImage) { wrapperEmptyState.style.display = 'flex'; wrapperPreviewContainer.style.display = 'none'; return; }
+  wrapperEmptyState.style.display = 'none'; wrapperPreviewContainer.style.display = 'flex';
+  const borderThickness = parseInt(borderThicknessSelect.value);
+  const cornerRadius = parseInt(cornerRadiusSelect.value);
+  const padding = parseInt(imagePaddingSelect.value);
+  const showLogo = showLogoCheckbox.checked;
+  const logoPosition = logoPositionSelect.value;
+  logoPositionLabel.style.display = showLogo ? 'block' : 'none';
+  let html = `<div style="background:white;border-radius:${cornerRadius+4}px;padding:${padding}px;display:inline-block;border:${borderThickness}px solid #00c358;position:relative;max-width:100%;">
+    <img src="${uploadedImage.src}" style="display:block;border-radius:${Math.max(0,cornerRadius-4)}px;max-width:100%;max-height:400px;">`;
+  if (showLogo && logoImage) {
+    const posStyles = {'bottom-left':'bottom:4px;left:4px;','bottom-right':'bottom:4px;right:4px;','top-left':'top:4px;left:4px;','top-right':'top:4px;right:4px;'};
+    html += `<img src="${logoUrl}" style="position:absolute;${posStyles[logoPosition]}height:28px;border-radius:4px;">`;
+  }
+  html += '</div>';
+  wrapperPreviewContainer.innerHTML = html;
+}
+
+async function generateWrappedImage() {
+  if (!uploadedImage) return;
+  const ctx = wrapperCanvas.getContext('2d');
+  const borderThickness = parseInt(borderThicknessSelect.value);
+  const cornerRadius = parseInt(cornerRadiusSelect.value);
+  const padding = parseInt(imagePaddingSelect.value);
+  const showLogo = showLogoCheckbox.checked;
+  const logoPosition = logoPositionSelect.value;
+  const maxWidth = parseInt(maxOutputWidthSelect.value);
+  let imgWidth = uploadedImage.width, imgHeight = uploadedImage.height, scale = 1;
+  if (maxWidth > 0) { const avail = maxWidth - (padding + borderThickness) * 2; if (imgWidth > avail) { scale = avail / imgWidth; imgWidth = avail; imgHeight = uploadedImage.height * scale; } }
+  const totalPadding = padding + borderThickness;
+  const canvasWidth = imgWidth + totalPadding * 2, canvasHeight = imgHeight + totalPadding * 2;
+  wrapperCanvas.width = canvasWidth; wrapperCanvas.height = canvasHeight;
+  ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+  ctx.fillStyle = '#00c358'; ctx.beginPath(); ctx.roundRect(0, 0, canvasWidth, canvasHeight, cornerRadius); ctx.fill();
+  ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.roundRect(borderThickness, borderThickness, canvasWidth - borderThickness*2, canvasHeight - borderThickness*2, Math.max(0, cornerRadius - borderThickness/2)); ctx.fill();
+  ctx.save(); ctx.beginPath(); ctx.roundRect(totalPadding, totalPadding, imgWidth, imgHeight, Math.max(0, cornerRadius - borderThickness - padding/2)); ctx.clip();
+  ctx.drawImage(uploadedImage, totalPadding, totalPadding, imgWidth, imgHeight);
+  ctx.restore();
+  if (showLogo) {
+    const logo = await loadLogo();
+    if (logo) {
+      const logoHeight = Math.max(24, Math.min(36, imgHeight * 0.06));
+      const logoWidth = (logo.width / logo.height) * logoHeight;
+      const logoMargin = padding / 2 + borderThickness;
+      let logoX, logoY;
+      if (logoPosition === 'bottom-left') { logoX = logoMargin; logoY = canvasHeight - logoHeight - logoMargin; }
+      else if (logoPosition === 'bottom-right') { logoX = canvasWidth - logoWidth - logoMargin; logoY = canvasHeight - logoHeight - logoMargin; }
+      else if (logoPosition === 'top-left') { logoX = logoMargin; logoY = logoMargin; }
+      else { logoX = canvasWidth - logoWidth - logoMargin; logoY = logoMargin; }
+      ctx.save(); ctx.beginPath(); ctx.roundRect(logoX, logoY, logoWidth, logoHeight, 4); ctx.clip();
+      ctx.drawImage(logo, logoX, logoY, logoWidth, logoHeight); ctx.restore();
+    }
+  }
+  const link = document.createElement('a');
+  link.download = `wrapped-${Date.now()}.png`; link.href = wrapperCanvas.toDataURL('image/png'); link.click();
+}
+
+borderThicknessSelect.addEventListener('change', renderWrapperPreview);
+cornerRadiusSelect.addEventListener('change', renderWrapperPreview);
+imagePaddingSelect.addEventListener('change', renderWrapperPreview);
+showLogoCheckbox.addEventListener('change', renderWrapperPreview);
+logoPositionSelect.addEventListener('change', renderWrapperPreview);
+maxOutputWidthSelect.addEventListener('change', renderWrapperPreview);
+wrapperDownloadBtn.addEventListener('click', generateWrappedImage);
+
+// ════════════════════════════════════════════════════════════════
+// PICK GRID
+// ════════════════════════════════════════════════════════════════
+const CORS_PROXY = 'https://corsproxy.io/?url=';
+const ESPN_PRO_ABBREVS = {
+  'arizona cardinals':'ari','atlanta falcons':'atl','baltimore ravens':'bal','buffalo bills':'buf','carolina panthers':'car','chicago bears':'chi','cincinnati bengals':'cin','cleveland browns':'cle','dallas cowboys':'dal','denver broncos':'den','detroit lions':'det','green bay packers':'gb','houston texans':'hou','indianapolis colts':'ind','jacksonville jaguars':'jax','kansas city chiefs':'kc','las vegas raiders':'lv','los angeles chargers':'lac','los angeles rams':'lar','miami dolphins':'mia','minnesota vikings':'min','new england patriots':'ne','new orleans saints':'no','new york giants':'nyg','new york jets':'nyj','philadelphia eagles':'phi','pittsburgh steelers':'pit','san francisco 49ers':'sf','seattle seahawks':'sea','tampa bay buccaneers':'tb','tennessee titans':'ten','washington commanders':'wsh','cardinals':'ari','falcons':'atl','ravens':'bal','bills':'buf','panthers':'car','bears':'chi','bengals':'cin','browns':'cle','cowboys':'dal','broncos':'den','lions':'det','packers':'gb','texans':'hou','colts':'ind','jaguars':'jax','chiefs':'kc','raiders':'lv','chargers':'lac','rams':'lar','dolphins':'mia','vikings':'min','patriots':'ne','saints':'no','giants':'nyg','jets':'nyj','eagles':'phi','steelers':'pit','49ers':'sf','seahawks':'sea','buccaneers':'tb','titans':'ten','commanders':'wsh',
+  'atlanta hawks':'atl','boston celtics':'bos','brooklyn nets':'bkn','charlotte hornets':'cha','chicago bulls':'chi','cleveland cavaliers':'cle','dallas mavericks':'dal','denver nuggets':'den','detroit pistons':'det','golden state warriors':'gs','houston rockets':'hou','indiana pacers':'ind','los angeles clippers':'lac','los angeles lakers':'lal','memphis grizzlies':'mem','miami heat':'mia','milwaukee bucks':'mil','minnesota timberwolves':'min','new orleans pelicans':'no','new york knicks':'ny','oklahoma city thunder':'okc','orlando magic':'orl','philadelphia 76ers':'phi','phoenix suns':'phx','portland trail blazers':'por','sacramento kings':'sac','san antonio spurs':'sa','toronto raptors':'tor','utah jazz':'utah','washington wizards':'wsh','hawks':'atl','celtics':'bos','nets':'bkn','hornets':'cha','bulls':'chi','cavaliers':'cle','cavs':'cle','mavericks':'dal','mavs':'dal','nuggets':'den','pistons':'det','warriors':'gs','rockets':'hou','pacers':'ind','clippers':'lac','lakers':'lal','grizzlies':'mem','heat':'mia','bucks':'mil','timberwolves':'min','wolves':'min','pelicans':'no','knicks':'ny','thunder':'okc','magic':'orl','76ers':'phi','sixers':'phi','suns':'phx','blazers':'por','trail blazers':'por','kings':'sac','spurs':'sa','raptors':'tor','jazz':'utah','wizards':'wsh'
+};
+const ESPN_COLLEGE_IDS = {'alabama':333,'ohio state':194,'georgia':61,'michigan':130,'clemson':228,'notre dame':87,'oklahoma':201,'lsu':99,'penn state':213,'texas':251,'florida':57,'usc':30,'oregon':2483,'auburn':2,'miami':97,'texas a&m':245,'utah':254,'baylor':239,'ole miss':145,'tennessee':2633,'iowa':2294,'kentucky':96,'arkansas':8,'florida state':52,'washington':264,'wisconsin':275,'michigan state':127,'nc state':152,'kansas state':2306,'oklahoma state':197,'west virginia':277,'stanford':24,'colorado':38,'ucla':26,'arizona':12,'arizona state':9,'byu':252,'iowa state':66,'kansas':2305,'minnesota':135,'indiana':84,'purdue':2509,'rutgers':164,'maryland':120,'nebraska':158,'northwestern':77,'illinois':356,'wake forest':154,'virginia tech':259,'virginia':258,'duke':150,'north carolina':153,'pittsburgh':221,'syracuse':183,'louisville':97,'boston college':103,'georgia tech':59,'gonzaga':2250,'villanova':222,'connecticut':41,'uconn':41,'houston':248,'creighton':156,'xavier':2752,'marquette':269};
+
+let pgData = { headers: [], rows: [] };
+let pgPreviewCache = {};
+let pgCanvasCache = {};
+let pgManualOverrides = {};
+let pgMissingTeams = new Set();
+let pgSelectedSize = 'auto';
+
+const SOCIAL_SIZES = {
+  auto: null,
+  twitter: { w: 1200, h: 675 },
+  'instagram-square': { w: 1080, h: 1080 },
+  'instagram-story': { w: 1080, h: 1920 },
+  facebook: { w: 1200, h: 630 },
+  article: { w: 1200, h: 800 },
+};
+
+const pgDataInput = document.getElementById('pgDataInput');
+const pgTitleInput = document.getElementById('pgTitle');
+const pgSubtitleInput = document.getElementById('pgSubtitle');
+const pgSportSelect = document.getElementById('pgSport');
+const pgLogoSizeSelect = document.getElementById('pgLogoSize');
+const pgShowTeamNameCheckbox = document.getElementById('pgShowTeamName');
+const pgHeaderColorSelect = document.getElementById('pgHeaderColor');
+const pgLogoPositionSelect = document.getElementById('pgLogoPosition');
+const pgBgColorSelect = document.getElementById('pgBgColor');
+const pgDownloadBtn = document.getElementById('pgDownloadBtn');
+const pgEmptyState = document.getElementById('pgEmptyState');
+const pgPreviewContainer = document.getElementById('pgPreviewContainer');
+const pgOverrideCard = document.getElementById('pgOverrideCard');
+const pgOverrideList = document.getElementById('pgOverrideList');
+const pgTableContainer = document.getElementById('pgTableContainer');
+const pgLogoStatus = document.getElementById('pgLogoStatus');
+const pgStatusBadge = document.getElementById('pgStatusBadge');
+const pickGridCanvas = document.getElementById('pickGridCanvas');
+
+document.getElementById('pgSizeGrid').addEventListener('click', e => {
+  const btn = e.target.closest('.size-btn');
+  if (!btn) return;
+  document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  pgSelectedSize = btn.dataset.size;
+});
+
+function parsePgData(text) {
+  if (!text.trim()) { pgData = { headers: [], rows: [] }; return; }
+  const lines = text.trim().split('\n');
+  if (lines.length < 2) { pgData = { headers: [], rows: [] }; return; }
+  const headers = lines[0].split('\t').map(h => h.trim());
+  const rows = lines.slice(1).filter(l => l.trim()).map(line => line.split('\t').map(c => c.trim()));
+  pgData = { headers, rows };
+}
+
+function getEspnLogoUrl(teamName, sport) {
+  const key = teamName.toLowerCase().trim();
+  if (!key) return null;
+  if (pgManualOverrides[key]) return pgManualOverrides[key];
+  if (sport === 'ncaa') {
+    const id = ESPN_COLLEGE_IDS[key];
+    if (id) return `http://a.espncdn.com/i/teamlogos/ncaa/500/${id}.png`;
+    for (const [name, id2] of Object.entries(ESPN_COLLEGE_IDS)) {
+      if (key === name || key.includes(name) || name.includes(key)) return `http://a.espncdn.com/i/teamlogos/ncaa/500/${id2}.png`;
+    }
+  }
+  const abbrev = ESPN_PRO_ABBREVS[key];
+  if (abbrev) return `http://a.espncdn.com/i/teamlogos/${sport}/500/${abbrev}.png`;
+  for (const [name, abbr] of Object.entries(ESPN_PRO_ABBREVS)) {
+    if (key === name) return `http://a.espncdn.com/i/teamlogos/${sport === 'ncaa' ? 'nfl' : sport}/500/${abbr}.png`;
+  }
+  return null;
+}
+
+function getTeamInitials(name) { return name.split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0, 3); }
+function getAllTeams() { const teams = new Set(); pgData.rows.forEach(row => { for (let i = 1; i < row.length; i++) { if (row[i] && row[i].trim()) teams.add(row[i].trim()); } }); return [...teams]; }
+
+async function preloadPreviewLogos() {
+  const sport = pgSportSelect.value;
+  const teams = getAllTeams();
+  pgMissingTeams = new Set();
+  const promises = teams.map(team => new Promise(resolve => {
+    const key = team.toLowerCase().trim();
+    const url = getEspnLogoUrl(team, sport);
+    if (!url) { pgMissingTeams.add(team); pgPreviewCache[key] = { url: null, loaded: false, img: null }; resolve(); return; }
+    if (pgPreviewCache[key] && pgPreviewCache[key].url === url && pgPreviewCache[key].loaded) { resolve(); return; }
+    const img = new Image();
+    img.onload = () => { pgPreviewCache[key] = { url, loaded: true, img }; resolve(); };
+    img.onerror = () => { pgMissingTeams.add(team); pgPreviewCache[key] = { url, loaded: false, img: null }; resolve(); };
+    img.src = url;
+  }));
+  await Promise.all(promises);
+}
+
+async function preloadCanvasLogos() {
+  const sport = pgSportSelect.value;
+  const teams = getAllTeams();
+  const promises = teams.map(team => new Promise(resolve => {
+    const key = team.toLowerCase().trim();
+    const directUrl = getEspnLogoUrl(team, sport);
+    if (!directUrl) { pgCanvasCache[key] = { loaded: false, img: null }; resolve(); return; }
+    const proxyUrl = CORS_PROXY + encodeURIComponent(directUrl);
+    if (pgCanvasCache[key] && pgCanvasCache[key].proxyUrl === proxyUrl && pgCanvasCache[key].loaded) { resolve(); return; }
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => { pgCanvasCache[key] = { loaded: true, img, proxyUrl }; resolve(); };
+    img.onerror = () => { pgCanvasCache[key] = { loaded: false, img: null, proxyUrl }; resolve(); };
+    img.src = proxyUrl;
+  }));
+  await Promise.all(promises);
+}
+
+function renderPgOverrides() {
+  const missing = [...pgMissingTeams].filter(t => !pgManualOverrides[t.toLowerCase().trim()]);
+  if (missing.length === 0) { pgOverrideCard.style.display = 'none'; return; }
+  pgOverrideCard.style.display = 'block';
+  pgOverrideList.innerHTML = '';
+  missing.forEach(team => {
+    const row = document.createElement('div');
+    row.className = 'team-override-row';
+    const nameEl = document.createElement('span');
+    nameEl.className = 'team-name';
+    nameEl.textContent = team;
+    const urlInput = document.createElement('input');
+    urlInput.type = 'text';
+    urlInput.className = 'input-field';
+    urlInput.placeholder = 'Paste ESPN logo URL…';
+    urlInput.value = pgManualOverrides[team.toLowerCase().trim()] || '';
+    urlInput.addEventListener('change', () => {
+      const val = urlInput.value.trim();
+      const k = team.toLowerCase().trim();
+      if (val) pgManualOverrides[k] = val;
+      else delete pgManualOverrides[k];
+      delete pgPreviewCache[k];
+      delete pgCanvasCache[k];
+      updatePgPreview();
+    });
+    row.appendChild(nameEl);
+    row.appendChild(urlInput);
+    pgOverrideList.appendChild(row);
+  });
+}
+
+async function updatePgPreview() {
+  if (pgData.headers.length === 0 || pgData.rows.length === 0) {
+    pgEmptyState.style.display = 'flex'; pgPreviewContainer.style.display = 'none'; pgDownloadBtn.disabled = true; return;
+  }
+  pgEmptyState.style.display = 'none'; pgPreviewContainer.style.display = 'block'; pgDownloadBtn.disabled = false;
+  await preloadPreviewLogos();
+  renderPgOverrides();
+  const logoSize = parseInt(pgLogoSizeSelect.value);
+  const showName = pgShowTeamNameCheckbox.checked;
+  const headerColor = pgHeaderColorSelect.value;
+  const categories = pgData.headers.slice(1);
+  const total = getAllTeams().length;
+  const matched = total - pgMissingTeams.size;
+  pgLogoStatus.style.display = 'block';
+  pgLogoStatus.innerHTML = `<span class="found">✓ ${matched}/${total} logos matched</span>${pgMissingTeams.size > 0 ? ` &nbsp;|&nbsp; <span class="missing">⚠ ${pgMissingTeams.size} not found</span>` : ''}`;
+  let html = `<table class="pick-grid-table"><thead><tr><th class="picker-col" style="background:${headerColor};">Picker</th>${categories.map(c => `<th style="background:${headerColor};">${c}</th>`).join('')}</tr></thead><tbody>`;
+  pgData.rows.forEach(row => {
+    const pickerName = row[0] || '';
+    html += `<tr><td class="picker-name">${pickerName}</td>`;
+    for (let i = 1; i < pgData.headers.length; i++) {
+      const teamName = (row[i] || '').trim();
+      const key = teamName.toLowerCase();
+      const cached = pgPreviewCache[key];
+      const url = pgManualOverrides[key] || (cached && cached.url) || null;
+      const loaded = cached && cached.loaded;
+      html += `<td>`;
+      if (teamName) {
+        if (loaded && url) {
+          html += `<div class="logo-cell" style="flex-direction:column;"><img src="${url}" alt="${teamName}" style="width:${logoSize}px;height:${logoSize}px;object-fit:contain;" onerror="this.style.display='none'">${showName ? `<span class="team-abbr" style="margin-top:3px;">${teamName}</span>` : ''}</div>`;
+        } else {
+          html += `<div class="logo-cell" style="flex-direction:column;"><div style="width:${logoSize}px;height:${logoSize}px;border-radius:50%;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-size:${Math.floor(logoSize*0.28)}px;font-weight:700;color:#475569;">${getTeamInitials(teamName)}</div>${showName ? `<span class="team-abbr" style="margin-top:3px;">${teamName}</span>` : ''}</div>`;
+        }
+      }
+      html += `</td>`;
+    }
+    html += `</tr>`;
+  });
+  html += `</tbody></table>`;
+  pgTableContainer.innerHTML = html;
+}
+
+async function generatePickGrid() {
+  if (pgData.headers.length === 0) return;
+  pgDownloadBtn.textContent = '⏳ Loading logos…';
+  pgDownloadBtn.disabled = true;
+  await preloadCanvasLogos();
+  pgDownloadBtn.textContent = '📥 Download Pick Grid';
+  pgDownloadBtn.disabled = false;
+  const logoSize = parseInt(pgLogoSizeSelect.value);
+  const showName = pgShowTeamNameCheckbox.checked;
+  const headerColor = pgHeaderColorSelect.value;
+  const bgColor = pgBgColorSelect.value;
+  const categories = pgData.headers.slice(1);
+  const title = pgTitleInput.value;
+  const subtitle = pgSubtitleInput.value;
+  const anLogoPos = pgLogoPositionSelect.value;
+  const targetSize = SOCIAL_SIZES[pgSelectedSize];
+  const ctx = pickGridCanvas.getContext('2d');
+  const PAD = 28, CORNER = 14, HEADER_ROW_H = 46, PICKER_COL_W = 170;
+  const CELL_PAD = showName ? 26 : 18;
+  const CELL_W = Math.max(logoSize + CELL_PAD + 16, 80);
+  const CELL_H = logoSize + (showName ? 26 : 12) + 10;
+  const TITLE_H = title ? (subtitle ? 72 : 48) : 0;
+  const AN_STRIP = anLogoPos !== 'none' ? 36 : 0;
+  const tableW = PICKER_COL_W + CELL_W * categories.length;
+  const tableH = HEADER_ROW_H + CELL_H * pgData.rows.length;
+  const contentW = tableW + PAD * 2;
+  const contentH = TITLE_H + tableH + PAD * 2 + AN_STRIP;
+  let W, H, scale = 1, offsetX = 0, offsetY = 0;
+  if (targetSize) {
+    W = targetSize.w; H = targetSize.h;
+    const scaleX = W / contentW, scaleY = H / contentH;
+    scale = Math.min(scaleX, scaleY, 1);
+    offsetX = (W - contentW * scale) / 2;
+    offsetY = (H - contentH * scale) / 2;
+  } else { W = contentW; H = contentH; }
+  pickGridCanvas.width = W; pickGridCanvas.height = H;
+  ctx.fillStyle = bgColor; ctx.fillRect(0, 0, W, H);
+  ctx.save(); ctx.translate(offsetX, offsetY); ctx.scale(scale, scale);
+  ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.roundRect(0, 0, contentW, contentH, CORNER); ctx.fill();
+  const tableTop = PAD + TITLE_H, tableLeft = PAD;
+  if (title) {
+    ctx.fillStyle = '#1a1a2e'; ctx.font = `bold 24px Inter, system-ui, sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText(title, contentW / 2, PAD + 28);
+    if (subtitle) { ctx.fillStyle = '#64748b'; ctx.font = `14px Inter, system-ui, sans-serif`; ctx.fillText(subtitle, contentW / 2, PAD + 52); }
+  }
+  ctx.save(); ctx.beginPath(); ctx.roundRect(tableLeft, tableTop, tableW, tableH, 10); ctx.clip();
+  ctx.fillStyle = headerColor; ctx.fillRect(tableLeft, tableTop, tableW, HEADER_ROW_H);
+  ctx.fillStyle = '#ffffff'; ctx.font = `bold 13px Inter, system-ui, sans-serif`; ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
+  ctx.fillText('Picker', tableLeft + 14, tableTop + HEADER_ROW_H / 2);
+  categories.forEach((cat, i) => { const x = tableLeft + PICKER_COL_W + i * CELL_W + CELL_W / 2; ctx.textAlign = 'center'; ctx.fillText(cat.length > 14 ? cat.slice(0, 13) + '…' : cat, x, tableTop + HEADER_ROW_H / 2); });
+  pgData.rows.forEach((row, rowIdx) => {
+    const y = tableTop + HEADER_ROW_H + rowIdx * CELL_H;
+    ctx.fillStyle = rowIdx % 2 === 0 ? '#ebecf5' : '#f6f8fd'; ctx.fillRect(tableLeft, y, tableW, CELL_H);
+    ctx.fillStyle = '#1e293b'; ctx.font = `bold 13px Inter, system-ui, sans-serif`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    const pName = (row[0] || '');
+    ctx.fillText(pName.length > 16 ? pName.slice(0,15)+'…' : pName, tableLeft + 14, y + CELL_H / 2);
+    for (let i = 1; i < pgData.headers.length; i++) {
+      const teamName = (row[i] || '').trim();
+      const key = teamName.toLowerCase();
+      const cached = pgCanvasCache[key];
+      const cellX = tableLeft + PICKER_COL_W + (i - 1) * CELL_W;
+      const cellCenterX = cellX + CELL_W / 2;
+      const logoTopY = y + (CELL_H - logoSize - (showName ? 18 : 0)) / 2;
+      if (!teamName) continue;
+      if (cached && cached.loaded && cached.img) {
+        ctx.drawImage(cached.img, cellCenterX - logoSize / 2, logoTopY, logoSize, logoSize);
+      } else {
+        const r = logoSize / 2; ctx.fillStyle = '#e2e8f0'; ctx.beginPath(); ctx.arc(cellCenterX, logoTopY + r, r, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#64748b'; ctx.font = `bold ${Math.floor(logoSize * 0.3)}px Inter, system-ui, sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(getTeamInitials(teamName), cellCenterX, logoTopY + r);
+      }
+      if (showName) {
+        ctx.fillStyle = '#475569'; ctx.font = `10px Inter, system-ui, sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+        ctx.fillText(teamName.length > 12 ? teamName.slice(0,11)+'…' : teamName, cellCenterX, logoTopY + logoSize + 3);
+      }
+    }
+  });
+  ctx.restore();
+  ctx.strokeStyle = 'rgba(148,163,184,0.35)'; ctx.lineWidth = 1; ctx.beginPath();
+  ctx.moveTo(tableLeft + PICKER_COL_W, tableTop); ctx.lineTo(tableLeft + PICKER_COL_W, tableTop + tableH); ctx.stroke();
+  if (anLogoPos !== 'none') {
+    const logo = await loadLogo();
+    if (logo) {
+      const lh = 22, lw = (logo.width / logo.height) * lh;
+      const lx = anLogoPos === 'bottom-right' ? contentW - lw - 12 : 12;
+      const ly = contentH - lh - 10;
+      ctx.save(); ctx.globalAlpha = 0.65; ctx.drawImage(logo, lx, ly, lw, lh); ctx.restore();
+    }
+  }
+  ctx.restore();
+  const link = document.createElement('a');
+  link.download = `pick-grid-${pgSelectedSize}-${Date.now()}.png`; link.href = pickGridCanvas.toDataURL('image/png'); link.click();
+}
+
+pgDataInput.addEventListener('input', () => { parsePgData(pgDataInput.value); updatePgPreview(); });
+pgTitleInput.addEventListener('input', updatePgPreview);
+pgSubtitleInput.addEventListener('input', updatePgPreview);
+pgSportSelect.addEventListener('change', () => { pgPreviewCache = {}; pgCanvasCache = {}; updatePgPreview(); });
+pgLogoSizeSelect.addEventListener('change', updatePgPreview);
+pgShowTeamNameCheckbox.addEventListener('change', updatePgPreview);
+pgHeaderColorSelect.addEventListener('change', updatePgPreview);
+pgLogoPositionSelect.addEventListener('change', updatePgPreview);
+pgBgColorSelect.addEventListener('change', updatePgPreview);
+pgDownloadBtn.addEventListener('click', generatePickGrid);
+
+// ════════════════════════════════════════════════════════════════
+// SCATTER PLOT
+// ════════════════════════════════════════════════════════════════
+
+// Color palette for finish groups / categories
+const SC_GROUP_COLORS = {
+  'Top 10':   '#00c358',
+  'Made Cut': '#60a5fa',
+  'MC':       '#94a3b8',
+};
+const SC_YEAR_COLORS = {
+  '2020': '#f59e0b',
+  '2021': '#ef4444',
+  '2022': '#8b5cf6',
+  '2023': '#06b6d4',
+  '2024': '#f97316',
+  '2025': '#00c358',
+};
+const SC_PALETTE = ['#00c358','#60a5fa','#f59e0b','#ef4444','#8b5cf6','#06b6d4','#f97316','#a3e635','#fb7185','#34d399'];
+
+let scData = [];            // raw records
+let scFilteredData = [];    // after year filter
+let scColumns = [];
+let scActiveYears = new Set();
+let scAllYears = [];
+let scHoveredPoint = null;
+let scPointObjects = [];    // { x, y, cx, cy, record } for hit testing
+
+const scXAxisSel  = document.getElementById('scXAxis');
+const scYAxisSel  = document.getElementById('scYAxis');
+const scColorBySel = document.getElementById('scColorBy');
+const scLabelBySel = document.getElementById('scLabelBy');
+const scInvertY   = document.getElementById('scInvertY');
+const scInvertX   = document.getElementById('scInvertX');
+const scDiagLine  = document.getElementById('scDiagLine');
+const scTitle     = document.getElementById('scTitle');
+const scSubtitle  = document.getElementById('scSubtitle');
+const scXLabel    = document.getElementById('scXLabel');
+const scYLabel    = document.getElementById('scYLabel');
+const scPointSize = document.getElementById('scPointSize');
+const scLogoPos   = document.getElementById('scLogoPos');
+const scShowLabels= document.getElementById('scShowLabels');
+const scDownloadBtn = document.getElementById('scDownloadBtn');
+const scEmptyState = document.getElementById('scEmptyState');
+const scPreviewWrap = document.getElementById('scPreviewWrap');
+const scPointCount = document.getElementById('scPointCount');
+const scLegendEl   = document.getElementById('scLegend');
+const scStatsEl    = document.getElementById('scStats');
+const scTooltip    = document.getElementById('scTooltip');
+const scPreviewCanvas = document.getElementById('scatterPreviewCanvas');
+const scatterCanvas = document.getElementById('scatterCanvas');
+const scYearFilters = document.getElementById('scYearFilters');
+
+function scLoadData(records) {
+  scData = records;
+  scColumns = Object.keys(records[0] || {});
+  scAllYears = [...new Set(records.map(r => r.year).filter(Boolean))].sort();
+  scActiveYears = new Set(scAllYears);
+  scBuildYearFilters();
+  scPopulateSelects();
+  scApplyFilter();
+  scRender();
+}
+
+function scBuildYearFilters() {
+  scYearFilters.innerHTML = '';
+  // "All" chip
+  const allChip = document.createElement('button');
+  allChip.className = 'year-chip active';
+  allChip.textContent = 'All';
+  allChip.dataset.year = 'all';
+  allChip.addEventListener('click', () => {
+    if (scActiveYears.size === scAllYears.length) {
+      scActiveYears = new Set();
+    } else {
+      scActiveYears = new Set(scAllYears);
+    }
+    scUpdateYearChips();
+    scApplyFilter();
+    scRender();
+  });
+  scYearFilters.appendChild(allChip);
+
+  scAllYears.forEach(yr => {
+    const chip = document.createElement('button');
+    chip.className = 'year-chip active';
+    chip.textContent = yr;
+    chip.dataset.year = yr;
+    chip.addEventListener('click', () => {
+      if (scActiveYears.has(yr)) scActiveYears.delete(yr);
+      else scActiveYears.add(yr);
+      scUpdateYearChips();
+      scApplyFilter();
+      scRender();
+    });
+    scYearFilters.appendChild(chip);
+  });
+}
+
+function scUpdateYearChips() {
+  const chips = scYearFilters.querySelectorAll('.year-chip');
+  chips.forEach(chip => {
+    if (chip.dataset.year === 'all') {
+      chip.classList.toggle('active', scActiveYears.size === scAllYears.length);
+    } else {
+      chip.classList.toggle('active', scActiveYears.has(chip.dataset.year));
+    }
+  });
+}
+
+function scPopulateSelects() {
+  const numericCols = scColumns.filter(col => {
+    return scData.some(r => r[col] && r[col] !== 'NULL' && !isNaN(parseFloat(r[col])));
+  });
+  const allCols = scColumns;
+
+  [scXAxisSel, scYAxisSel].forEach(sel => {
+    sel.innerHTML = '';
+    numericCols.forEach(col => {
+      const opt = document.createElement('option');
+      opt.value = col;
+      opt.textContent = col.replace(/_/g, ' ');
+      sel.appendChild(opt);
+    });
+  });
+
+  // Smart defaults for Masters data
+  if (numericCols.includes('odds_pct')) scXAxisSel.value = 'odds_pct';
+  if (numericCols.includes('model_pct')) scYAxisSel.value = 'model_pct';
+
+  [scColorBySel, scLabelBySel].forEach(sel => {
+    sel.innerHTML = '<option value="none">None</option>';
+    allCols.forEach(col => {
+      const opt = document.createElement('option');
+      opt.value = col;
+      opt.textContent = col.replace(/_/g, ' ');
+      sel.appendChild(opt);
+    });
+  });
+
+  // Smart defaults
+  if (allCols.includes('finish_group')) scColorBySel.value = 'finish_group';
+  if (allCols.includes('player_name')) scLabelBySel.value = 'player_name';
+}
+
+function scApplyFilter() {
+  scFilteredData = scData.filter(r => !r.year || scActiveYears.has(r.year));
+}
+
+function scGetNumeric(record, col) {
+  const v = record[col];
+  if (!v || v === 'NULL') return null;
+  const n = parseFloat(v);
+  return isNaN(n) ? null : n;
+}
+
+function scGetColorMap(colorByCol) {
+  if (colorByCol === 'none') return {};
+  const vals = [...new Set(scFilteredData.map(r => r[colorByCol]).filter(Boolean))].sort();
+  const map = {};
+  // Check if matches known group colors
+  vals.forEach((v, i) => {
+    if (SC_GROUP_COLORS[v]) map[v] = SC_GROUP_COLORS[v];
+    else if (SC_YEAR_COLORS[v]) map[v] = SC_YEAR_COLORS[v];
+    else map[v] = SC_PALETTE[i % SC_PALETTE.length];
+  });
+  return map;
+}
+
+function scRender() {
+  const xCol = scXAxisSel.value;
+  const yCol = scYAxisSel.value;
+  if (!xCol || !yCol || scFilteredData.length === 0) {
+    scEmptyState.style.display = 'flex';
+    scPreviewWrap.style.display = 'none';
+    scDownloadBtn.disabled = true;
+    return;
+  }
+
+  scEmptyState.style.display = 'none';
+  scPreviewWrap.style.display = 'flex';
+  scDownloadBtn.disabled = false;
+
+  // Collect valid points
+  const points = scFilteredData
+    .map(r => ({ xv: scGetNumeric(r, xCol), yv: scGetNumeric(r, yCol), record: r }))
+    .filter(p => p.xv !== null && p.yv !== null);
+
+  scPointCount.textContent = `${points.length} points`;
+
+  const colorByCol = scColorBySel.value;
+  const colorMap = scGetColorMap(colorByCol);
+
+  // Build legend
+  if (colorByCol !== 'none' && Object.keys(colorMap).length > 0) {
+    scLegendEl.innerHTML = Object.entries(colorMap)
+      .map(([k, c]) => `<div class="legend-item"><div class="legend-dot" style="background:${c};"></div><span>${k}</span></div>`)
+      .join('');
+    scLegendEl.style.display = 'flex';
+  } else {
+    scLegendEl.style.display = 'none';
+  }
+
+  // Stats
+  const xVals = points.map(p => p.xv);
+  const yVals = points.map(p => p.yv);
+  const xMin = Math.min(...xVals), xMax = Math.max(...xVals);
+  const yMin = Math.min(...yVals), yMax = Math.max(...yVals);
+  const xMean = xVals.reduce((a,b) => a+b,0)/xVals.length;
+  const yMean = yVals.reduce((a,b) => a+b,0)/yVals.length;
+  scStatsEl.innerHTML = `<span>n = <strong>${points.length}</strong></span> <span>X range: <strong>${xMin.toFixed(3)} – ${xMax.toFixed(3)}</strong></span> <span>Y range: <strong>${yMin.toFixed(3)} – ${yMax.toFixed(3)}</strong></span>`;
+
+  scDrawChart(scPreviewCanvas, points, colorMap, false);
+}
+
+function scDrawChart(targetCanvas, points, colorMap, highRes) {
+  const DPR = highRes ? 2 : (window.devicePixelRatio || 1);
+  const colorByCol = scColorBySel.value;
+  const labelByCol = scLabelBySel.value;
+  const xCol = scXAxisSel.value;
+  const yCol = scYAxisSel.value;
+  const invertY = scInvertY.checked;
+  const invertX = scInvertX.checked;
+  const diagLine = scDiagLine.checked;
+  const showLabels = scShowLabels.checked;
+  const ptR = parseInt(scPointSize.value);
+  const titleText = scTitle.value || (xCol.replace(/_/g,' ') + ' vs ' + yCol.replace(/_/g,' '));
+  const subtitleText = scSubtitle.value;
+  const xLabelText = scXLabel.value || xCol.replace(/_/g,' ');
+  const yLabelText = scYLabel.value || yCol.replace(/_/g,' ');
+
+  const xVals = points.map(p => p.xv);
+  const yVals = points.map(p => p.yv);
+  let xMin = Math.min(...xVals), xMax = Math.max(...xVals);
+  let yMin = Math.min(...yVals), yMax = Math.max(...yVals);
+
+  // Pad ranges slightly
+  const xPad = (xMax - xMin) * 0.08 || 0.05;
+  const yPad = (yMax - yMin) * 0.08 || 0.05;
+  xMin -= xPad; xMax += xPad;
+  yMin -= yPad; yMax += yPad;
+
+  if (invertX) [xMin, xMax] = [xMax, xMin];
+  if (invertY) [yMin, yMax] = [yMax, yMin];
+
+  // Canvas dimensions
+  const DISPLAY_W = highRes ? 1200 : targetCanvas.parentElement.clientWidth || 700;
+  const DISPLAY_H = Math.round(DISPLAY_W * 0.65);
+  targetCanvas.width  = DISPLAY_W * DPR;
+  targetCanvas.height = DISPLAY_H * DPR;
+  targetCanvas.style.width  = DISPLAY_W + 'px';
+  targetCanvas.style.height = DISPLAY_H + 'px';
+
+  const ctx = targetCanvas.getContext('2d');
+  ctx.scale(DPR, DPR);
+  const W = DISPLAY_W, H = DISPLAY_H;
+
+  // Margins
+  const ML = 64, MR = 28, MT = titleText ? 52 : 20, MB = 56;
+  const PW = W - ML - MR, PH = H - MT - MB;
+
+  // Background
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, W, H);
+
+  // Grid
+  const numGridLines = 5;
+  ctx.strokeStyle = '#e2e8f0';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4, 4]);
+  for (let i = 0; i <= numGridLines; i++) {
+    const t = i / numGridLines;
+    const gx = ML + t * PW;
+    const gy = MT + t * PH;
+    ctx.beginPath(); ctx.moveTo(gx, MT); ctx.lineTo(gx, MT + PH); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(ML, gy); ctx.lineTo(ML + PW, gy); ctx.stroke();
+  }
+  ctx.setLineDash([]);
+
+  // Axes
+  ctx.strokeStyle = '#cbd5e1';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(ML, MT); ctx.lineTo(ML, MT + PH); ctx.lineTo(ML + PW, MT + PH);
+  ctx.stroke();
+
+  // Project value to pixel
+  const px = v => ML + ((v - xMin) / (xMax - xMin)) * PW;
+  const py = v => MT + ((v - yMin) / (yMax - yMin)) * PH;
+
+  // Diagonal reference line (y = x, only if axes share same range)
+  if (diagLine) {
+    const dMin = Math.max(Math.min(xMin,yMin), Math.min(xMin,xMax), Math.min(yMin,yMax));
+    const dMax = Math.min(Math.max(xMax,yMax));
+    const x1 = px(Math.max(xMin,yMin)), y1 = py(Math.max(xMin,yMin));
+    const x2 = px(Math.min(xMax,yMax)), y2 = py(Math.min(xMax,yMax));
+    ctx.save();
+    ctx.strokeStyle = '#00c358';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([6, 4]);
+    ctx.globalAlpha = 0.5;
+    ctx.beginPath();
+    ctx.moveTo(px(xMin), py(xMin));
+    ctx.lineTo(px(xMax), py(xMax));
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.globalAlpha = 1;
+    ctx.restore();
+  }
+
+  // Axis tick labels
+  ctx.fillStyle = '#64748b';
+  ctx.font = `${highRes ? 11 : 10}px Inter, system-ui, sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  for (let i = 0; i <= numGridLines; i++) {
+    const t = i / numGridLines;
+    const xv = xMin + t * (xMax - xMin);
+    const yv = yMin + t * (yMax - yMin);
+    const gx = ML + t * PW;
+    const gy = MT + t * PH;
+    ctx.fillText(xv.toFixed(2), gx, MT + PH + 6);
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(yv.toFixed(2), ML - 6, gy);
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+  }
+
+  // Axis labels
+  ctx.fillStyle = '#334155';
+  ctx.font = `bold ${highRes ? 13 : 11}px Inter, system-ui, sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'bottom';
+  ctx.fillText(xLabelText, ML + PW / 2, H - 4);
+
+  ctx.save();
+  ctx.translate(14, MT + PH / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.textBaseline = 'top';
+  ctx.fillText(yLabelText, 0, 0);
+  ctx.restore();
+
+  // Title
+  if (titleText) {
+    ctx.fillStyle = '#1e293b';
+    ctx.font = `bold ${highRes ? 18 : 15}px Inter, system-ui, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    ctx.fillText(titleText, W / 2, 10);
+    if (subtitleText) {
+      ctx.fillStyle = '#64748b';
+      ctx.font = `${highRes ? 12 : 11}px Inter, system-ui, sans-serif`;
+      ctx.fillText(subtitleText, W / 2, 30);
+    }
+  }
+
+  // Draw points — clip to plot area
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(ML, MT, PW, PH);
+  ctx.clip();
+
+  scPointObjects = [];
+
+  points.forEach(pt => {
+    const cx = px(pt.xv);
+    const cy = py(pt.yv);
+    const group = colorByCol !== 'none' ? pt.record[colorByCol] : null;
+    const color = group && colorMap[group] ? colorMap[group] : '#60a5fa';
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, ptR, 0, Math.PI * 2);
+    ctx.fillStyle = color + 'cc';
+    ctx.fill();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    scPointObjects.push({ cx, cy, record: pt.record });
+
+    // Label
+    if (showLabels && labelByCol !== 'none' && pt.record[labelByCol]) {
+      const label = pt.record[labelByCol];
+      ctx.fillStyle = '#1e293b';
+      ctx.font = `${highRes ? 9 : 8}px Inter, system-ui, sans-serif`;
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'bottom';
+      ctx.fillText(label.length > 18 ? label.slice(0,17)+'…' : label, cx + ptR + 2, cy);
+    }
+  });
+
+  ctx.restore();
+
+  // AN logo watermark
+  const anPos = scLogoPos.value;
+  if (anPos !== 'none' && logoImage) {
+    const lh = 18, lw = (logoImage.width / logoImage.height) * lh;
+    const lx = anPos === 'bottom-right' ? W - lw - 12 : 12;
+    const ly = H - lh - 8;
+    ctx.save();
+    ctx.globalAlpha = 0.5;
+    ctx.drawImage(logoImage, lx, ly, lw, lh);
+    ctx.restore();
+  }
+}
+
+// Tooltip hit testing
+scPreviewCanvas.addEventListener('mousemove', e => {
+  const rect = scPreviewCanvas.getBoundingClientRect();
+  const scaleX = scPreviewCanvas.width / rect.width;
+  const scaleY = scPreviewCanvas.height / rect.height;
+  const mx = (e.clientX - rect.left) * scaleX / (window.devicePixelRatio || 1);
+  const my = (e.clientY - rect.top)  * scaleY / (window.devicePixelRatio || 1);
+  const ptR = parseInt(scPointSize.value);
+  const hitR = ptR + 4;
+
+  let found = null;
+  for (const pt of scPointObjects) {
+    const dx = mx - pt.cx, dy = my - pt.cy;
+    if (dx*dx + dy*dy <= hitR*hitR) { found = pt; break; }
+  }
+
+  if (found) {
+    const r = found.record;
+    const xCol = scXAxisSel.value;
+    const yCol = scYAxisSel.value;
+    const labelByCol = scLabelBySel.value;
+    const colorByCol = scColorBySel.value;
+    let html = '';
+    if (labelByCol !== 'none' && r[labelByCol]) html += `<strong>${r[labelByCol]}</strong><br>`;
+    if (r.year) html += `Year: ${r.year}<br>`;
+    html += `${xCol.replace(/_/g,' ')}: ${r[xCol] || '—'}<br>`;
+    html += `${yCol.replace(/_/g,' ')}: ${r[yCol] || '—'}`;
+    if (colorByCol !== 'none' && r[colorByCol] && colorByCol !== xCol && colorByCol !== yCol && colorByCol !== 'year') {
+      html += `<br>${colorByCol.replace(/_/g,' ')}: ${r[colorByCol]}`;
+    }
+    if (r.finish) html += `<br>Finish: ${r.finish}`;
+    scTooltip.innerHTML = html;
+    scTooltip.style.display = 'block';
+    scTooltip.style.left = (e.clientX + 14) + 'px';
+    scTooltip.style.top  = (e.clientY - 10) + 'px';
+  } else {
+    scTooltip.style.display = 'none';
+  }
+});
+
+scPreviewCanvas.addEventListener('mouseleave', () => {
+  scTooltip.style.display = 'none';
+});
+
+// Download high-res
+scDownloadBtn.addEventListener('click', async () => {
+  const xCol = scXAxisSel.value;
+  const yCol = scYAxisSel.value;
+  if (!xCol || !yCol || scFilteredData.length === 0) return;
+
+  // Wait for logo
+  await loadLogo();
+
+  const colorByCol = scColorBySel.value;
+  const colorMap = scGetColorMap(colorByCol);
+  const points = scFilteredData
+    .map(r => ({ xv: scGetNumeric(r, xCol), yv: scGetNumeric(r, yCol), record: r }))
+    .filter(p => p.xv !== null && p.yv !== null);
+
+  scDrawChart(scatterCanvas, points, colorMap, true);
+
+  const link = document.createElement('a');
+  link.download = `scatter-${xCol}-vs-${yCol}-${Date.now()}.png`;
+  link.href = scatterCanvas.toDataURL('image/png');
+  link.click();
+});
+
+// Control change listeners
+[scXAxisSel, scYAxisSel, scColorBySel, scLabelBySel, scInvertY, scInvertX, scDiagLine, scTitle, scSubtitle, scXLabel, scYLabel, scPointSize, scLogoPos, scShowLabels].forEach(el => {
+  el.addEventListener('change', scRender);
+  if (el.tagName === 'INPUT' && el.type === 'text') el.addEventListener('input', scRender);
+});
+
+// Data source toggle
+const scUseBuiltin = document.getElementById('scUseBuiltin');
+const scUsePaste   = document.getElementById('scUsePaste');
+const scPasteArea  = document.getElementById('scPasteArea');
+const scCsvInput   = document.getElementById('scCsvInput');
+const scDataInfo   = document.getElementById('scDataInfo');
+
+function scSetActiveSource(src) {
+  if (src === 'builtin') {
+    scUseBuiltin.style.background = 'rgba(0,195,88,0.15)';
+    scUseBuiltin.style.borderColor = '#00c358';
+    scUseBuiltin.style.color = '#00c358';
+    scUsePaste.style.background = 'rgba(30,41,59,0.8)';
+    scUsePaste.style.borderColor = 'rgba(148,163,184,0.2)';
+    scUsePaste.style.color = '#94a3b8';
+    scPasteArea.style.display = 'none';
+    scLoadData(MASTERS_DATA);
+    scDataInfo.textContent = `Loaded: Masters data (${MASTERS_DATA.length} records, 2020–2025)`;
+  } else {
+    scUsePaste.style.background = 'rgba(0,195,88,0.15)';
+    scUsePaste.style.borderColor = '#00c358';
+    scUsePaste.style.color = '#00c358';
+    scUseBuiltin.style.background = 'rgba(30,41,59,0.8)';
+    scUseBuiltin.style.borderColor = 'rgba(148,163,184,0.2)';
+    scUseBuiltin.style.color = '#94a3b8';
+    scPasteArea.style.display = 'block';
+  }
+}
+
+scUseBuiltin.addEventListener('click', () => scSetActiveSource('builtin'));
+scUsePaste.addEventListener('click', () => scSetActiveSource('paste'));
+
+scCsvInput.addEventListener('input', () => {
+  const text = scCsvInput.value.trim();
+  if (!text) return;
+  try {
+    const lines = text.split('\n').filter(l => l.trim());
+    const delimiter = lines[0].includes('\t') ? '\t' : ',';
+    const headers = lines[0].split(delimiter).map(h => h.trim().replace(/^"|"$/g,''));
+    const records = lines.slice(1).map(line => {
+      const vals = line.split(delimiter).map(v => v.trim().replace(/^"|"$/g,''));
+      const obj = {};
+      headers.forEach((h, i) => { obj[h] = vals[i] || ''; });
+      return obj;
+    });
+    scLoadData(records);
+    scDataInfo.textContent = `Loaded: ${records.length} records`;
+  } catch(e) {
+    scDataInfo.textContent = 'Error parsing CSV. Check format.';
+  }
+});
+
+// Auto-load Masters data
+scSetActiveSource('builtin');
+</script>
+</body>
+</html>
